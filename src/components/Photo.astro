@@ -13,6 +13,10 @@ interface Props {
   dark?: boolean; // placeholder untuk latar gelap
 }
 const { image, alt = '', width = 800, ratio = '4/3', label = '', class: cls = '', eager = false, dark = false } = Astro.props;
+const [rw, rh] = ratio.split('/').map(Number);
+// Dimensi selalu diisi (dari CMS, atau dari rasio) agar layout tidak bergeser saat gambar dimuat
+const w = image?.width ?? width;
+const h = image?.height ?? Math.round(width * (rh / rw));
 ---
 
 {
@@ -20,8 +24,8 @@ const { image, alt = '', width = 800, ratio = '4/3', label = '', class: cls = ''
     <img
       src={optimize(image.url, width)}
       alt={alt || image.alt || ''}
-      width={image.width ?? undefined}
-      height={image.height ?? undefined}
+      width={w}
+      height={h}
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
       class:list={['block w-full object-cover', cls]}

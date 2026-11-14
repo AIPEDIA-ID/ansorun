@@ -33,3 +33,13 @@ export const ui = {
   comingSoon: 'Segera Hadir',
   backToTop: 'Kembali ke atas',
 };
+
+/**
+ * Font: satu-satunya tempat untuk mengganti font. `href` = link Google Fonts,
+ * `heading`/`body` = nilai font-family (dipakai sebagai --t-font-heading / --t-font-body).
+ */
+export const fonts = {
+  href: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,600;0,700;0,800;1,800&family=Open+Sans:wght@400;600;700&display=swap',
+  heading: '"Montserrat", "Helvetica Neue", Arial, sans-serif',
+  body: '"Open Sans", "Helvetica Neue", Arial, sans-serif',
+};

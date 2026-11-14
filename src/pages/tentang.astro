@@ -9,7 +9,7 @@ const { site } = await getSiteData();
 const { about, faqs } = await getAbout();
 ---
 
-<Base title="Tentang">
+<Base title="Tentang" description={about.metaDescription}>
   <PageBanner crumb="Tentang" />
 
   <!-- Tentang -->

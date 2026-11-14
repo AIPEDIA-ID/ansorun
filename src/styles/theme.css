@@ -17,20 +17,22 @@
 
 /* ---------- 1. TOKENS ---------- */
 :root {
-  --t-font-heading: "Montserrat", "Helvetica Neue", Arial, sans-serif;
-  --t-font-body: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+  /* Font: diatur di src/config.ts (fonts) — satu tempat untuk link & nama font. */
 
-  --t-primary: #1c4fa0;     /* banner, tombol sekunder, angka countdown */
-  --t-accent: #ff4d2e;      /* tombol utama, stripe, nomor */
-  --t-highlight: #b6e03d;   /* breadcrumb aktif, label kecil di bg gelap */
+  --t-primary: #2563d6;     /* banner, tombol sekunder, angka countdown */
+  --t-accent: #ef3340;      /* tombol utama, stripe, nomor */
+  --t-highlight: #ff6670;   /* breadcrumb aktif, label kecil di bg gelap */
 
-  --t-paper: #ffffff;
+  --t-paper: #ffffff;       /* latar halaman */
+  --t-surface: #ffffff;     /* kartu, input, header solid, lightbox */
+  --t-on-accent: #ffffff;   /* teks di atas warna aksen (tombol, nomor, ikon) */
+  --t-on-dark: #ffffff;     /* teks/garis di atas foto & section gelap */
   --t-alt: #f3f5f8;
   --t-ink: #38414d;
   --t-ink-soft: #6f7a87;
   --t-line: #e1e5ea;
-  --t-dark: #0b1730;        /* section gelap */
-  --t-darker: #070f20;      /* footer */
+  --t-dark: #071a4a;        /* section gelap */
+  --t-darker: #040f30;      /* footer */
   --t-dark-ink: #9aa7ba;
 
   --t-radius: 4px;
@@ -42,6 +44,7 @@
 :root {
   --t-primary-dark: color-mix(in srgb, var(--t-primary) 80%, black);
   --t-accent-dark: color-mix(in srgb, var(--t-accent) 82%, black);
+  --t-banner: color-mix(in srgb, var(--t-primary) 42%, var(--t-dark)); /* banner halaman dalam: lebih tenang dari primary */
   --t-tint: color-mix(in srgb, var(--t-primary) 8%, white);
   --t-dark-card: color-mix(in srgb, var(--t-dark) 86%, white);
 }
@@ -49,6 +52,8 @@
 /* Expose token ke Tailwind: bg-primary, text-ink, font-heading, dst. */
 @theme inline {
   --font-heading: var(--t-font-heading);
+  --color-white: var(--t-on-dark);
+  --color-on-accent: var(--t-on-accent);
   --font-sans: var(--t-font-body);
   --color-primary: var(--t-primary);
   --color-primary-dark: var(--t-primary-dark);
@@ -71,21 +76,22 @@
   html { font-size: 15px; scroll-behavior: smooth; scroll-padding-top: calc(var(--t-header-h) + 16px); }
   body { font-family: var(--t-font-body); color: var(--t-ink); background: var(--t-paper); line-height: 1.75; }
   a { color: var(--t-primary); transition: color .2s; }
-  a:hover { color: var(--t-accent); }
+  a:hover { color: var(--t-primary-dark); }
   h1, h2, h3, h4 { font-family: var(--t-font-heading); line-height: 1.2; font-weight: 700; color: var(--t-dark); }
 }
 
 @layer components {
   .container-x { width: 100%; max-width: var(--t-container); margin-inline: auto; padding-inline: 20px; }
   .section { padding-block: 88px; }
-  .on-dark { color: #fff; }
-  .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: #fff; }
-  .on-dark a:not(.btn) { color: #fff; }
+  .on-dark { color: var(--t-on-dark); }
+  .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: var(--t-on-dark); }
+  .on-dark a:not(.btn) { color: var(--t-on-dark); }
   .bg-dark-section { background: var(--t-dark); }
 
   /* Teks dengan penekanan: **tebal** dari CMS */
   .rich strong { font-weight: 800; }
-  .rich-accent strong { color: var(--t-accent); }
+  .rich-accent strong { color: var(--t-primary-dark); }          /* di latar terang: aksen neon tidak terbaca */
+  .on-dark .rich-accent strong { color: var(--t-accent); }
 
   /* Label kecil di atas judul */
   .eyebrow { font: 700 12px var(--t-font-heading); letter-spacing: .22em; text-transform: uppercase; color: var(--t-primary); }
@@ -100,10 +106,10 @@
   /* ---- Header: transparan di atas hero, solid saat scroll ---- */
   .header {
     position: fixed; inset-inline: 0; top: 0; z-index: 50;
-    color: #fff;
+    color: var(--t-on-dark);
     transition: background-color .25s, box-shadow .25s, color .25s;
   }
-  .header.is-solid { background: #fff; color: var(--t-dark); box-shadow: 0 2px 14px rgb(0 0 0 / .12); }
+  .header.is-solid { background: var(--t-surface); color: var(--t-dark); box-shadow: 0 2px 14px rgb(0 0 0 / .12); }
   .header .logo-img { filter: brightness(0) invert(1); transition: filter .25s; }
   .header.is-solid .logo-img { filter: none; }
   .site-title { font: 800 20px var(--t-font-heading); letter-spacing: -.2px; text-transform: uppercase; color: inherit; }
@@ -127,10 +133,10 @@
             mask-image: linear-gradient(90deg, #000 0 60%, transparent);
   }
   .stripe-band-r { transform: scaleX(-1); }
-  .stripe-stack { position: absolute; right: 0; top: 0; height: 52%; width: 46%; pointer-events: none; opacity: .9;
+  .stripe-stack { position: absolute; right: 0; top: var(--t-header-h); height: 44%; width: 46%; pointer-events: none; opacity: .9;
     background:
       repeating-linear-gradient(115deg, var(--t-highlight) 0 5px, transparent 5px 11px) 100% 22% / 80% 34px no-repeat,
-      repeating-linear-gradient(115deg, #fff 0 5px, transparent 5px 11px) 100% 52% / 62% 34px no-repeat,
+      repeating-linear-gradient(115deg, var(--t-on-dark) 0 5px, transparent 5px 11px) 100% 52% / 62% 34px no-repeat,
       repeating-linear-gradient(115deg, var(--t-highlight) 0 5px, transparent 5px 11px) 100% 82% / 90% 34px no-repeat;
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 70%);
             mask-image: linear-gradient(90deg, transparent, #000 70%);
@@ -138,27 +144,27 @@
 
   /* ---- Hero ---- */
   .hero {
-    position: relative; overflow: hidden; color: #fff;
+    position: relative; overflow: hidden; color: var(--t-on-dark);
     min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
     padding-top: var(--t-header-h);
     background-color: var(--t-primary-dark);
     background-size: cover; background-position: 70% center;
   }
-  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(7 15 32 / .75), rgb(7 15 32 / .15) 70%); }
+  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--t-darker) 75%, transparent), color-mix(in srgb, var(--t-darker) 15%, transparent) 70%); }
   .hero > * { position: relative; }
-  .hero h1 { color: #fff; font-weight: 300; font-size: clamp(40px, 7.4vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
+  .hero h1 { color: var(--t-on-dark); font-weight: 300; font-size: clamp(40px, 7.4vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
   .hero-eyebrow { font: 500 clamp(15px, 2vw, 22px) var(--t-font-heading); letter-spacing: .04em; text-transform: uppercase; }
 
   /* ---- Banner halaman dalam ---- */
   .page-banner {
-    position: relative; overflow: hidden; color: #fff;
+    position: relative; overflow: hidden; color: var(--t-on-dark);
     padding: calc(var(--t-header-h) + 24px) 0 64px;
-    background-color: var(--t-primary);
+    background-color: var(--t-banner);
     background-size: cover; background-position: center;
   }
-  .page-banner h1 { color: #fff; font-weight: 300; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -.02em; }
+  .page-banner h1 { color: var(--t-on-dark); font-weight: 300; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -.02em; }
   .breadcrumb { font: 600 13px var(--t-font-heading); }
-  .breadcrumb a { color: #fff; }
+  .breadcrumb a { color: var(--t-on-dark); }
   .breadcrumb a:hover { color: var(--t-highlight); }
   .breadcrumb .current { color: var(--t-highlight); }
 
@@ -171,20 +177,20 @@
     display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
     padding: 13px 30px;
     font: 700 13px var(--t-font-heading); letter-spacing: .06em; text-transform: uppercase;
-    color: #fff; background: var(--t-accent);
+    color: var(--t-on-accent); background: var(--t-accent);
     border: 2px solid var(--t-accent); border-radius: 999px;
     transition: background .2s, border-color .2s, color .2s;
   }
-  .btn:hover { color: #fff; background: var(--t-accent-dark); border-color: var(--t-accent-dark); }
+  .btn:hover { color: var(--t-on-accent); background: var(--t-accent-dark); border-color: var(--t-accent-dark); }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn-blue { background: var(--t-primary); border-color: var(--t-primary); }
   .btn-blue:hover { background: var(--t-primary-dark); border-color: var(--t-primary-dark); }
-  .btn-outline { background: transparent; border-color: #fff; color: #fff; }
-  .btn-outline:hover { background: #fff; border-color: #fff; color: var(--t-dark); }
+  .btn-outline { background: transparent; border-color: var(--t-on-dark); color: var(--t-on-dark); }
+  .btn-outline:hover { background: var(--t-surface); border-color: var(--t-on-dark); color: var(--t-dark); }
 
   /* ---- Kartu ---- */
-  .card { background: #fff; border: 1px solid var(--t-line); border-radius: var(--t-radius); }
-  .card-dark { background: var(--t-dark-card); border: 1px solid rgb(255 255 255 / .1); border-radius: var(--t-radius); color: #fff; }
+  .card { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .card-dark { background: var(--t-dark-card); border: 1px solid color-mix(in srgb, var(--t-on-dark) 10%, transparent); border-radius: var(--t-radius); color: var(--t-on-dark); }
   .thumb { display: block; overflow: hidden; border-radius: var(--t-radius); background: var(--t-alt); }
   a.thumb img { transition: transform .35s; }
   a.thumb:hover img { transform: scale(1.05); }
@@ -200,33 +206,33 @@
   .entry img { max-width: 100%; border-radius: var(--t-radius); }
   .entry table { border-collapse: collapse; width: 100%; }
   .entry th, .entry td { border: 1px solid var(--t-line); padding: 8px 12px; text-align: left; }
-  .on-dark .entry { color: rgb(255 255 255 / .85); }
+  .on-dark .entry { color: color-mix(in srgb, var(--t-on-dark) 85%, transparent); }
 
   /* ---- Tab pill ---- */
   .tabs-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
   .tab-btn {
     padding: 9px 20px; cursor: pointer;
     font: 700 12.5px var(--t-font-heading); letter-spacing: .04em;
-    color: var(--t-ink); background: #fff; border: 1px solid var(--t-line); border-radius: 999px;
+    color: var(--t-ink); background: var(--t-surface); border: 1px solid var(--t-line); border-radius: 999px;
     transition: background .2s, color .2s, border-color .2s;
   }
   .tab-btn:hover { border-color: var(--t-primary); color: var(--t-primary); }
-  .tab-btn[aria-selected="true"] { background: var(--t-primary); border-color: var(--t-primary); color: #fff; }
+  .tab-btn[aria-selected="true"] { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
   .tab-panel { margin-top: 28px; }
 
   /* ---- Pemilih item race pack ---- */
   .rp-item {
     display: flex; gap: 14px; width: 100%; text-align: left; cursor: pointer;
-    padding: 14px 16px; color: #fff;
-    background: rgb(255 255 255 / .04); border: 2px solid rgb(255 255 255 / .1); border-radius: var(--t-radius);
+    padding: 14px 16px; color: var(--t-on-dark);
+    background: color-mix(in srgb, var(--t-on-dark) 4%, transparent); border: 2px solid color-mix(in srgb, var(--t-on-dark) 10%, transparent); border-radius: var(--t-radius);
     transition: border-color .2s, background .2s;
   }
-  .rp-item:hover { border-color: rgb(255 255 255 / .35); }
-  .rp-item[aria-selected="true"] { border-color: var(--t-accent); background: rgb(255 77 46 / .12); }
-  .rp-icon { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: var(--t-radius); background: var(--t-accent); color: #fff; }
+  .rp-item:hover { border-color: color-mix(in srgb, var(--t-on-dark) 35%, transparent); }
+  .rp-item[aria-selected="true"] { border-color: var(--t-accent); background: color-mix(in srgb, var(--t-accent) 12%, transparent); }
+  .rp-icon { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: var(--t-radius); background: var(--t-accent); color: var(--t-on-accent); }
 
   /* ---- FAQ accordion ---- */
-  details.faq { background: #fff; border: 1px solid var(--t-line); border-radius: var(--t-radius); margin-bottom: 10px; }
+  details.faq { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); margin-bottom: 10px; }
   details.faq > summary {
     cursor: pointer; list-style: none; position: relative;
     padding: 18px 56px 18px 22px; font: 700 15px var(--t-font-heading); color: var(--t-dark);
@@ -240,21 +246,21 @@
   /* ---- Form ---- */
   .field {
     width: 100%; padding: 14px 18px; font: 14px var(--t-font-body); color: var(--t-ink);
-    background: #fff; border: 2px solid transparent; border-radius: 999px;
+    background: var(--t-surface); border: 2px solid transparent; border-radius: 999px;
   }
   .field:focus { outline: 0; border-color: var(--t-accent); }
 
   /* ---- Footer ---- */
   .site-footer { background: var(--t-darker); color: var(--t-dark-ink); font-size: 14px; }
-  .site-footer h4 { font-size: 14px; color: #fff; margin-bottom: 18px; }
+  .site-footer h4 { font-size: 14px; color: var(--t-on-dark); margin-bottom: 18px; }
   .site-footer a { color: var(--t-dark-ink); }
-  .site-footer a:hover { color: #fff; }
-  .social-btn { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid rgb(255 255 255 / .18); border-radius: var(--t-radius); color: #fff; background: rgb(255 255 255 / .04); }
-  .site-footer a.social-btn { color: #fff; }
+  .site-footer a:hover { color: var(--t-on-dark); }
+  .social-btn { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid color-mix(in srgb, var(--t-on-dark) 18%, transparent); border-radius: var(--t-radius); color: var(--t-on-dark); background: color-mix(in srgb, var(--t-on-dark) 4%, transparent); }
+  .site-footer a.social-btn { color: var(--t-on-dark); }
   .social-btn:hover { background: var(--t-accent); border-color: var(--t-accent); }
   .footer-rule { height: 4px; background: linear-gradient(90deg, var(--t-highlight), var(--t-accent) 50%, var(--t-primary)); }
 
   /* ---- Lightbox ---- */
-  dialog.lightbox { max-width: min(92vw, 960px); padding: 10px; border: 0; border-radius: var(--t-radius); background: #fff; margin: auto; }
+  dialog.lightbox { max-width: min(92vw, 960px); padding: 10px; border: 0; border-radius: var(--t-radius); background: var(--t-surface); margin: auto; }
   dialog.lightbox::backdrop { background: rgb(0 0 0 / .8); }
 }

@@ -42,7 +42,7 @@ export const getSiteData = () =>
       allFooterLinks: SiteData['footerLinks'];
     }>(`{
       siteSetting {
-        eventName bannerTitle tagline categories eventDate location
+        eventName bannerTitle tagline metaDescription categories eventDate location
         heroEyebrow heroHeadline heroSubheadline heroImage { ${IMG} } logo { ${IMG} }
         primaryColor { hex } accentColor { hex }
         registrationUrl registrationLabel
@@ -72,7 +72,7 @@ export const getSiteData = () =>
 export const getAbout = () =>
   once('about', async () => {
     const data = await dato<{ aboutPage: AboutPage | null; allFaqs: Faq[] }>(`{
-      aboutPage { sectionTitle eyebrow quote body faqEyebrow faqTitle faqText }
+      aboutPage { metaDescription sectionTitle eyebrow quote body faqEyebrow faqTitle faqText }
       allFaqs(orderBy: _position_ASC) { question answer }
     }`);
     return {
@@ -93,7 +93,7 @@ export const getLari = () =>
       allInfoTabs: InfoTab[];
     }>(`{
       lariPage {
-        racepackTitle racepackIntro racepackVenue racepackSchedule
+        metaDescription racepackTitle racepackIntro racepackVenue racepackSchedule
         stepsTitle stepsText proxyNote proxyFile { url } proxyFileLabel
         communityTitle communityText communityImage { ${IMG} } communityUrl
         infoTitle infoText

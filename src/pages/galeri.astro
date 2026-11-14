@@ -9,7 +9,7 @@ const { site } = await getSiteData();
 const photos = await getGallery();
 ---
 
-<Base title="Galeri">
+<Base title="Galeri" description={site.galleryText}>
   <PageBanner crumb="Galeri" />
   <section class="section">
     <div class="container-x">

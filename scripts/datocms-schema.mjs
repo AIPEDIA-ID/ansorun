@@ -57,6 +57,7 @@ const models = [
       str('Nama event (untuk <title>, logo teks)', 'event_name', true),
       plainText('Judul banner halaman dalam (**tebal**, baris baru boleh)', 'banner_title'),
       str('Tagline', 'tagline'),
+      plainText('SEO: deskripsi Beranda (±155 karakter)', 'meta_description'),
       str('Kategori (mis. "HM • 10K • 5K")', 'categories'),
       f('Tanggal & jam event', 'event_date', 'date_time', { validators: req }),
       str('Lokasi', 'location', true),
@@ -107,6 +108,7 @@ const models = [
   {
     name: 'Halaman Tentang', api_key: 'about_page', singleton: true,
     fields: [
+      plainText('SEO: deskripsi halaman (±155 karakter)', 'meta_description'),
       plainText('Judul section (**tebal**, baris baru boleh)', 'section_title'),
       str('Label di atas isi', 'eyebrow'),
       plainText('Kutipan', 'quote'),
@@ -123,6 +125,7 @@ const models = [
   {
     name: 'Halaman Lari', api_key: 'lari_page', singleton: true,
     fields: [
+      plainText('SEO: deskripsi halaman (±155 karakter)', 'meta_description'),
       plainText('Judul race pack (**tebal**)', 'racepack_title'),
       plainText('Intro race pack', 'racepack_intro'),
       str('Lokasi pengambilan', 'racepack_venue'),

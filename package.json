@@ -10,9 +10,11 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "check": "node scripts/check.mjs",
     "dato:schema": "node scripts/datocms-schema.mjs"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.5",
     "@tailwindcss/vite": "^4.3.5",
     "astro": "^7.4.12",
     "marked": "^18.2.0",

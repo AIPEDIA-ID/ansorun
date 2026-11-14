@@ -32,12 +32,25 @@ Satu file saja. Di atas hero logo otomatis dibuat putih (CSS filter), setelah sc
 
 | Kebutuhan | File |
 |---|---|
-| Warna, font, lebar, tinggi header | `src/styles/theme.css` bagian TOKENS |
+| Warna, lebar, tinggi header | `src/styles/theme.css` bagian TOKENS (termasuk `--t-on-dark` / `--t-surface` untuk putih) |
+| Font (link + nama font) | `src/config.ts` → `fonts` |
 | Warna utama/aksen tanpa deploy kode | DatoCMS → Site Settings |
 | Bentuk komponen (tombol, kartu, hero, stripe) | `src/styles/theme.css` bagian SKIN |
 | Menu & teks UI statis | `src/config.ts` |
 | Teks, gambar, tanggal, FAQ, sponsor | DatoCMS |
 | Susunan section | `src/pages/*.astro` |
+
+## SEO
+
+Otomatis: title/description per halaman (field **SEO: deskripsi** di Dato), canonical, Open Graph + Twitter card, JSON-LD `SportsEvent` di Beranda, `sitemap-index.xml`, `robots.txt`, ukuran gambar tetap (tanpa layout shift). **Isi `SITE_URL` dengan domain asli sebelum rilis**, kalau tidak canonical, sitemap, dan robots menunjuk ke localhost.
+
+## Pagar kualitas
+
+```bash
+npm run check   # gagal bila ada warna mentah di luar token, lalu build
+```
+
+Foto contoh dari Unsplash (di `src/lib/fallback.ts`) muncul bila field gambar Dato kosong; ganti dengan foto asli sebelum rilis.
 
 ## Struktur
 

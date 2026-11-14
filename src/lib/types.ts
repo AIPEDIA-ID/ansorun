@@ -12,6 +12,7 @@ export interface SiteSettings {
   eventName: string;
   bannerTitle: RichText;
   tagline: string;
+  metaDescription: string; // SEO: deskripsi Beranda & default
   categories: string;
   eventDate: string; // ISO
   location: string;
@@ -56,6 +57,7 @@ export interface FooterLink {
 }
 
 export interface AboutPage {
+  metaDescription: string;
   sectionTitle: RichText;
   eyebrow: string;
   quote: string;
@@ -91,6 +93,7 @@ export interface InfoTab {
 }
 
 export interface LariPage {
+  metaDescription: string;
   racepackTitle: RichText;
   racepackIntro: string;
   racepackVenue: string;

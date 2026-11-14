@@ -38,6 +38,7 @@ export async function dato<T>(query: string): Promise<T | null> {
 
 /** Tambah parameter imgix (resize + format modern) ke URL aset Dato. */
 export function img(url: string, width = 800, extra = ''): string {
+  if (url.includes('images.unsplash.com')) return `${url}${url.includes('?') ? '&' : '?'}auto=format&fit=crop&q=75&w=${width}`;
   if (!url.includes('datocms-assets.com')) return url;
   return `${url}${url.includes('?') ? '&' : '?'}auto=format&fit=max&w=${width}${extra}`;
 }

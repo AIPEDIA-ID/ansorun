@@ -7,17 +7,36 @@ import type {
   RacepackItem, RacepackStep, SiteSettings, Sponsor,
 } from './types';
 
+
+// Foto contoh dari Unsplash (hanya dipakai bila field gambar di DatoCMS kosong).
+const un = (id: string, alt: string) => ({ url: `https://images.unsplash.com/photo-${id}`, alt, width: null, height: null });
+// Logo sponsor palsu (brand fiktif) — hanya untuk gambaran; file ada di public/dummy/
+const dummyLogo = (file: string, alt: string) => ({ url: `/dummy/sponsor-${file}.svg`, alt, width: 240, height: 64 });
+
+const photo = {
+  sunrise: un('1552674605-db6ffd4facb5', 'Pelari saat matahari terbit'),
+  silhouette: un('1594882645126-14020914d58d', 'Siluet pelari di bukit'),
+  trackTop: un('1502904550040-7534597429ae', 'Pelari di lintasan dilihat dari atas'),
+  sprint: un('1532444458054-01a7dd3e9fca', 'Pelari berlomba di lintasan'),
+  road: un('1571008887538-b36bb32f4571', 'Kaki pelari di jalan raya'),
+  trail: un('1486218119243-13883505764c', 'Pelari di jalan pedesaan'),
+  block: un('1461896836934-ffe607ba8211', 'Pelari bersiap di start block'),
+  laces: un('1483721310020-03333e577078', 'Pelari mengikat tali sepatu'),
+  stairs: un('1476480862126-209bfaa8edc8', 'Sepatu lari di tangga'),
+};
+
 export const site: SiteSettings = {
   eventName: 'Event Lari 2027',
   bannerTitle: '**EVENT LARI**\n2027',
   tagline: 'Era Baru Lari Dimulai di Sini',
+  metaDescription: 'Event Lari 2027: Half Marathon, 10K, dan 5K di Stadion Utama, Jakarta. Daftar sekarang dan lihat jadwal, rute, serta informasi race pack.',
   categories: 'HM • 10K • 5K',
   eventDate: '2027-05-16T05:00:00+07:00',
   location: 'Stadion Utama, Jakarta',
   heroEyebrow: 'Ini bukan sekadar lomba.',
   heroHeadline: '**AYO**\n**BERLARI** Lebih Jauh',
   heroSubheadline: 'Ambil langkah pertamamu di era baru berlari!',
-  heroImage: null,
+  heroImage: photo.sunrise,
   logo: null,
   primaryColor: null,
   accentColor: null,
@@ -28,7 +47,7 @@ export const site: SiteSettings = {
   instagramTitle: 'Ikuti kami di **Instagram**',
   instagramText: 'Dapatkan info terbaru dan jadi bagian dari #EventLari2027',
   instagramHandle: '@eventlari',
-  instagramImage: null,
+  instagramImage: photo.silhouette,
   instagramUrl: '#',
   galleryTitle: 'Momen di **Event Lari**',
   galleryText: 'Sorotan utama dan suasana event dalam satu galeri.',
@@ -42,9 +61,9 @@ export const site: SiteSettings = {
 };
 
 export const sponsors: Sponsor[] = [
-  { name: 'Sponsor Utama', url: null, role: 'Powered by', logo: null },
-  { name: 'Mitra Resmi', url: null, role: 'Presented by', logo: null },
-  { name: 'Mitra Komunitas', url: null, role: 'In collaboration with', logo: null },
+  { name: 'Velocita', url: null, role: 'Powered by', logo: dummyLogo('velocita', 'Velocita') },
+  { name: 'Aquanova', url: null, role: 'Presented by', logo: dummyLogo('aquanova', 'Aquanova') },
+  { name: 'Kopi Lari', url: null, role: 'In collaboration with', logo: dummyLogo('kopi-lari', 'Kopi Lari') },
 ];
 
 export const footerLinks: FooterLink[] = [
@@ -57,6 +76,7 @@ export const footerLinks: FooterLink[] = [
 ];
 
 export const about: AboutPage = {
+  metaDescription: 'Kenali Event Lari 2027: tentang acara, kategori lomba, dan jawaban atas pertanyaan yang sering diajukan peserta.',
   sectionTitle: 'TENTANG\n**EVENT LARI**',
   eyebrow: 'EVENT LARI 2027',
   quote: 'Ini bukan sekadar mencapai garis finis. Ini tentang perjalanan ke depan.',
@@ -85,11 +105,11 @@ export const racepackItems: RacepackItem[] = [
 ];
 
 export const racepackSteps: RacepackStep[] = [
-  { description: 'Peserta datang ke lokasi Race Pack Collection sesuai jadwal dengan membawa email konfirmasi registrasi (cetak atau digital).', image: null },
-  { description: 'Peserta menuju meja frontliner dan mengantre sesuai kategori lomba yang didaftarkan.', image: null },
-  { description: 'Saat dipanggil, peserta menunjukkan email konfirmasi dan kartu identitas resmi untuk verifikasi data.', image: null },
-  { description: 'Setelah terverifikasi, BIB dan race pack diserahkan. Periksa isi race pack di tempat, karena klaim hanya bisa dilakukan saat pengambilan.', image: null },
-  { description: 'Peserta melakukan scan BIB di area chip untuk memastikan BIB sudah terdaftar dan aktif.', image: null },
+  { description: 'Peserta datang ke lokasi Race Pack Collection sesuai jadwal dengan membawa email konfirmasi registrasi (cetak atau digital).', image: photo.road },
+  { description: 'Peserta menuju meja frontliner dan mengantre sesuai kategori lomba yang didaftarkan.', image: photo.laces },
+  { description: 'Saat dipanggil, peserta menunjukkan email konfirmasi dan kartu identitas resmi untuk verifikasi data.', image: photo.block },
+  { description: 'Setelah terverifikasi, BIB dan race pack diserahkan. Periksa isi race pack di tempat, karena klaim hanya bisa dilakukan saat pengambilan.', image: photo.stairs },
+  { description: 'Peserta melakukan scan BIB di area chip untuk memastikan BIB sudah terdaftar dan aktif.', image: photo.trail },
 ];
 
 export const infoTabs: InfoTab[] = [
@@ -102,6 +122,7 @@ export const infoTabs: InfoTab[] = [
 ];
 
 export const lari: LariPage = {
+  metaDescription: 'Jadwal dan lokasi pengambilan race pack Event Lari 2027, isi race pack, langkah pengambilan, serta informasi lengkap event.',
   racepackTitle: 'Racepack Collection\n**Event Lari 2027**',
   racepackIntro: 'Perlengkapan yang mendukung kenyamanan dan kelancaran lari Anda, lengkap dengan medali sesuai kategori bagi yang mencapai garis finish.',
   racepackVenue: 'Stadion Utama, Jakarta',
@@ -113,11 +134,11 @@ export const lari: LariPage = {
   proxyFileLabel: 'Unduh Surat Kuasa',
   communityTitle: 'Bergabung dengan **Komunitas**',
   communityText: 'Dari komunitas lari lokal hingga nasional, kita berlari sebagai satu. Ikuti kami untuk info terbaru dan cerita dari sesama pelari.',
-  communityImage: null,
+  communityImage: photo.trackTop,
   communityUrl: '#',
   infoTitle: 'Informasi **Event**',
   infoText: 'Seluruh informasi yang perlu Anda ketahui tentang Event Lari 2027, mulai dari peraturan, rute, hingga hadiah.',
 };
 
 // 6 tile placeholder agar layout terlihat sebelum foto diunggah
-export const gallery: GalleryPhoto[] = Array.from({ length: 6 }, () => ({ caption: null, image: null }));
+export const gallery: GalleryPhoto[] = [photo.sprint, photo.road, photo.trail, photo.block, photo.laces, photo.stairs].map((image) => ({ caption: null, image }));

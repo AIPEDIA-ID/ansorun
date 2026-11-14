@@ -3,7 +3,7 @@ import '../styles/theme.css';
 import { getSiteData } from '../lib/content';
 import { img } from '../lib/datocms';
 import { plain } from '../lib/text';
-import { nav, ui } from '../config';
+import { fonts, nav, ui } from '../config';
 import Icon from '../components/Icon.astro';
 
 interface Props { title?: string; description?: string }
@@ -11,11 +11,33 @@ const { title, description } = Astro.props;
 
 const { site, footerLinks } = await getSiteData();
 const pageTitle = title ? `${title} — ${site.eventName}` : `${site.eventName} | ${site.tagline}`;
-const metaDesc = description ?? site.heroSubheadline;
+const metaDesc = plain(description ?? site.metaDescription);
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = site.heroImage ? img(site.heroImage.url, 1200) : null;
+
+// Structured data Event (Google rich result) — hanya di Beranda
+const eventLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name: plain(site.eventName),
+  description: metaDesc,
+  startDate: site.eventDate,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: { '@type': 'Place', name: site.location, address: site.location },
+  url: canonical,
+  ...(ogImage && { image: [ogImage] }),
+  ...(site.registrationUrl && {
+    offers: { '@type': 'Offer', url: site.registrationUrl, availability: 'https://schema.org/InStock' },
+  }),
+};
 
 // Override warna dari DatoCMS (opsional) — mengalahkan token di theme.css
 const overrides = [
+  `--t-font-heading:${fonts.heading}`,
+  `--t-font-body:${fonts.body}`,
   site.primaryColor && `--t-primary:${site.primaryColor}`,
   site.accentColor && `--t-accent:${site.accentColor}`,
 ].filter(Boolean).join(';');
@@ -39,15 +61,25 @@ const socials = ([
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={metaDesc} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,600;0,700;0,800;1,800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href={fonts.href} rel="stylesheet" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={plain(site.eventName)} />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={metaDesc} />
-    {site.heroImage && <meta property="og:image" content={img(site.heroImage.url, 1200)} />}
-    {overrides && <style set:html={`:root{${overrides}}`} />}
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={metaDesc} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {path === '/' && <script type="application/ld+json" set:html={JSON.stringify(eventLd)} />}
+    {<style set:html={`:root{${overrides}}`} />}
   </head>
   <body id="top">
     <!-- Header: transparan di atas hero, solid putih setelah scroll -->
