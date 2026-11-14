@@ -1,18 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageHeader from '../components/PageHeader.astro';
+import PageBanner from '../components/PageBanner.astro';
 import Gallery from '../components/Gallery.astro';
-import Sidebar from '../components/Sidebar.astro';
-import { getGallery } from '../lib/content';
-import { ui } from '../config';
+import { getSiteData, getGallery } from '../lib/content';
+import { rich } from '../lib/text';
 
+const { site } = await getSiteData();
 const photos = await getGallery();
 ---
 
-<Base title={ui.galleryTitle}>
-  <PageHeader title={ui.galleryTitle} subtitle="Sorotan dan suasana event dalam satu galeri." />
-  <div class="container-x grid gap-12 py-14 lg:grid-cols-[1fr_300px]">
-    <Gallery photos={photos} cols="grid-cols-2 sm:grid-cols-3" />
-    <Sidebar />
-  </div>
+<Base title="Galeri">
+  <PageBanner crumb="Galeri" />
+  <section class="section">
+    <div class="container-x">
+      <div class="section-heading">
+        <h2 class="rich rich-accent text-primary" set:html={rich(site.galleryTitle)} />
+        <p>{site.galleryText}</p>
+      </div>
+      <Gallery photos={photos} />
+    </div>
+  </section>
 </Base>

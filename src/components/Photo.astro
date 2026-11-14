@@ -7,11 +7,12 @@ interface Props {
   alt?: string;
   width?: number; // lebar maksimum untuk resize imgix
   ratio?: string; // css aspect-ratio, mis. "4/3"
-  label?: string; // teks placeholder
+  label?: string; // teks placeholder bila belum ada gambar
   class?: string;
   eager?: boolean;
+  dark?: boolean; // placeholder untuk latar gelap
 }
-const { image, alt = '', width = 800, ratio = '4/3', label = 'Foto', class: cls = '', eager = false } = Astro.props;
+const { image, alt = '', width = 800, ratio = '4/3', label = '', class: cls = '', eager = false, dark = false } = Astro.props;
 ---
 
 {
@@ -29,8 +30,12 @@ const { image, alt = '', width = 800, ratio = '4/3', label = 'Foto', class: cls 
   ) : (
     <div
       role="img"
-      aria-label={alt || label}
-      class:list={['flex w-full items-center justify-center bg-tint font-heading text-xs font-bold uppercase tracking-[.15em] text-ink-soft', cls]}
+      aria-label={alt || label || 'Foto'}
+      class:list={[
+        'flex w-full items-center justify-center font-heading text-xs font-bold uppercase tracking-[.2em]',
+        dark ? 'bg-white/5 text-white/40' : 'bg-tint text-ink-soft',
+        cls,
+      ]}
       style={`aspect-ratio:${ratio}`}
     >
       {label}

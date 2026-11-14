@@ -1,15 +1,16 @@
 ---
 import '../styles/theme.css';
-import { getSiteData, formatDate } from '../lib/content';
+import { getSiteData } from '../lib/content';
 import { img } from '../lib/datocms';
+import { plain } from '../lib/text';
 import { nav, ui } from '../config';
-import SocialLinks from '../components/SocialLinks.astro';
+import Icon from '../components/Icon.astro';
 
 interface Props { title?: string; description?: string }
 const { title, description } = Astro.props;
 
 const { site, footerLinks } = await getSiteData();
-const pageTitle = title ? `${title} — ${site.eventName}` : `${site.eventName} — ${site.tagline}`;
+const pageTitle = title ? `${title} — ${site.eventName}` : `${site.eventName} | ${site.tagline}`;
 const metaDesc = description ?? site.heroSubheadline;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
@@ -21,6 +22,14 @@ const overrides = [
 
 const groups = new Map<string, typeof footerLinks>();
 for (const l of footerLinks) groups.set(l.group, [...(groups.get(l.group) ?? []), l]);
+
+const socials = ([
+  ['Instagram', 'instagram', site.instagramUrl],
+  ['TikTok', 'tiktok', site.tiktokUrl],
+  ['Facebook', 'facebook', site.facebookUrl],
+  ['X', 'x', site.xUrl],
+  ['Threads', 'threads', site.threadsUrl],
+] as const).filter(([, , url]) => url);
 ---
 
 <!doctype html>
@@ -34,24 +43,18 @@ for (const l of footerLinks) groups.set(l.group, [...(groups.get(l.group) ?? [])
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,500;0,600;0,700;0,800;1,800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={metaDesc} />
     {site.heroImage && <meta property="og:image" content={img(site.heroImage.url, 1200)} />}
     {overrides && <style set:html={`:root{${overrides}}`} />}
   </head>
   <body id="top">
-    <div class="topbar">
-      <div class="container-x flex flex-wrap items-center justify-between gap-2 py-2">
-        <span>{formatDate(site.eventDate, { dateStyle: 'full' })} &middot; {site.location}</span>
-        <SocialLinks />
-      </div>
-    </div>
-
-    <header class="header">
+    <!-- Header: transparan di atas hero, solid putih setelah scroll -->
+    <header class="header" data-header>
       <div class="container-x flex flex-wrap items-center justify-between gap-x-6" style="min-height:var(--t-header-h)">
-        <a href="/" class="site-title" aria-label={site.eventName}>
-          {site.logo ? <img src={img(site.logo.url, 400)} alt={site.eventName} class="h-11 w-auto" /> : site.eventName}
+        <a href="/" class="site-title" aria-label={plain(site.eventName)}>
+          {site.logo ? <img src={img(site.logo.url, 400)} alt={plain(site.eventName)} class="logo-img h-11 w-auto" /> : plain(site.eventName)}
         </a>
         <nav class="nav" aria-label="Menu utama">
           <ul class="flex flex-wrap">
@@ -64,28 +67,43 @@ for (const l of footerLinks) groups.set(l.group, [...(groups.get(l.group) ?? [])
     <main><slot /></main>
 
     <footer class="site-footer">
-      <div class="container-x grid gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="container-x grid gap-12 py-16 lg:grid-cols-[1.3fr_2fr]">
         <div>
-          <h4>{site.eventName}</h4>
-          <p>{site.tagline}</p>
-          <p class="mt-3">{site.categories}</p>
-          <p>{site.location}</p>
+          <p class="font-heading text-lg font-extrabold uppercase text-white">{plain(site.eventName)}</p>
+          <p class="mt-3 max-w-xs">{site.tagline}</p>
+          <p class="mt-1">{site.categories}</p>
+          <p class="mt-3 flex items-center gap-2"><Icon name="pin" size={16} /> {site.location}</p>
+          <ul class="mt-5 flex gap-2">
+            {socials.map(([label, icon, url]) => (
+              <li><a class="social-btn" href={url!} aria-label={label} rel="noopener" target={url!.startsWith('http') ? '_blank' : undefined}><Icon name={icon} size={18} /></a></li>
+            ))}
+          </ul>
         </div>
-        {
-          [...groups].map(([group, links]) => (
-            <div>
-              <h4>{group}</h4>
-              <ul class="space-y-2">{links.map((l) => <li><a href={l.url}>{l.label}</a></li>)}</ul>
-            </div>
-          ))
-        }
+        <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+          {
+            [...groups].map(([group, links]) => (
+              <div>
+                <h4>{group}</h4>
+                <ul class="space-y-2.5">{links.map((l) => <li><a href={l.url}>{l.label}</a></li>)}</ul>
+              </div>
+            ))
+          }
+        </div>
       </div>
-      <div class="site-footer-bottom">
-        <div class="container-x flex flex-wrap items-center justify-between gap-2 py-4">
+      <div class="container-x border-t border-white/10 py-6 text-[13px]">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <span>{site.footerNote}</span>
-          <a href="#top">{ui.backToTop}</a>
+          <a href="#top">{ui.backToTop} &uarr;</a>
         </div>
       </div>
+      <div class="footer-rule"></div>
     </footer>
+
+    <script>
+      const header = document.querySelector<HTMLElement>('[data-header]');
+      const onScroll = () => header?.classList.toggle('is-solid', window.scrollY > 40);
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    </script>
   </body>
 </html>

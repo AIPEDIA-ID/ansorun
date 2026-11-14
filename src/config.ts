@@ -1,6 +1,6 @@
 /**
  * Konfigurasi statis & teks UI yang BUKAN konten CMS.
- * Teks yang sering diubah klien (judul event, tanggal, FAQ, dll.) ada di DatoCMS.
+ * Teks yang sering diubah klien (judul, tanggal, FAQ, dll.) ada di DatoCMS.
  */
 export const LOCALE = 'id-ID';
 export const TIMEZONE = 'Asia/Jakarta';
@@ -13,21 +13,23 @@ export const nav = [
 ] as const;
 
 export const ui = {
-  countdownTitle: 'Hitung Mundur Menuju Hari-H',
-  countdownDone: 'Event sedang / telah berlangsung. Sampai jumpa di garis finis!',
+  explore: 'Jelajahi',
   units: { days: 'Hari', hours: 'Jam', minutes: 'Menit', seconds: 'Detik' },
-  newsletterTitle: 'Berlangganan Info',
-  newsletterText: 'Dapatkan kabar terbaru, tips latihan, dan info early bird langsung ke email Anda.',
-  newsletterPlaceholder: 'Alamat email Anda',
-  newsletterButton: 'Daftar',
-  newsletterPrivacy: 'Kami menghormati privasi Anda. Berhenti berlangganan kapan saja.',
-  eventInfoTitle: 'Info Event',
-  followUs: 'Ikuti Kami',
-  faqTitle: 'Pertanyaan yang Sering Diajukan',
-  faqContact: 'Masih punya pertanyaan?',
-  contactButton: 'Hubungi Kami',
-  galleryTitle: 'Galeri',
+  countdownDone: 'Event sedang berlangsung. Sampai jumpa di garis finis!',
+  followInstagram: 'Follow di Instagram',
+  galleryEyebrow: 'Galeri',
+  viewAllPhotos: 'Lihat Semua Foto',
   galleryEmpty: 'Foto akan segera ditambahkan.',
-  comingSoon: 'Segera hadir.',
-  backToTop: '↑ Kembali ke atas',
+  closeLightbox: 'Tutup',
+  newsletterTitle: 'Tetap Bergerak',
+  newsletterText: 'Dapatkan pembaruan eksklusif, tips latihan, dan info pendaftaran early bird langsung ke email Anda.',
+  newsletterPlaceholder: 'Masukkan alamat email Anda',
+  newsletterConsent: 'Dengan mengirimkan alamat email Anda, Anda setuju untuk menerima buletin, informasi acara, dan pembaruan resmi dari penyelenggara.',
+  newsletterButton: 'Berlangganan',
+  newsletterPrivacy: 'Kami menghormati privasi Anda. Berhenti berlangganan kapan saja.',
+  faqContact: 'Masih memiliki pertanyaan?',
+  contactButton: 'Hubungi Kami',
+  stepsNoticeTitle: 'Penting',
+  comingSoon: 'Segera Hadir',
+  backToTop: 'Kembali ke atas',
 };

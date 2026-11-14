@@ -1,41 +1,26 @@
 ---
 import { ui } from '../config';
+import Icon from './Icon.astro';
 
-interface Props { action: string | null; variant?: 'widget' | 'band' }
-const { action, variant = 'widget' } = Astro.props;
+interface Props { action: string | null }
+const { action } = Astro.props;
 ---
 
-{
-  variant === 'band' ? (
-    <section class="bg-dark py-16 text-white">
-      <div class="container-x grid items-center gap-6 md:grid-cols-2">
-        <div>
-          <h2 class="text-2xl uppercase !text-white">{ui.newsletterTitle}</h2>
-          <p class="mt-2 text-white/70">{ui.newsletterText}</p>
-        </div>
-        <form method="post" action={action ?? undefined}>
-          <div class="flex flex-col gap-2 sm:flex-row">
-            <label class="sr-only" for="nl-email-band">Email</label>
-            <input id="nl-email-band" class="field" type="email" name="email" required placeholder={ui.newsletterPlaceholder} disabled={!action} />
-            <button class="btn shrink-0" type="submit" disabled={!action}>{ui.newsletterButton}</button>
-          </div>
-          <p class="mt-2 text-xs text-white/50">{ui.newsletterPrivacy}</p>
-        </form>
-      </div>
-    </section>
-  ) : (
-    <div class="widget">
-      <h2 class="widget-title">{ui.newsletterTitle}</h2>
-      <div class="widget-body">
-        <p class="mb-3 text-sm">{ui.newsletterText}</p>
-        <!-- action diisi dari DatoCMS (Mailchimp / Formspree / dsb). Kosong = form nonaktif. -->
-        <form method="post" action={action ?? undefined} class="space-y-3">
-          <label class="sr-only" for="nl-email">Email</label>
-          <input id="nl-email" class="field" type="email" name="email" required placeholder={ui.newsletterPlaceholder} disabled={!action} />
-          <button class="btn btn-blue w-full" type="submit" disabled={!action}>{ui.newsletterButton}</button>
-          <p class="text-xs text-ink-soft">{ui.newsletterPrivacy}</p>
-        </form>
-      </div>
-    </div>
-  )
-}
+<section class="relative overflow-hidden bg-dark py-24 text-center on-dark">
+  <div class="stripe-band absolute bottom-10 left-0 w-1/3 opacity-80" aria-hidden="true"></div>
+  <div class="stripe-band stripe-band-r absolute right-0 top-10 w-1/3 opacity-80" aria-hidden="true"></div>
+  <div class="container-x relative max-w-2xl">
+    <span class="mx-auto mb-6 grid h-16 w-16 place-items-center rounded-[4px] bg-accent text-white"><Icon name="mail" size={28} /></span>
+    <h2 class="text-4xl font-extrabold">{ui.newsletterTitle}</h2>
+    <p class="mx-auto mt-4 max-w-xl text-white/70">{ui.newsletterText}</p>
+
+    <!-- action diisi dari DatoCMS (Mailchimp / Formspree / dsb). Kosong = form nonaktif. -->
+    <form method="post" action={action ?? undefined} class="mx-auto mt-8 max-w-md space-y-4">
+      <label class="sr-only" for="nl-email">Email</label>
+      <input id="nl-email" class="field" type="email" name="email" required placeholder={ui.newsletterPlaceholder} disabled={!action} />
+      <p class="text-xs leading-relaxed text-white/50">{ui.newsletterConsent}</p>
+      <button class="btn" type="submit" disabled={!action}>{ui.newsletterButton}</button>
+      <p class="text-xs text-white/40">{ui.newsletterPrivacy}</p>
+    </form>
+  </div>
+</section>

@@ -2,7 +2,6 @@
  * Semua pengambilan konten lewat sini. Halaman/komponen tidak tahu soal GraphQL.
  * Field kosong di DatoCMS otomatis jatuh ke nilai di fallback.ts.
  */
-import { marked } from 'marked';
 import { LOCALE, TIMEZONE } from '../config';
 import { dato } from './datocms';
 import * as fb from './fallback';
@@ -10,10 +9,6 @@ import type {
   AboutPage, Faq, GalleryPhoto, InfoTab, LariPage, RacepackItem,
   RacepackStep, SiteData, SiteSettings,
 } from './types';
-
-marked.setOptions({ gfm: true, breaks: false });
-export const md = (src: string | null | undefined): string => (src ? (marked.parse(src, { async: false }) as string) : '');
-export const mdInline = (src: string | null | undefined): string => (src ? (marked.parseInline(src, { async: false }) as string) : '');
 
 /** Buang null / string kosong supaya tidak menimpa fallback */
 function defined<T extends object>(obj: T | null | undefined): Partial<T> {
@@ -47,11 +42,14 @@ export const getSiteData = () =>
       allFooterLinks: SiteData['footerLinks'];
     }>(`{
       siteSetting {
-        eventName tagline categories eventDate location
-        heroHeadline heroSubheadline heroImage { ${IMG} } logo { ${IMG} }
+        eventName bannerTitle tagline categories eventDate location
+        heroEyebrow heroHeadline heroSubheadline heroImage { ${IMG} } logo { ${IMG} }
         primaryColor { hex } accentColor { hex }
-        registrationUrl registrationLabel newsletterAction contactUrl
-        instagramUrl tiktokUrl facebookUrl xUrl threadsUrl footerNote
+        registrationUrl registrationLabel
+        countdownTitle countdownText
+        instagramTitle instagramText instagramHandle instagramImage { ${IMG} } instagramUrl
+        galleryTitle galleryText
+        newsletterAction contactUrl tiktokUrl facebookUrl xUrl threadsUrl footerNote
       }
       allSponsors(orderBy: _position_ASC) { name url role logo { ${IMG} } }
       allFooterLinks(orderBy: _position_ASC) { group label url }
@@ -74,7 +72,7 @@ export const getSiteData = () =>
 export const getAbout = () =>
   once('about', async () => {
     const data = await dato<{ aboutPage: AboutPage | null; allFaqs: Faq[] }>(`{
-      aboutPage { title quote body }
+      aboutPage { sectionTitle eyebrow quote body faqEyebrow faqTitle faqText }
       allFaqs(orderBy: _position_ASC) { question answer }
     }`);
     return {
@@ -84,24 +82,28 @@ export const getAbout = () =>
   });
 
 /* ---------------------------------------------------------------- lari */
+type LariRaw = Omit<LariPage, 'proxyFileUrl'> & { proxyFile: { url: string } | null };
+
 export const getLari = () =>
   once('lari', async () => {
     const data = await dato<{
-      lariPage: (Omit<LariPage, 'proxyFileUrl'> & { proxyFile: { url: string } | null }) | null;
+      lariPage: LariRaw | null;
       allRacepackItems: RacepackItem[];
       allRacepackSteps: RacepackStep[];
       allInfoTabs: InfoTab[];
     }>(`{
       lariPage {
-        racepackTitle racepackIntro racepackVenue racepackSchedule stepsTitle
-        proxyNote proxyFile { url } proxyFileLabel
-        communityTitle communityText communityImage { ${IMG} } communityUrl infoTitle
+        racepackTitle racepackIntro racepackVenue racepackSchedule
+        stepsTitle stepsText proxyNote proxyFile { url } proxyFileLabel
+        communityTitle communityText communityImage { ${IMG} } communityUrl
+        infoTitle infoText
       }
-      allRacepackItems(orderBy: _position_ASC) { title description image { ${IMG} } }
+      allRacepackItems(orderBy: _position_ASC) { title description icon caption image { ${IMG} } }
       allRacepackSteps(orderBy: _position_ASC) { description image { ${IMG} } }
       allInfoTabs(orderBy: _position_ASC) { title content }
     }`);
-    const { proxyFile, ...rest } = data?.lariPage ?? ({} as NonNullable<typeof data>['lariPage'] & object);
+    const raw = data?.lariPage;
+    const { proxyFile, ...rest } = raw ?? ({} as Partial<LariRaw>);
     return {
       lari: { ...fb.lari, ...defined(rest), proxyFileUrl: proxyFile?.url ?? null } as LariPage,
       items: listOr(data?.allRacepackItems, fb.racepackItems),
@@ -111,13 +113,15 @@ export const getLari = () =>
   });
 
 /* -------------------------------------------------------------- galeri */
-export const getGallery = (limit?: number) =>
-  once<GalleryPhoto[]>(`gallery`, async () => {
+export const getGallery = async (limit?: number): Promise<GalleryPhoto[]> => {
+  const all = await once<GalleryPhoto[]>('gallery', async () => {
     const data = await dato<{ allGalleryPhotos: GalleryPhoto[] }>(`{
       allGalleryPhotos(orderBy: _position_ASC, first: 100) { caption image { ${IMG} } }
     }`);
     return listOr(data?.allGalleryPhotos, fb.gallery);
-  }).then((all) => (limit ? all.slice(0, limit) : all));
+  });
+  return limit ? all.slice(0, limit) : all;
+};
 
 /* -------------------------------------------------------------- format */
 export function formatDate(iso: string, opts: Intl.DateTimeFormatOptions = { dateStyle: 'full' }) {

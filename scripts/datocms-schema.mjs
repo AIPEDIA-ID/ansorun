@@ -40,26 +40,46 @@ const color = (label, key) =>
   f(label, key, 'color', { appearance: { editor: 'color_picker', parameters: { enable_alpha: false, preset_colors: [] }, addons: [] } });
 
 /* ---- model ---- */
+const iconSelect = (label, key) =>
+  f(label, key, 'string', {
+    validators: { enum: { values: ['shirt', 'medal', 'bib', 'bag', 'star'] } },
+    appearance: {
+      editor: 'string_select',
+      parameters: { options: ['shirt', 'medal', 'bib', 'bag', 'star'].map((v) => ({ label: v, value: v })) },
+      addons: [],
+    },
+  });
+
 const models = [
   {
     name: 'Site Settings', api_key: 'site_setting', singleton: true,
     fields: [
-      str('Nama event', 'event_name', true),
+      str('Nama event (untuk <title>, logo teks)', 'event_name', true),
+      plainText('Judul banner halaman dalam (**tebal**, baris baru boleh)', 'banner_title'),
       str('Tagline', 'tagline'),
       str('Kategori (mis. "HM • 10K • 5K")', 'categories'),
       f('Tanggal & jam event', 'event_date', 'date_time', { validators: req }),
       str('Lokasi', 'location', true),
-      str('Headline hero', 'hero_headline'),
-      plainText('Sub-headline hero', 'hero_subheadline'),
-      image('Gambar hero', 'hero_image'),
+      str('Hero: baris kecil di atas headline', 'hero_eyebrow'),
+      plainText('Hero: headline (**tebal**, baris baru boleh)', 'hero_headline'),
+      str('Hero: sub-headline', 'hero_subheadline'),
+      image('Hero: gambar latar', 'hero_image'),
       image('Logo (kosong = teks nama event)', 'logo'),
       color('Warna utama (override tema)', 'primary_color'),
       color('Warna aksen (override tema)', 'accent_color'),
       url('URL pendaftaran', 'registration_url'),
       str('Label tombol pendaftaran', 'registration_label'),
+      plainText('Countdown: judul (**tebal**)', 'countdown_title'),
+      str('Countdown: teks', 'countdown_text'),
+      plainText('Instagram: judul (**tebal**)', 'instagram_title'),
+      str('Instagram: teks', 'instagram_text'),
+      str('Instagram: handle', 'instagram_handle'),
+      image('Instagram: gambar latar', 'instagram_image'),
+      url('Instagram: URL', 'instagram_url'),
+      plainText('Galeri: judul (**tebal**)', 'gallery_title'),
+      str('Galeri: teks', 'gallery_text'),
       url('Endpoint form newsletter (action URL)', 'newsletter_action'),
       str('Link kontak (mailto: / URL)', 'contact_url'),
-      url('Instagram', 'instagram_url'),
       url('TikTok', 'tiktok_url'),
       url('Facebook', 'facebook_url'),
       url('X', 'x_url'),
@@ -87,9 +107,13 @@ const models = [
   {
     name: 'Halaman Tentang', api_key: 'about_page', singleton: true,
     fields: [
-      str('Judul', 'title', true),
+      plainText('Judul section (**tebal**, baris baru boleh)', 'section_title'),
+      str('Label di atas isi', 'eyebrow'),
       plainText('Kutipan', 'quote'),
       markdown('Isi', 'body', true),
+      str('FAQ: label kecil', 'faq_eyebrow'),
+      plainText('FAQ: judul (**tebal**)', 'faq_title'),
+      str('FAQ: teks', 'faq_text'),
     ],
   },
   {
@@ -99,24 +123,32 @@ const models = [
   {
     name: 'Halaman Lari', api_key: 'lari_page', singleton: true,
     fields: [
-      str('Judul race pack', 'racepack_title'),
+      plainText('Judul race pack (**tebal**)', 'racepack_title'),
       plainText('Intro race pack', 'racepack_intro'),
       str('Lokasi pengambilan', 'racepack_venue'),
       markdown('Jadwal pengambilan', 'racepack_schedule'),
       str('Judul langkah pengambilan', 'steps_title'),
+      str('Teks langkah pengambilan', 'steps_text'),
       markdown('Catatan diwakilkan', 'proxy_note'),
       f('File surat kuasa', 'proxy_file', 'file'),
       str('Label tombol surat kuasa', 'proxy_file_label'),
-      str('Judul komunitas', 'community_title'),
-      plainText('Teks komunitas', 'community_text'),
-      image('Gambar komunitas', 'community_image'),
-      url('Link komunitas', 'community_url'),
-      str('Judul informasi event', 'info_title'),
+      plainText('Komunitas: judul (**tebal**)', 'community_title'),
+      plainText('Komunitas: teks', 'community_text'),
+      image('Komunitas: gambar latar', 'community_image'),
+      url('Komunitas: link', 'community_url'),
+      plainText('Informasi event: judul (**tebal**)', 'info_title'),
+      plainText('Informasi event: teks', 'info_text'),
     ],
   },
   {
     name: 'Isi Race Pack', api_key: 'racepack_item', sortable: true,
-    fields: [str('Judul', 'title', true), plainText('Deskripsi', 'description'), image('Gambar', 'image')],
+    fields: [
+      str('Judul', 'title', true),
+      plainText('Deskripsi', 'description'),
+      iconSelect('Ikon', 'icon'),
+      str('Caption preview (mis. "Jersey by Brand")', 'caption'),
+      image('Gambar preview', 'image'),
+    ],
   },
   {
     name: 'Langkah Race Pack', api_key: 'racepack_step', sortable: true,

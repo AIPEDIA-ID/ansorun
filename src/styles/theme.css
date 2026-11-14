@@ -3,8 +3,10 @@
 /* =====================================================================
    THEME — satu-satunya tempat untuk mengubah tampilan situs.
 
-   Gaya: tema WordPress ~2018 (header sticky, hero full-width, section
-   berselang-seling, tombol solid datar, Montserrat + Open Sans).
+   Struktur halaman mengikuti digiland.co.id (header transparan di atas
+   hero, countdown, CTA Instagram, galeri, newsletter, footer gelap).
+   Skin-nya sengaja datar ala tema WordPress ~2018: warna solid, tanpa
+   gradient/glass, Montserrat + Open Sans.
 
    1. TOKENS : warna, font, ukuran. Ubah di sini untuk feedback klien.
                (Warna utama/aksen juga bisa di-override dari DatoCMS
@@ -18,28 +20,30 @@
   --t-font-heading: "Montserrat", "Helvetica Neue", Arial, sans-serif;
   --t-font-body: "Open Sans", "Helvetica Neue", Arial, sans-serif;
 
-  --t-primary: #1769aa;
-  --t-accent: #f26b21;
+  --t-primary: #1c4fa0;     /* banner, tombol sekunder, angka countdown */
+  --t-accent: #ff4d2e;      /* tombol utama, stripe, nomor */
+  --t-highlight: #b6e03d;   /* breadcrumb aktif, label kecil di bg gelap */
 
   --t-paper: #ffffff;
-  --t-alt: #f5f7f9;        /* latar section berselang-seling */
-  --t-ink: #333a40;
-  --t-ink-soft: #6c757d;
-  --t-line: #e3e7ea;
-  --t-dark: #1d2327;       /* footer, band gelap */
-  --t-dark-ink: #a7b0b7;
+  --t-alt: #f3f5f8;
+  --t-ink: #38414d;
+  --t-ink-soft: #6f7a87;
+  --t-line: #e1e5ea;
+  --t-dark: #0b1730;        /* section gelap */
+  --t-darker: #070f20;      /* footer */
+  --t-dark-ink: #9aa7ba;
 
-  --t-radius: 3px;
+  --t-radius: 4px;
   --t-container: 1140px;
   --t-header-h: 76px;
-  --t-shadow: 0 2px 12px rgb(0 0 0 / 0.08);
 }
 
-/* Turunan otomatis dari primary/accent */
+/* Turunan otomatis */
 :root {
-  --t-primary-dark: color-mix(in srgb, var(--t-primary) 78%, black);
-  --t-accent-dark: color-mix(in srgb, var(--t-accent) 85%, black);
+  --t-primary-dark: color-mix(in srgb, var(--t-primary) 80%, black);
+  --t-accent-dark: color-mix(in srgb, var(--t-accent) 82%, black);
   --t-tint: color-mix(in srgb, var(--t-primary) 8%, white);
+  --t-dark-card: color-mix(in srgb, var(--t-dark) 86%, white);
 }
 
 /* Expose token ke Tailwind: bg-primary, text-ink, font-heading, dst. */
@@ -50,6 +54,7 @@
   --color-primary-dark: var(--t-primary-dark);
   --color-accent: var(--t-accent);
   --color-accent-dark: var(--t-accent-dark);
+  --color-highlight: var(--t-highlight);
   --color-alt: var(--t-alt);
   --color-paper: var(--t-paper);
   --color-ink: var(--t-ink);
@@ -57,215 +62,199 @@
   --color-line: var(--t-line);
   --color-tint: var(--t-tint);
   --color-dark: var(--t-dark);
+  --color-darker: var(--t-darker);
+  --color-dark-card: var(--t-dark-card);
 }
 
 /* ---------- 2. SKIN ---------- */
 @layer base {
   html { font-size: 15px; scroll-behavior: smooth; scroll-padding-top: calc(var(--t-header-h) + 16px); }
-  body {
-    font-family: var(--t-font-body);
-    color: var(--t-ink);
-    background: var(--t-paper);
-    line-height: 1.75;
-  }
+  body { font-family: var(--t-font-body); color: var(--t-ink); background: var(--t-paper); line-height: 1.75; }
   a { color: var(--t-primary); transition: color .2s; }
   a:hover { color: var(--t-accent); }
-  h1, h2, h3, h4 {
-    font-family: var(--t-font-heading);
-    line-height: 1.25;
-    font-weight: 700;
-    color: var(--t-dark);
-  }
+  h1, h2, h3, h4 { font-family: var(--t-font-heading); line-height: 1.2; font-weight: 700; color: var(--t-dark); }
 }
 
 @layer components {
-  .container-x { max-width: var(--t-container); margin-inline: auto; padding-inline: 20px; }
-  .section { padding-block: 72px; }
-  .section-alt { background: var(--t-alt); }
+  .container-x { width: 100%; max-width: var(--t-container); margin-inline: auto; padding-inline: 20px; }
+  .section { padding-block: 88px; }
+  .on-dark { color: #fff; }
+  .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: #fff; }
+  .on-dark a:not(.btn) { color: #fff; }
+  .bg-dark-section { background: var(--t-dark); }
 
-  /* Top bar tipis */
-  .topbar { background: var(--t-primary-dark); color: rgb(255 255 255 / .85); font-size: 12px; }
-  .topbar a { color: #fff; }
-  .topbar a:hover { color: var(--t-accent); }
+  /* Teks dengan penekanan: **tebal** dari CMS */
+  .rich strong { font-weight: 800; }
+  .rich-accent strong { color: var(--t-accent); }
 
-  /* Header sticky */
+  /* Label kecil di atas judul */
+  .eyebrow { font: 700 12px var(--t-font-heading); letter-spacing: .22em; text-transform: uppercase; color: var(--t-primary); }
+  .on-dark .eyebrow { color: var(--t-highlight); }
+
+  /* Judul section tengah */
+  .section-heading { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  .section-heading h2 { font-size: clamp(28px, 4vw, 42px); margin-top: 10px; }
+  .section-heading p { margin-top: 14px; color: var(--t-ink-soft); }
+  .on-dark .section-heading p { color: var(--t-dark-ink); }
+
+  /* ---- Header: transparan di atas hero, solid saat scroll ---- */
   .header {
-    position: sticky; top: 0; z-index: 50;
-    background: #fff;
-    box-shadow: 0 1px 0 var(--t-line), 0 2px 10px rgb(0 0 0 / .05);
+    position: fixed; inset-inline: 0; top: 0; z-index: 50;
+    color: #fff;
+    transition: background-color .25s, box-shadow .25s, color .25s;
   }
-  .site-title {
-    font-family: var(--t-font-heading);
-    font-weight: 800;
-    font-size: 22px;
-    letter-spacing: -.3px;
-    text-transform: uppercase;
-    color: var(--t-dark);
-  }
-  .site-title:hover { color: var(--t-primary); }
-  .site-title b { color: var(--t-accent); }
-
+  .header.is-solid { background: #fff; color: var(--t-dark); box-shadow: 0 2px 14px rgb(0 0 0 / .12); }
+  .header .logo-img { filter: brightness(0) invert(1); transition: filter .25s; }
+  .header.is-solid .logo-img { filter: none; }
+  .site-title { font: 800 20px var(--t-font-heading); letter-spacing: -.2px; text-transform: uppercase; color: inherit; }
+  .site-title:hover { color: inherit; opacity: .85; }
   .nav a {
-    display: block;
-    padding: 0 16px;
-    line-height: var(--t-header-h);
-    font: 600 12.5px var(--t-font-heading);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--t-dark);
-    border-bottom: 3px solid transparent;
-    line-height: calc(var(--t-header-h) - 3px);
+    display: block; padding: 8px 16px;
+    font: 700 13px var(--t-font-heading); letter-spacing: .04em;
+    color: inherit; position: relative;
   }
-  .nav a:hover { color: var(--t-accent); }
-  .nav a[aria-current="page"] { color: var(--t-primary); border-bottom-color: var(--t-accent); }
+  .nav a::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 2px; height: 3px; background: var(--t-accent); transform: scaleX(0); transition: transform .2s; }
+  .nav a:hover { color: inherit; }
+  .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
 
-  /* Hero */
+  /* ---- Stripe diagonal (motif lintasan) ---- */
+  .stripe-band {
+    height: 38px; pointer-events: none;
+    background:
+      linear-gradient(90deg, var(--t-accent) 0 38%, transparent 38%),
+      repeating-linear-gradient(115deg, var(--t-accent) 0 6px, transparent 6px 14px);
+    -webkit-mask-image: linear-gradient(90deg, #000 0 60%, transparent);
+            mask-image: linear-gradient(90deg, #000 0 60%, transparent);
+  }
+  .stripe-band-r { transform: scaleX(-1); }
+  .stripe-stack { position: absolute; right: 0; top: 0; height: 52%; width: 46%; pointer-events: none; opacity: .9;
+    background:
+      repeating-linear-gradient(115deg, var(--t-highlight) 0 5px, transparent 5px 11px) 100% 22% / 80% 34px no-repeat,
+      repeating-linear-gradient(115deg, #fff 0 5px, transparent 5px 11px) 100% 52% / 62% 34px no-repeat,
+      repeating-linear-gradient(115deg, var(--t-highlight) 0 5px, transparent 5px 11px) 100% 82% / 90% 34px no-repeat;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 70%);
+            mask-image: linear-gradient(90deg, transparent, #000 70%);
+  }
+
+  /* ---- Hero ---- */
   .hero {
-    position: relative;
-    display: flex; align-items: center;
-    min-height: 600px;
-    color: #fff;
+    position: relative; overflow: hidden; color: #fff;
+    min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
+    padding-top: var(--t-header-h);
     background-color: var(--t-primary-dark);
-    background-size: cover; background-position: center;
+    background-size: cover; background-position: 70% center;
   }
-  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(rgb(10 20 30 / .55), rgb(10 20 30 / .7)); }
+  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(7 15 32 / .75), rgb(7 15 32 / .15) 70%); }
   .hero > * { position: relative; }
-  .hero h1 {
-    color: #fff;
-    font-size: clamp(34px, 6vw, 62px);
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: -.5px;
-  }
-  .hero-strip { background: rgb(0 0 0 / .45); border-top: 1px solid rgb(255 255 255 / .15); }
+  .hero h1 { color: #fff; font-weight: 300; font-size: clamp(40px, 7.4vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
+  .hero-eyebrow { font: 500 clamp(15px, 2vw, 22px) var(--t-font-heading); letter-spacing: .04em; text-transform: uppercase; }
 
-  /* Banner halaman dalam */
+  /* ---- Banner halaman dalam ---- */
   .page-banner {
-    background-color: var(--t-primary-dark);
+    position: relative; overflow: hidden; color: #fff;
+    padding: calc(var(--t-header-h) + 24px) 0 64px;
+    background-color: var(--t-primary);
     background-size: cover; background-position: center;
-    color: #fff;
-    padding-block: 44px;
-    border-bottom: 4px solid var(--t-accent);
   }
-  .page-banner h1 { color: #fff; font-size: 32px; text-transform: uppercase; letter-spacing: .02em; }
-  .breadcrumb { font-size: 13px; color: rgb(255 255 255 / .75); }
+  .page-banner h1 { color: #fff; font-weight: 300; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -.02em; }
+  .breadcrumb { font: 600 13px var(--t-font-heading); }
   .breadcrumb a { color: #fff; }
-  .breadcrumb a:hover { color: var(--t-accent); }
+  .breadcrumb a:hover { color: var(--t-highlight); }
+  .breadcrumb .current { color: var(--t-highlight); }
 
-  /* Judul section: tengah + garis aksen */
-  .section-heading { text-align: center; margin-bottom: 44px; }
-  .section-heading h2 { font-size: 30px; text-transform: uppercase; letter-spacing: .02em; }
-  .section-heading p { color: var(--t-ink-soft); margin-top: 8px; }
-  .section-heading::after {
-    content: ""; display: block; width: 56px; height: 3px;
-    background: var(--t-accent); margin: 16px auto 0;
-  }
-  /* Judul section rata kiri (halaman dalam) */
-  .section-title { font-size: 24px; margin: 48px 0 18px; padding-bottom: 12px; position: relative; }
-  .section-title::after { content: ""; position: absolute; left: 0; bottom: 0; width: 48px; height: 3px; background: var(--t-accent); }
-  .section-title:first-child { margin-top: 0; }
+  /* ---- Countdown ---- */
+  .count-num { font: italic 800 clamp(56px, 11vw, 132px)/1 var(--t-font-heading); color: var(--t-primary); font-variant-numeric: tabular-nums; }
+  .count-label { font: 600 13px var(--t-font-heading); letter-spacing: .3em; text-transform: uppercase; color: var(--t-ink-soft); margin-top: 8px; }
 
-  /* Tombol solid datar */
+  /* ---- Tombol solid datar ---- */
   .btn {
-    display: inline-block; cursor: pointer;
-    padding: 12px 28px;
-    font: 700 12.5px var(--t-font-heading);
-    letter-spacing: .08em; text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    padding: 13px 30px;
+    font: 700 13px var(--t-font-heading); letter-spacing: .06em; text-transform: uppercase;
     color: #fff; background: var(--t-accent);
-    border: 2px solid var(--t-accent);
-    border-radius: var(--t-radius);
+    border: 2px solid var(--t-accent); border-radius: 999px;
     transition: background .2s, border-color .2s, color .2s;
   }
   .btn:hover { color: #fff; background: var(--t-accent-dark); border-color: var(--t-accent-dark); }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn-blue { background: var(--t-primary); border-color: var(--t-primary); }
   .btn-blue:hover { background: var(--t-primary-dark); border-color: var(--t-primary-dark); }
-  .btn-plain { background: transparent; border-color: #fff; color: #fff; }
-  .btn-plain:hover { background: #fff; border-color: #fff; color: var(--t-dark); }
+  .btn-outline { background: transparent; border-color: #fff; color: #fff; }
+  .btn-outline:hover { background: #fff; border-color: #fff; color: var(--t-dark); }
 
-  /* Kartu / widget */
-  .widget { background: #fff; border: 1px solid var(--t-line); border-radius: var(--t-radius); margin-bottom: 28px; }
-  .widget-title {
-    font-size: 14px; text-transform: uppercase; letter-spacing: .08em;
-    padding: 16px 20px 0; position: relative; padding-bottom: 12px;
-  }
-  .widget-title::after { content: ""; position: absolute; left: 20px; bottom: 0; width: 36px; height: 3px; background: var(--t-accent); }
-  .widget-body { padding: 16px 20px 20px; }
-  .card { background: #fff; border-radius: var(--t-radius); box-shadow: var(--t-shadow); overflow: hidden; }
-  .card-top { border-top: 3px solid var(--t-accent); }
-  .widget ul.plain { list-style: none; margin: 0; padding: 0; }
-  .widget ul.plain li { padding: 8px 0; border-bottom: 1px solid var(--t-line); }
-  .widget ul.plain li:last-child { border-bottom: 0; }
+  /* ---- Kartu ---- */
+  .card { background: #fff; border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .card-dark { background: var(--t-dark-card); border: 1px solid rgb(255 255 255 / .1); border-radius: var(--t-radius); color: #fff; }
+  .thumb { display: block; overflow: hidden; border-radius: var(--t-radius); background: var(--t-alt); }
+  a.thumb img { transition: transform .35s; }
+  a.thumb:hover img { transform: scale(1.05); }
 
-  /* Konten teks (markdown dari CMS) */
+  /* ---- Konten teks (markdown dari CMS) ---- */
   .entry > * + * { margin-top: 1em; }
   .entry h2 { font-size: 22px; margin-top: 1.6em; }
   .entry h3 { font-size: 18px; margin-top: 1.4em; }
   .entry a { text-decoration: underline; }
   .entry ul { list-style: disc; padding-left: 22px; }
   .entry ol { list-style: decimal; padding-left: 22px; }
-  .entry blockquote {
-    font-size: 17px; font-style: italic; color: var(--t-ink);
-    border-left: 4px solid var(--t-accent);
-    background: var(--t-alt); padding: 16px 22px;
-  }
+  .entry blockquote { font-style: italic; border-left: 4px solid var(--t-accent); padding-left: 18px; }
   .entry img { max-width: 100%; border-radius: var(--t-radius); }
   .entry table { border-collapse: collapse; width: 100%; }
   .entry th, .entry td { border: 1px solid var(--t-line); padding: 8px 12px; text-align: left; }
-  .entry th { background: var(--t-alt); }
+  .on-dark .entry { color: rgb(255 255 255 / .85); }
 
-  /* Foto */
-  .thumb { display: block; overflow: hidden; border-radius: var(--t-radius); background: var(--t-alt); }
-  a.thumb img { transition: transform .35s; }
-  a.thumb:hover img { transform: scale(1.05); }
-
-  /* Tab datar */
-  .tabs-list { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--t-line); }
+  /* ---- Tab pill ---- */
+  .tabs-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
   .tab-btn {
-    padding: 12px 20px; margin-bottom: -2px;
-    font: 600 12.5px var(--t-font-heading); letter-spacing: .06em; text-transform: uppercase;
-    color: var(--t-ink-soft); background: none; border: 0; border-bottom: 2px solid transparent; cursor: pointer;
+    padding: 9px 20px; cursor: pointer;
+    font: 700 12.5px var(--t-font-heading); letter-spacing: .04em;
+    color: var(--t-ink); background: #fff; border: 1px solid var(--t-line); border-radius: 999px;
+    transition: background .2s, color .2s, border-color .2s;
   }
-  .tab-btn:hover { color: var(--t-accent); }
-  .tab-btn[aria-selected="true"] { color: var(--t-primary); border-bottom-color: var(--t-accent); }
-  .tab-panel { padding: 24px 0 0; }
+  .tab-btn:hover { border-color: var(--t-primary); color: var(--t-primary); }
+  .tab-btn[aria-selected="true"] { background: var(--t-primary); border-color: var(--t-primary); color: #fff; }
+  .tab-panel { margin-top: 28px; }
 
-  /* FAQ accordion */
+  /* ---- Pemilih item race pack ---- */
+  .rp-item {
+    display: flex; gap: 14px; width: 100%; text-align: left; cursor: pointer;
+    padding: 14px 16px; color: #fff;
+    background: rgb(255 255 255 / .04); border: 2px solid rgb(255 255 255 / .1); border-radius: var(--t-radius);
+    transition: border-color .2s, background .2s;
+  }
+  .rp-item:hover { border-color: rgb(255 255 255 / .35); }
+  .rp-item[aria-selected="true"] { border-color: var(--t-accent); background: rgb(255 77 46 / .12); }
+  .rp-icon { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: var(--t-radius); background: var(--t-accent); color: #fff; }
+
+  /* ---- FAQ accordion ---- */
   details.faq { background: #fff; border: 1px solid var(--t-line); border-radius: var(--t-radius); margin-bottom: 10px; }
   details.faq > summary {
     cursor: pointer; list-style: none; position: relative;
-    padding: 16px 52px 16px 20px;
-    font: 600 14px var(--t-font-heading); color: var(--t-dark);
+    padding: 18px 56px 18px 22px; font: 700 15px var(--t-font-heading); color: var(--t-dark);
   }
   details.faq > summary::-webkit-details-marker { display: none; }
-  details.faq > summary::after {
-    content: "+"; position: absolute; right: 20px; top: 50%; transform: translateY(-50%);
-    font-size: 22px; font-weight: 400; color: var(--t-accent);
-  }
+  details.faq > summary::after { content: "+"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: 400; color: var(--t-accent); }
   details.faq[open] > summary { color: var(--t-primary); }
   details.faq[open] > summary::after { content: "–"; }
-  details.faq > .entry { padding: 0 20px 18px; }
+  details.faq > .entry { padding: 0 22px 20px; }
 
-  /* Form */
+  /* ---- Form ---- */
   .field {
-    width: 100%; padding: 12px 14px;
-    font: 14px var(--t-font-body); color: var(--t-ink);
-    background: #fff; border: 1px solid #ced4da; border-radius: var(--t-radius);
+    width: 100%; padding: 14px 18px; font: 14px var(--t-font-body); color: var(--t-ink);
+    background: #fff; border: 2px solid transparent; border-radius: 999px;
   }
-  .field:focus { outline: 0; border-color: var(--t-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--t-primary) 20%, transparent); }
+  .field:focus { outline: 0; border-color: var(--t-accent); }
 
-  /* Footer */
-  .site-footer { background: var(--t-dark); color: var(--t-dark-ink); font-size: 14px; }
-  .site-footer h4 {
-    font-size: 14px; text-transform: uppercase; letter-spacing: .08em; color: #fff;
-    margin-bottom: 20px; padding-bottom: 12px; position: relative;
-  }
-  .site-footer h4::after { content: ""; position: absolute; left: 0; bottom: 0; width: 36px; height: 3px; background: var(--t-accent); }
+  /* ---- Footer ---- */
+  .site-footer { background: var(--t-darker); color: var(--t-dark-ink); font-size: 14px; }
+  .site-footer h4 { font-size: 14px; color: #fff; margin-bottom: 18px; }
   .site-footer a { color: var(--t-dark-ink); }
   .site-footer a:hover { color: #fff; }
-  .site-footer-bottom { background: rgb(0 0 0 / .25); font-size: 13px; }
+  .social-btn { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid rgb(255 255 255 / .18); border-radius: var(--t-radius); color: #fff; background: rgb(255 255 255 / .04); }
+  .site-footer a.social-btn { color: #fff; }
+  .social-btn:hover { background: var(--t-accent); border-color: var(--t-accent); }
+  .footer-rule { height: 4px; background: linear-gradient(90deg, var(--t-highlight), var(--t-accent) 50%, var(--t-primary)); }
 
-  /* Lightbox */
+  /* ---- Lightbox ---- */
   dialog.lightbox { max-width: min(92vw, 960px); padding: 10px; border: 0; border-radius: var(--t-radius); background: #fff; margin: auto; }
   dialog.lightbox::backdrop { background: rgb(0 0 0 / .8); }
 }

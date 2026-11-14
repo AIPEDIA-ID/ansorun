@@ -5,13 +5,18 @@ export interface Img {
   height?: number | null;
 }
 
+/** Teks yang mendukung **tebal** dan baris baru — lihat lib/text.ts */
+type RichText = string;
+
 export interface SiteSettings {
   eventName: string;
+  bannerTitle: RichText;
   tagline: string;
   categories: string;
   eventDate: string; // ISO
   location: string;
-  heroHeadline: string;
+  heroEyebrow: string;
+  heroHeadline: RichText;
   heroSubheadline: string;
   heroImage: Img | null;
   logo: Img | null;
@@ -19,9 +24,17 @@ export interface SiteSettings {
   accentColor: string | null;
   registrationUrl: string | null;
   registrationLabel: string;
+  countdownTitle: RichText;
+  countdownText: string;
+  instagramTitle: RichText;
+  instagramText: string;
+  instagramHandle: string;
+  instagramImage: Img | null;
+  instagramUrl: string | null;
+  galleryTitle: RichText;
+  galleryText: string;
   newsletterAction: string | null;
   contactUrl: string | null;
-  instagramUrl: string | null;
   tiktokUrl: string | null;
   facebookUrl: string | null;
   xUrl: string | null;
@@ -43,9 +56,13 @@ export interface FooterLink {
 }
 
 export interface AboutPage {
-  title: string;
+  sectionTitle: RichText;
+  eyebrow: string;
   quote: string;
   body: string; // markdown
+  faqEyebrow: string;
+  faqTitle: RichText;
+  faqText: string;
 }
 
 export interface Faq {
@@ -53,9 +70,13 @@ export interface Faq {
   answer: string; // markdown
 }
 
+export type IconName = 'shirt' | 'medal' | 'bib' | 'bag' | 'star';
+
 export interface RacepackItem {
   title: string;
   description: string;
+  icon: IconName | null;
+  caption: string | null; // label kecil di preview, mis. "Jersey by Brand"
   image: Img | null;
 }
 
@@ -70,24 +91,26 @@ export interface InfoTab {
 }
 
 export interface LariPage {
-  racepackTitle: string;
+  racepackTitle: RichText;
   racepackIntro: string;
   racepackVenue: string;
   racepackSchedule: string; // markdown
   stepsTitle: string;
+  stepsText: string;
   proxyNote: string; // markdown
   proxyFileUrl: string | null;
   proxyFileLabel: string;
-  communityTitle: string;
+  communityTitle: RichText;
   communityText: string;
   communityImage: Img | null;
   communityUrl: string | null;
-  infoTitle: string;
+  infoTitle: RichText;
+  infoText: string;
 }
 
 export interface GalleryPhoto {
   caption: string | null;
-  image: Img;
+  image: Img | null;
 }
 
 export interface SiteData {

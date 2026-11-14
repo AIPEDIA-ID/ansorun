@@ -4,35 +4,33 @@ import { ui } from '../config';
 import Photo from './Photo.astro';
 import type { GalleryPhoto } from '../lib/types';
 
-interface Props { photos: GalleryPhoto[]; cols?: string }
-const { photos, cols = 'grid-cols-2 sm:grid-cols-3' } = Astro.props;
+interface Props { photos: GalleryPhoto[]; dark?: boolean }
+const { photos, dark = false } = Astro.props;
 ---
 
-{
-  photos.length === 0 ? (
-    <p class="entry text-ink-soft">{ui.galleryEmpty}</p>
-  ) : (
-    <div data-gallery>
-      <ul class:list={['grid gap-3', cols]}>
-        {
-          photos.map((p) => (
-            <li>
-              <a class="thumb" href={optimize(p.image.url, 1600)} data-full={optimize(p.image.url, 1600)} data-caption={p.caption ?? ''}>
-                <Photo image={p.image} alt={p.caption ?? ''} width={500} ratio="4/3" />
-              </a>
-              {p.caption && <p class="mt-1 text-xs text-ink-soft">{p.caption}</p>}
-            </li>
-          ))
-        }
-      </ul>
-      <dialog class="lightbox" aria-label="Pratinjau foto">
-        <img alt="" class="max-h-[80vh] w-full object-contain" />
-        <p class="mt-1 text-center text-xs text-ink-soft" data-cap></p>
-        <form method="dialog" class="mt-2 text-center"><button class="btn btn-blue">Tutup</button></form>
-      </dialog>
-    </div>
-  )
-}
+<div data-gallery>
+  <ul class="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">
+    {
+      photos.map((p) => (
+        <li>
+          {p.image ? (
+            <a class="thumb" href={optimize(p.image.url, 1600)} data-full={optimize(p.image.url, 1600)} data-caption={p.caption ?? ''}>
+              <Photo image={p.image} alt={p.caption ?? ''} width={600} ratio="4/3" />
+            </a>
+          ) : (
+            <Photo image={null} ratio="4/3" label="Foto" dark={dark} class="rounded-[4px]" />
+          )}
+          {p.caption && <p class:list={['mt-2 text-xs', dark ? 'text-white/60' : 'text-ink-soft']}>{p.caption}</p>}
+        </li>
+      ))
+    }
+  </ul>
+  <dialog class="lightbox" aria-label="Pratinjau foto">
+    <img alt="" class="max-h-[80vh] w-full object-contain" />
+    <p class="mt-2 text-center text-xs text-ink-soft" data-cap></p>
+    <form method="dialog" class="mt-3 text-center"><button class="btn btn-blue">{ui.closeLightbox}</button></form>
+  </dialog>
+</div>
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((root) => {
