@@ -1,65 +1,97 @@
 ---
 import Base from '../layouts/Base.astro';
-import Photo from '../components/Photo.astro';
 import Countdown from '../components/Countdown.astro';
 import Sponsors from '../components/Sponsors.astro';
-import Sidebar from '../components/Sidebar.astro';
 import Gallery from '../components/Gallery.astro';
+import Newsletter from '../components/Newsletter.astro';
 import { getSiteData, getAbout, getGallery, formatDate, md } from '../lib/content';
+import { img } from '../lib/datocms';
 import { ui } from '../config';
 
 const { site } = await getSiteData();
 const { about } = await getAbout();
 const photos = await getGallery(6);
+
+const heroBg = site.heroImage ? `background-image:url(${img(site.heroImage.url, 1920)})` : '';
+const facts = [
+  ['Tanggal', formatDate(site.eventDate, { dateStyle: 'long' })],
+  ['Lokasi', site.location],
+  ['Kategori', site.categories],
+];
 ---
 
 <Base>
-  <!-- Featured box -->
-  <section class="p-3">
-    <div class="featured">
-      <div class="relative">
+  <!-- Hero -->
+  <section class="hero flex-col !items-stretch !justify-end" style={heroBg}>
+    <div class="container-x flex flex-1 flex-col items-center justify-center py-24 text-center">
+      <p class="mb-4 font-heading text-sm font-semibold uppercase tracking-[.25em] text-white/85">{site.tagline}</p>
+      <h1 class="max-w-4xl">{site.heroHeadline}</h1>
+      <p class="mx-auto mt-5 max-w-2xl text-lg text-white/90">{site.heroSubheadline}</p>
+      <p class="mt-8 flex flex-wrap justify-center gap-3">
+        {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
+        <a class="btn btn-plain" href="/lari">Info Race Pack</a>
+      </p>
+    </div>
+    <div class="hero-strip">
+      <div class="container-x grid divide-white/15 sm:grid-cols-3 sm:divide-x">
         {
-          site.heroImage ? (
-            <Photo image={site.heroImage} alt={site.eventName} width={1400} ratio="21/9" eager class="!w-full" />
-          ) : (
-            <div
-              class="w-full"
-              style="aspect-ratio:21/9;background:radial-gradient(circle at 75% 30%,var(--t-primary-light),var(--t-primary-dark) 70%)"
-              role="img"
-              aria-label={site.eventName}
-            />
-          )
+          facts.map(([k, v]) => (
+            <div class="px-4 py-4 text-center">
+              <div class="text-[11px] font-semibold uppercase tracking-[.2em] text-white/60">{k}</div>
+              <div class="font-heading font-semibold">{v}</div>
+            </div>
+          ))
         }
-        <div class="featured-caption absolute inset-x-0 bottom-0 px-5 py-3">
-          <h1 class="text-3xl font-bold">{site.heroHeadline}</h1>
-          <p class="mt-1 max-w-xl text-[12px] text-white/90">{site.heroSubheadline}</p>
-          <p class="mt-1 text-[11px] font-bold text-white/80">
-            {formatDate(site.eventDate, { dateStyle: 'full' })} &middot; {site.location} &middot; {site.categories}
-          </p>
-          <p class="mt-2 flex gap-2">
-            {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
-            <a class="btn btn-plain" href="/lari">Info Race Pack</a>
-          </p>
-        </div>
       </div>
     </div>
   </section>
 
   <Sponsors />
+  <Countdown target={site.eventDate} />
 
-  <div class="grid gap-6 p-5 md:grid-cols-[1fr_260px]">
-    <div>
-      <Countdown target={site.eventDate} />
-
-      <h2 class="section-title !mt-2">{about.title}</h2>
-      <div class="entry"><blockquote>{about.quote}</blockquote></div>
-      <div class="entry mt-3" set:html={md(about.body)} />
-      <p class="mt-2"><a href="/tentang">Selengkapnya &raquo;</a></p>
-
-      <h2 class="section-title">{ui.galleryTitle}</h2>
-      <Gallery photos={photos} cols="grid-cols-2 sm:grid-cols-3" />
-      {photos.length > 0 && <p class="mt-2"><a href="/galeri">Lihat semua foto &raquo;</a></p>}
+  <!-- Tentang -->
+  <section class="section">
+    <div class="container-x">
+      <div class="section-heading"><h2>{about.title}</h2></div>
+      <div class="mx-auto grid max-w-5xl items-start gap-10 md:grid-cols-[1.4fr_1fr]">
+        <div>
+          <div class="entry" set:html={md(about.body)} />
+          <p class="mt-6"><a class="btn btn-blue" href="/tentang">Selengkapnya</a></p>
+        </div>
+        <div class="card card-top p-7">
+          <p class="font-heading text-xl font-bold italic leading-snug text-dark">&ldquo;{about.quote}&rdquo;</p>
+        </div>
+      </div>
     </div>
-    <Sidebar />
-  </div>
+  </section>
+
+  <!-- Galeri -->
+  {
+    photos.length > 0 && (
+      <section class="section section-alt">
+        <div class="container-x">
+          <div class="section-heading"><h2>{ui.galleryTitle}</h2></div>
+          <Gallery photos={photos} cols="grid-cols-2 md:grid-cols-3" />
+          <p class="mt-10 text-center"><a class="btn btn-blue" href="/galeri">Lihat Semua Foto</a></p>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- CTA -->
+  {
+    site.registrationUrl && (
+      <section class="bg-accent py-14 text-center text-white">
+        <div class="container-x">
+          <h2 class="text-3xl uppercase !text-white">Siap untuk berlari?</h2>
+          <p class="mt-2 text-white/90">{site.categories} &middot; {formatDate(site.eventDate, { dateStyle: 'long' })}</p>
+          <p class="mt-6">
+            <a class="btn btn-plain" href={site.registrationUrl}>{site.registrationLabel}</a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+
+  <Newsletter action={site.newsletterAction} variant="band" />
 </Base>

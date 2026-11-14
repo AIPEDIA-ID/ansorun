@@ -1,6 +1,6 @@
 # Event Lari — Astro + DatoCMS + Tailwind
 
-Situs event lari statis. Tampilan sengaja bergaya "era WordPress 2010": kotak berpusat, nav bertab, widget bertitle-bar, tombol bergradasi.
+Situs event lari statis. Tampilan sengaja bergaya tema WordPress ~2018: header sticky, hero full-width, section berselang-seling, tombol solid datar, Montserrat + Open Sans.
 
 ## Menjalankan
 
@@ -28,7 +28,7 @@ Agar konten tampil setelah diedit: buat webhook Dato → build hook Netlify/Verc
 |---|---|
 | Warna, font, lebar, radius | `src/styles/theme.css` bagian TOKENS |
 | Warna utama/aksen tanpa deploy kode | DatoCMS → Site Settings → Warna utama / aksen |
-| Gradient, bevel, bentuk komponen | `src/styles/theme.css` bagian SKIN |
+| Bentuk komponen (tombol, kartu, header, hero) | `src/styles/theme.css` bagian SKIN |
 | Menu & teks UI statis | `src/config.ts` |
 | Teks, gambar, tanggal, FAQ, sponsor | DatoCMS |
 | Struktur halaman | `src/pages/*.astro` |

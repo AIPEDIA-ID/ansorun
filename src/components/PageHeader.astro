@@ -3,10 +3,14 @@ interface Props { title: string; crumb?: string; subtitle?: string }
 const { title, crumb = title, subtitle } = Astro.props;
 ---
 
-<nav class="breadcrumb px-5 py-1.5" aria-label="Breadcrumb">
-  <a href="/">Beranda</a> &raquo; <span>{crumb}</span>
-</nav>
-<header class="px-5 pt-5">
-  <h1 class="page-title">{title}</h1>
-  {subtitle && <p class="-mt-2 mb-3 text-ink-soft">{subtitle}</p>}
-</header>
+<section class="page-banner">
+  <div class="container-x flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <h1>{title}</h1>
+      {subtitle && <p class="mt-2 max-w-2xl text-white/80">{subtitle}</p>}
+    </div>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Beranda</a> &nbsp;/&nbsp; <span>{crumb}</span>
+    </nav>
+  </div>
+</section>

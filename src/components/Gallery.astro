@@ -20,15 +20,15 @@ const { photos, cols = 'grid-cols-2 sm:grid-cols-3' } = Astro.props;
               <a class="thumb" href={optimize(p.image.url, 1600)} data-full={optimize(p.image.url, 1600)} data-caption={p.caption ?? ''}>
                 <Photo image={p.image} alt={p.caption ?? ''} width={500} ratio="4/3" />
               </a>
-              {p.caption && <p class="mt-1 text-[11px] text-ink-soft">{p.caption}</p>}
+              {p.caption && <p class="mt-1 text-xs text-ink-soft">{p.caption}</p>}
             </li>
           ))
         }
       </ul>
       <dialog class="lightbox" aria-label="Pratinjau foto">
         <img alt="" class="max-h-[80vh] w-full object-contain" />
-        <p class="mt-1 text-center text-[11px] text-ink-soft" data-cap></p>
-        <form method="dialog" class="mt-2 text-center"><button class="btn btn-plain">Tutup</button></form>
+        <p class="mt-1 text-center text-xs text-ink-soft" data-cap></p>
+        <form method="dialog" class="mt-2 text-center"><button class="btn btn-blue">Tutup</button></form>
       </dialog>
     </div>
   )

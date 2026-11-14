@@ -30,8 +30,8 @@ const { image, alt = '', width = 800, ratio = '4/3', label = 'Foto', class: cls 
     <div
       role="img"
       aria-label={alt || label}
-      class:list={['flex w-full items-center justify-center text-[11px] font-bold uppercase tracking-wider text-ink-soft', cls]}
-      style={`aspect-ratio:${ratio};background:repeating-linear-gradient(45deg,var(--t-tint) 0 8px,#fff 8px 16px)`}
+      class:list={['flex w-full items-center justify-center bg-tint font-heading text-xs font-bold uppercase tracking-[.15em] text-ink-soft', cls]}
+      style={`aspect-ratio:${ratio}`}
     >
       {label}
     </div>
