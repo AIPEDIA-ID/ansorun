@@ -1,0 +1,28 @@
+---
+import { getSiteData } from '../lib/content';
+import { img } from '../lib/datocms';
+
+const { sponsors } = await getSiteData();
+
+// Kelompokkan per role, urutan mengikuti urutan di CMS
+const groups = new Map<string, typeof sponsors>();
+for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s]);
+---
+
+<div class="flex flex-wrap items-start justify-center gap-x-8 gap-y-3 border-y border-line bg-tint px-5 py-3">
+  {
+    [...groups].map(([role, list]) => (
+      <div class="text-center">
+        <div class="mb-1 text-[10px] uppercase tracking-wider text-ink-soft">{role}</div>
+        <div class="flex items-center justify-center gap-3">
+          {list.map((s) => {
+            const inner = s.logo
+              ? <img src={img(s.logo.url, 240)} alt={s.name} class="h-9 w-auto" loading="lazy" />
+              : <span class="font-heading text-sm font-bold text-primary-dark">{s.name}</span>;
+            return s.url ? <a href={s.url} rel="noopener" target="_blank">{inner}</a> : inner;
+          })}
+        </div>
+      </div>
+    ))
+  }
+</div>

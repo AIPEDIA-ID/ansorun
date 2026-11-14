@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import Countdown from '../components/Countdown.astro';
+import Sponsors from '../components/Sponsors.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Gallery from '../components/Gallery.astro';
+import { getSiteData, getAbout, getGallery, formatDate, md } from '../lib/content';
+import { ui } from '../config';
+
+const { site } = await getSiteData();
+const { about } = await getAbout();
+const photos = await getGallery(6);
+---
+
+<Base>
+  <!-- Featured box -->
+  <section class="p-3">
+    <div class="featured">
+      <div class="relative">
+        {
+          site.heroImage ? (
+            <Photo image={site.heroImage} alt={site.eventName} width={1400} ratio="21/9" eager class="!w-full" />
+          ) : (
+            <div
+              class="w-full"
+              style="aspect-ratio:21/9;background:radial-gradient(circle at 75% 30%,var(--t-primary-light),var(--t-primary-dark) 70%)"
+              role="img"
+              aria-label={site.eventName}
+            />
+          )
+        }
+        <div class="featured-caption absolute inset-x-0 bottom-0 px-5 py-3">
+          <h1 class="text-3xl font-bold">{site.heroHeadline}</h1>
+          <p class="mt-1 max-w-xl text-[12px] text-white/90">{site.heroSubheadline}</p>
+          <p class="mt-1 text-[11px] font-bold text-white/80">
+            {formatDate(site.eventDate, { dateStyle: 'full' })} &middot; {site.location} &middot; {site.categories}
+          </p>
+          <p class="mt-2 flex gap-2">
+            {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
+            <a class="btn btn-plain" href="/lari">Info Race Pack</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Sponsors />
+
+  <div class="grid gap-6 p-5 md:grid-cols-[1fr_260px]">
+    <div>
+      <Countdown target={site.eventDate} />
+
+      <h2 class="section-title !mt-2">{about.title}</h2>
+      <div class="entry"><blockquote>{about.quote}</blockquote></div>
+      <div class="entry mt-3" set:html={md(about.body)} />
+      <p class="mt-2"><a href="/tentang">Selengkapnya &raquo;</a></p>
+
+      <h2 class="section-title">{ui.galleryTitle}</h2>
+      <Gallery photos={photos} cols="grid-cols-2 sm:grid-cols-3" />
+      {photos.length > 0 && <p class="mt-2"><a href="/galeri">Lihat semua foto &raquo;</a></p>}
+    </div>
+    <Sidebar />
+  </div>
+</Base>

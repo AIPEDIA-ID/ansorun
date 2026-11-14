@@ -1,0 +1,94 @@
+---
+import '../styles/theme.css';
+import { getSiteData, formatDate } from '../lib/content';
+import { img } from '../lib/datocms';
+import { nav, ui } from '../config';
+import SocialLinks from '../components/SocialLinks.astro';
+
+interface Props { title?: string; description?: string }
+const { title, description } = Astro.props;
+
+const { site, footerLinks } = await getSiteData();
+const pageTitle = title ? `${title} — ${site.eventName}` : `${site.eventName} — ${site.tagline}`;
+const metaDesc = description ?? site.heroSubheadline;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+// Override warna dari DatoCMS (opsional) — mengalahkan token di theme.css
+const overrides = [
+  site.primaryColor && `--t-primary:${site.primaryColor}`,
+  site.accentColor && `--t-accent:${site.accentColor}`,
+].filter(Boolean).join(';');
+
+const groups = new Map<string, typeof footerLinks>();
+for (const l of footerLinks) groups.set(l.group, [...(groups.get(l.group) ?? []), l]);
+---
+
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={metaDesc} />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={metaDesc} />
+    {site.heroImage && <meta property="og:image" content={img(site.heroImage.url, 1200)} />}
+    {overrides && <style set:html={`:root{${overrides}}`} />}
+  </head>
+  <body id="top">
+    <div class="site-wrap">
+      <div class="topbar">
+        <div class="flex flex-wrap items-center justify-between gap-2 px-5 py-1">
+          <span>{formatDate(site.eventDate, { dateStyle: 'full' })} &middot; {site.location}</span>
+          <SocialLinks class="[&_a]:!text-[11px]" />
+        </div>
+      </div>
+
+      <div class="masthead">
+        <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+          <a href="/" class="site-title" aria-label={site.eventName}>
+            {site.logo ? <img src={img(site.logo.url, 400)} alt={site.eventName} class="h-12 w-auto" /> : site.eventName}
+          </a>
+          <div class="text-right">
+            <p class="font-heading italic text-ink-soft">{site.tagline}</p>
+            <p class="text-[11px] font-bold text-primary-dark">{site.categories}</p>
+          </div>
+        </div>
+        <nav class="nav" aria-label="Menu utama">
+          <ul class="flex flex-wrap">
+            {nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}
+          </ul>
+        </nav>
+      </div>
+
+      <main><slot /></main>
+
+      <footer class="site-footer">
+        <div class="grid gap-6 px-5 py-6 sm:grid-cols-2 md:grid-cols-4">
+          <div>
+            <h4>{site.eventName}</h4>
+            <p>{site.tagline}</p>
+            <p class="mt-1">{site.categories}</p>
+            <p class="mt-1">{site.location}</p>
+          </div>
+          {
+            [...groups].map(([group, links]) => (
+              <div>
+                <h4>{group}</h4>
+                <ul class="space-y-1">{links.map((l) => <li><a href={l.url}>{l.label}</a></li>)}</ul>
+              </div>
+            ))
+          }
+        </div>
+        <div class="site-footer-bottom">
+          <div class="flex flex-wrap items-center justify-between gap-2 px-5 py-2">
+            <span>{site.footerNote}</span>
+            <a href="#top" class="!text-[#7e8c99]">{ui.backToTop}</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

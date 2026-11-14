@@ -1,0 +1,19 @@
+---
+import { getSiteData } from '../lib/content';
+
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+const { site } = await getSiteData();
+
+const links = [
+  ['Instagram', site.instagramUrl],
+  ['TikTok', site.tiktokUrl],
+  ['Facebook', site.facebookUrl],
+  ['X', site.xUrl],
+  ['Threads', site.threadsUrl],
+].filter(([, url]) => url) as [string, string][];
+---
+
+<ul class:list={['flex flex-wrap gap-x-3 gap-y-1', cls]}>
+  {links.map(([label, url]) => <li><a href={url} rel="noopener" target={url.startsWith('http') ? '_blank' : undefined}>{label}</a></li>)}
+</ul>

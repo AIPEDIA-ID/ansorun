@@ -1,0 +1,39 @@
+---
+import { img as optimize } from '../lib/datocms';
+import type { Img } from '../lib/types';
+
+interface Props {
+  image: Img | null | undefined;
+  alt?: string;
+  width?: number; // lebar maksimum untuk resize imgix
+  ratio?: string; // css aspect-ratio, mis. "4/3"
+  label?: string; // teks placeholder
+  class?: string;
+  eager?: boolean;
+}
+const { image, alt = '', width = 800, ratio = '4/3', label = 'Foto', class: cls = '', eager = false } = Astro.props;
+---
+
+{
+  image ? (
+    <img
+      src={optimize(image.url, width)}
+      alt={alt || image.alt || ''}
+      width={image.width ?? undefined}
+      height={image.height ?? undefined}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      class:list={['block w-full object-cover', cls]}
+      style={`aspect-ratio:${ratio}`}
+    />
+  ) : (
+    <div
+      role="img"
+      aria-label={alt || label}
+      class:list={['flex w-full items-center justify-center text-[11px] font-bold uppercase tracking-wider text-ink-soft', cls]}
+      style={`aspect-ratio:${ratio};background:repeating-linear-gradient(45deg,var(--t-tint) 0 8px,#fff 8px 16px)`}
+    >
+      {label}
+    </div>
+  )
+}

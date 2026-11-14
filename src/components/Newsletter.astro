@@ -1,0 +1,20 @@
+---
+import { ui } from '../config';
+
+interface Props { action: string | null }
+const { action } = Astro.props;
+---
+
+<div class="widget">
+  <h2 class="widget-title">{ui.newsletterTitle}</h2>
+  <div class="widget-body">
+    <p class="mb-2 text-[12px]">{ui.newsletterText}</p>
+    <!-- action diisi dari DatoCMS (Mailchimp / Formspree / dsb). Kosong = form nonaktif. -->
+    <form method="post" action={action ?? undefined} class="space-y-2">
+      <label class="sr-only" for="nl-email">Email</label>
+      <input id="nl-email" class="field" type="email" name="email" required placeholder={ui.newsletterPlaceholder} disabled={!action} />
+      <button class="btn btn-blue" type="submit" disabled={!action}>{ui.newsletterButton}</button>
+      <p class="text-[10px] text-ink-soft">{ui.newsletterPrivacy}</p>
+    </form>
+  </div>
+</div>

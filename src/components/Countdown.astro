@@ -1,0 +1,57 @@
+---
+import { ui } from '../config';
+
+interface Props { target: string }
+const { target } = Astro.props;
+const units = [
+  ['days', ui.units.days],
+  ['hours', ui.units.hours],
+  ['minutes', ui.units.minutes],
+  ['seconds', ui.units.seconds],
+] as const;
+---
+
+<div class="widget" data-countdown={target}>
+  <h2 class="widget-title">{ui.countdownTitle}</h2>
+  <div class="widget-body">
+    <div class="grid grid-cols-4 gap-2 text-center" data-countdown-grid>
+      {
+        units.map(([key, label]) => (
+          <div class="border border-line bg-tint py-2" style="box-shadow:inset 0 1px 3px rgb(0 0 0 / .1)">
+            <div class="font-heading text-3xl font-bold text-primary-dark tabular-nums" data-unit={key}>--</div>
+            <div class="text-[10px] font-bold uppercase tracking-wider text-ink-soft">{label}</div>
+          </div>
+        ))
+      }
+    </div>
+    <p class="mt-2 hidden text-center font-bold text-accent-dark" data-countdown-done>{ui.countdownDone}</p>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-countdown]').forEach((root) => {
+    const target = new Date(root.dataset.countdown!).getTime();
+    const grid = root.querySelector<HTMLElement>('[data-countdown-grid]')!;
+    const done = root.querySelector<HTMLElement>('[data-countdown-done]')!;
+    const el = (u: string) => root.querySelector<HTMLElement>(`[data-unit="${u}"]`)!;
+
+    const tick = () => {
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        grid.classList.add('hidden');
+        done.classList.remove('hidden');
+        return false;
+      }
+      const s = Math.floor(diff / 1000);
+      const pad = (n: number) => String(n).padStart(2, '0');
+      el('days').textContent = pad(Math.floor(s / 86400));
+      el('hours').textContent = pad(Math.floor((s % 86400) / 3600));
+      el('minutes').textContent = pad(Math.floor((s % 3600) / 60));
+      el('seconds').textContent = pad(s % 60);
+      return true;
+    };
+    if (tick()) {
+      const id = setInterval(() => { if (!tick()) clearInterval(id); }, 1000);
+    }
+  });
+</script>
