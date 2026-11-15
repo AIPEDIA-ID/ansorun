@@ -14,13 +14,64 @@ const { action } = Astro.props;
     <h2 class="text-4xl font-extrabold">{ui.newsletterTitle}</h2>
     <p class="mx-auto mt-4 max-w-xl text-white/70">{ui.newsletterText}</p>
 
-    <!-- action diisi dari DatoCMS (Mailchimp / Formspree / dsb). Kosong = form nonaktif. -->
-    <form method="post" action={action ?? undefined} class="mx-auto mt-8 max-w-md space-y-4">
+    <!-- action diisi dari DatoCMS (endpoint yang menerima POST JSON, mis. Formspree/Getform/Basin).
+         Kosong = mode contoh: form tetap bisa dicoba, tapi tidak mengirim ke mana pun. -->
+    <form
+      method="post"
+      action={action ?? undefined}
+      class="mx-auto mt-8 max-w-md space-y-4"
+      data-newsletter
+      data-live={action ? 'true' : 'false'}
+      data-msg-sending={ui.newsletterSending}
+      data-msg-success={ui.newsletterSuccess}
+      data-msg-error={ui.newsletterError}
+      data-msg-demo={ui.newsletterDemo}
+    >
       <label class="sr-only" for="nl-email">Email</label>
-      <input id="nl-email" class="field" type="email" name="email" required placeholder={ui.newsletterPlaceholder} disabled={!action} />
+      <input id="nl-email" class="field" type="email" name="email" required autocomplete="email" inputmode="email" placeholder={ui.newsletterPlaceholder} />
+      <!-- honeypot anti-spam: disembunyikan dari pengguna, bot biasanya mengisinya -->
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden" />
       <p class="text-xs leading-relaxed text-white/50">{ui.newsletterConsent}</p>
-      <button class="btn" type="submit" disabled={!action}>{ui.newsletterButton}</button>
+      <button class="btn" type="submit">{ui.newsletterButton}</button>
+      <p class="min-h-[1.25rem] text-sm font-semibold" role="status" aria-live="polite" data-status></p>
       <p class="text-xs text-white/40">{ui.newsletterPrivacy}</p>
     </form>
   </div>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('[data-newsletter]').forEach((form) => {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const button = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    const say = (text: string, ok: boolean) => {
+      status.textContent = text;
+      status.className = 'min-h-[1.25rem] text-sm font-semibold ' + (ok ? 'text-highlight' : 'text-white');
+    };
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const d = form.dataset;
+      const data = new FormData(form);
+      if (data.get('_gotcha')) return; // bot
+
+      if (d.live !== 'true') { say(d.msgDemo!, false); return; }
+
+      button.disabled = true;
+      say(d.msgSending!, true);
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { Accept: 'application/json' },
+          body: data,
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        say(d.msgSuccess!, true);
+      } catch {
+        say(d.msgError!, false);
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+</script>

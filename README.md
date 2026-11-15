@@ -1,5 +1,7 @@
 # Event Lari — Astro + DatoCMS + Tailwind
 
+🇮🇩 Bahasa Indonesia · 🇬🇧 [English](README.en.md)
+
 Situs event lari statis. **Struktur halaman** mengikuti digiland.co.id (header transparan di atas hero, countdown, CTA Instagram, galeri, newsletter, footer gelap; halaman Tentang/FAQ, Lari/Race Pack, Galeri). **Skin**-nya sengaja beda: gaya tema WordPress ~2018, warna solid dan datar, Montserrat + Open Sans, tanpa gradient/glass.
 
 ## Menjalankan
@@ -52,6 +54,11 @@ npm run check   # gagal bila ada warna mentah di luar token, lalu build
 
 Foto contoh dari Unsplash (di `src/lib/fallback.ts`) muncul bila field gambar Dato kosong; ganti dengan foto asli sebelum rilis.
 
+## Isi contoh yang perlu diganti sebelum rilis
+
+- **Foto:** foto contoh Unsplash (di `src/lib/fallback.ts`) muncul bila field gambar di Dato kosong. Ganti dengan foto asli.
+- **Logo sponsor:** brand fiktif di `public/dummy/` (Velocita, Aquanova, Kopi Lari) hanyalah placeholder. Hapus folder itu dan buang `dummyLogo` dari `src/lib/fallback.ts` setelah sponsor asli terisi.
+
 ## Struktur
 
 ```
@@ -66,5 +73,5 @@ scripts/               datocms-schema.mjs
 
 ## Belum ada
 - Toggle bahasa ID/EN (semua teks Indonesia).
-- Captcha di form newsletter (form nonaktif sampai `newsletter_action` diisi).
+- Captcha di form newsletter (sekarang hanya honeypot). Tanpa `newsletter_action` form berjalan dalam mode contoh. Isi dengan endpoint yang menerima POST JSON (Formspree, Getform, Basin, dsb.); Mailchimp perlu endpoint perantara karena tidak mengizinkan fetch dari browser.
 - Carousel galeri (saat ini grid + lightbox).
