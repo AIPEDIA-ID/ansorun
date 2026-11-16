@@ -78,7 +78,8 @@ export const footerLinks: FooterLink[] = [
   { group: 'Event', label: 'Racepack', url: '/#racepack' },
   { group: 'Peserta', label: 'How to Join', url: '/#daftar' },
   { group: 'Peserta', label: 'Racepack Collection', url: '/racepack' },
-  { group: 'Peserta', label: 'FAQ & Contact', url: '/#faq' },
+  { group: 'Peserta', label: 'FAQ', url: '/#faq' },
+  { group: 'Peserta', label: 'Kontak', url: '/#kontak' },
 ];
 
 /* =====================================================================

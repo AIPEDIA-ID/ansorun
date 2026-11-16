@@ -28,31 +28,32 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <section class="hero-poster on-dark">
     {
       site.heroImage && (
-        <img
-          src={img(site.heroImage.url, 2400)}
-          alt={site.heroImage.alt ?? site.eventName}
-          width={site.heroImage.width ?? 2400}
-          height={site.heroImage.height ?? 1351}
-          fetchpriority="high"
-          decoding="async"
-        />
+        <div class="hero-poster-media">
+          <img
+            src={img(site.heroImage.url, 2400)}
+            alt={site.heroImage.alt ?? site.eventName}
+            width={site.heroImage.width ?? 2400}
+            height={site.heroImage.height ?? 1351}
+            fetchpriority="high"
+            decoding="async"
+          />
+          <div class="hero-fade-bottom" aria-hidden="true" />
+        </div>
       )
     }
-    <div class="container-x flex flex-wrap items-center justify-between gap-x-10 gap-y-5 py-8">
-      <div>
-        <h1 class="hero-eyebrow">{site.heroHeadline}</h1>
-        <p class="mt-1 font-heading text-sm font-bold">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
-      </div>
-      {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
+    <div class="container-x flex flex-col items-center text-center gap-4 py-8">
+      <h1 class="hero-eyebrow text-accent">{site.heroHeadline}</h1>
+      <p class="font-heading text-sm sm:text-base font-bold text-white/90">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
+      {site.registrationUrl && <div class="mt-2"><a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a></div>}
     </div>
     <Countdown target={site.eventDate} embedded />
     {
       groups.size > 0 && (
-        <div class="container-x flex flex-wrap items-end gap-x-10 gap-y-4 pb-8">
+        <div class="container-x flex flex-wrap items-center justify-center gap-x-12 gap-y-6 pb-8 text-center">
           {[...groups].map(([role, list]) => (
             <div>
               <div class="mb-1.5 text-[10px] font-semibold uppercase tracking-[.2em] text-white/60">{role}</div>
-              <div class="flex items-center gap-4">
+              <div class="flex items-center justify-center gap-4">
                 {list.map((s) => {
                   const inner = s.logo
                     ? <img src={img(s.logo.url, 240)} alt={s.name} class="h-8 w-auto" loading="lazy" />
@@ -68,24 +69,45 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     <div class="stripe-band" aria-hidden="true"></div>
   </section>
 
-  <!-- 02. ABOUT ANSORUN: tentang event dan misi sosial -->
-  <section class="section bg-alt" id="tentang">
-    <div class="container-x grid gap-12 md:grid-cols-[1fr_1.5fr]">
-      <div>
-        <h2 class="rich rich-accent font-display text-[clamp(34px,5vw,56px)] font-normal leading-[1.05] text-primary" set:html={rich(about.sectionTitle)} />
-        <div class="mt-6 h-[3px] w-16 bg-primary"></div>
+  <!-- 02. ABOUT ANSORUN: tentang event dan konsep sosial dari PDF -->
+  <section class="section section-about" id="tentang">
+    <div class="container-x">
+      <div class="section-heading !mb-10">
+        <p class="eyebrow">Tentang Acara & Misi Sosial</p>
+        <h2 class="rich rich-accent">DARI GARIS START <strong>MENJADI TAKJIL</strong> BUKA PUASA</h2>
+        <p class="mx-auto max-w-2xl text-sm sm:text-base leading-relaxed">
+          <strong>ANSORUN 2027</strong> menyambut bulan suci Ramadan 1448 H dengan semangat sehat, bergerak, dan toleransi lintas iman. Tiap kilometer yang ditempuh peserta menjadi kebaikan nyata yang disalurkan langsung.
+        </p>
       </div>
-      <div class="entry">
-        <div set:html={md(about.body)} />
-        {about.mission && <div set:html={md(about.mission)} />}
+
+      <!-- 3 Kartu Konsep Sosial dari Proposal PDF -->
+      <div class="grid gap-5 md:grid-cols-3">
+        <div class="concept-card">
+          <span class="concept-num">01</span>
+          <h3>Pendaftaran</h3>
+          <p>Kategori 5K (Rp150.000) dan 10K (Rp200.000). Sudah termasuk paket racepack resmi lengkap.</p>
+        </div>
+
+        <div class="concept-card">
+          <span class="concept-num">02</span>
+          <h3>Konversi Takjil</h3>
+          <p>Sebagian besar hasil pendaftaran dibelanjakan menjadi ribuan paket takjil buka puasa.</p>
+        </div>
+
+        <div class="concept-card">
+          <span class="concept-num">03</span>
+          <h3>Berbagi dari Pelari</h3>
+          <p>Disalurkan langsung oleh GP Ansor bersama komunitas lintas agama kepada panti asuhan yatim piatu, panti jompo, dan warga prasejahtera.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 03. EVENT HIGHLIGHTS: video promo -->
-  <section class="section bg-dark-section on-dark" id="video">
+  <section class="section" id="video">
     <div class="container-x">
       <div class="section-heading">
+        <p class="eyebrow">Highlight Event</p>
         <h2 class="rich rich-accent" set:html={rich(home.videoTitle)} />
       </div>
       <div class="mx-auto max-w-4xl">
@@ -98,6 +120,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <section class="section" id="race">
     <div class="container-x">
       <div class="section-heading">
+        <p class="eyebrow">Informasi Lomba</p>
         <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
       </div>
 
@@ -108,9 +131,9 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
           <div class="mt-4 grid gap-4 sm:grid-cols-2">
             {
               categories.map((c) => (
-                <div class="rounded-[4px] bg-alt p-5">
-                  <p class="font-display text-4xl text-primary">{c.name}</p>
-                  <div class="entry mt-2 text-sm" set:html={md(c.detail)} />
+                <div class="rounded-[4px] bg-alt/50 p-5 border border-line">
+                  <p class="font-display text-4xl text-accent">{c.name}</p>
+                  <div class="entry mt-2 text-sm text-dark-ink" set:html={md(c.detail)} />
                 </div>
               ))
             }
@@ -120,8 +143,8 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <!-- Lokasi -->
         <div class="card p-7" id="lokasi">
           <p class="eyebrow">Lokasi</p>
-          <h3 class="mt-4 text-xl">{raceInfo.locationName}</h3>
-          {raceInfo.locationAddress && <p class="mt-2 text-sm">{raceInfo.locationAddress}</p>}
+          <h3 class="mt-4 text-xl text-white">{raceInfo.locationName}</h3>
+          {raceInfo.locationAddress && <p class="mt-2 text-sm text-dark-ink">{raceInfo.locationAddress}</p>}
           {raceInfo.locationMapImage && <img src={img(raceInfo.locationMapImage.url, 900)} alt={raceInfo.locationMapImage.alt ?? 'Peta lokasi'} class="mt-4 w-full rounded-[4px]" loading="lazy" />}
           {raceInfo.locationMapUrl && <p class="mt-5"><a class="btn btn-blue" href={raceInfo.locationMapUrl} rel="noopener" target="_blank"><Icon name="pin" size={16} /> {ui.openMap}</a></p>}
         </div>
@@ -129,19 +152,20 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <!-- Jadwal -->
         <div class="card p-7 lg:col-span-2" id="jadwal">
           <p class="eyebrow">Jadwal</p>
-          <h3 class="mt-4 text-xl">{raceInfo.scheduleDate}</h3>
-          <div class="entry mt-3 text-sm overflow-x-auto" set:html={md(raceInfo.scheduleDetail)} />
+          <h3 class="mt-4 text-xl text-white">{raceInfo.scheduleDate}</h3>
+          <div class="entry mt-3 text-sm overflow-x-auto text-dark-ink" set:html={md(raceInfo.scheduleDetail)} />
         </div>
       </div>
     </div>
   </section>
 
   <!-- 04b. RUTE: section rute dengan tab interaktif & peta zoomable -->
-  <section class="section bg-alt" id="rute">
+  <section class="section" id="rute">
     <div class="container-x">
       <div class="section-heading">
+        <p class="eyebrow">Peta Lintasan</p>
         <h2 class="rich rich-accent" set:html={rich(home.routeTitle)} />
-        {raceInfo.routeDetail && <div class="entry mt-3" set:html={md(raceInfo.routeDetail)} />}
+        {raceInfo.routeDetail && <div class="entry mt-3 text-dark-ink" set:html={md(raceInfo.routeDetail)} />}
       </div>
       <RouteTabs items={categories} />
       {raceInfo.routeMapUrl && <p class="mt-8 text-center"><a class="btn btn-blue" href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
@@ -160,7 +184,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 05b. RACEPACK: perlengkapan peserta -->
-  <section class="section bg-dark-section on-dark" id="racepack">
+  <section class="section" id="racepack">
     <div class="container-x">
       <div class="section-heading">
         <p class="eyebrow">Perlengkapan Peserta</p>
@@ -171,9 +195,10 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 06. HOW TO JOIN: pendaftaran dan race pack collection -->
-  <section class="section bg-alt" id="daftar">
+  <section class="section" id="daftar">
     <div class="container-x">
       <div class="section-heading">
+        <p class="eyebrow">Alur Kepesertaan</p>
         <h2 class="rich rich-accent" set:html={rich(home.joinTitle)} />
       </div>
       <Steps steps={joinSteps} />
@@ -184,11 +209,13 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 07. FAQ & CONTACT: informasi tambahan dan kontak -->
+  <!-- 07. FAQ: pertanyaan yang sering diajukan -->
   <section class="section" id="faq">
     <div class="container-x max-w-3xl">
       <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(about.faqTitle)} />
+        <p class="eyebrow">Ada Pertanyaan?</p>
+        <h2 class="rich rich-accent">FREQUENTLY ASKED <strong>QUESTIONS</strong></h2>
+        <p class="mt-2 text-sm sm:text-base text-dark-ink">Pertanyaan umum seputar pendaftaran, kategori lomba, dan teknis race day.</p>
       </div>
       {
         faqs.map((f, i) => (
@@ -198,9 +225,19 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
           </details>
         ))
       }
-      <div class="mt-14" id="kontak">
-        <h3 class="mb-4 text-center text-lg">{ui.contactLabel}</h3>
-        <ContactList contact={contact} compact />
+    </div>
+  </section>
+
+  <!-- 08. CONTACT: informasi dan layanan narahubung -->
+  <section class="section section-about" id="kontak">
+    <div class="container-x">
+      <div class="section-heading">
+        <p class="eyebrow">Narahubung Resmi</p>
+        <h2 class="rich rich-accent">LAYANAN <strong>INFORMASI & KONTAK</strong></h2>
+        <p class="mt-2 text-sm sm:text-base text-dark-ink">Hubungi panitia resmi untuk informasi pendaftaran, rute, sponsorship, atau kemitraan.</p>
+      </div>
+      <div class="mx-auto max-w-4xl">
+        <ContactList contact={contact} />
       </div>
     </div>
   </section>
@@ -208,10 +245,10 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- Final Call to Action Sebelum Footer -->
   {
     site.registrationUrl && (
-      <section class="section bg-dark-section on-dark py-16 text-center" aria-label="Ajak Mendaftar">
+      <section class="section text-center" aria-label="Ajak Mendaftar">
         <div class="container-x max-w-2xl">
           <p class="eyebrow">Siap Melangkah & Berbagi?</p>
-          <h2 class="rich rich-accent mt-2 text-3xl sm:text-4xl">DAFTAR **SEKARANG**</h2>
+          <h2 class="rich rich-accent mt-2 text-3xl sm:text-4xl">DAFTAR <strong>SEKARANG</strong></h2>
           <p class="mt-3 text-sm sm:text-base text-dark-ink">
             Ajang lari 5K & 10K menyambut Ramadan 1448 H di GBK Senayan. Tiap kilometer hadirkan kebaikan nyata.
           </p>

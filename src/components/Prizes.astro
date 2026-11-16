@@ -13,27 +13,27 @@ const { prizes } = Astro.props;
       return (
         <div
           class:list={[
-            'card group relative flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl',
+            'card group relative flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl',
             isGrand
-              ? 'border-2 border-primary shadow-md ring-2 ring-primary/15'
-              : 'border border-line hover:border-primary/50',
+              ? 'border-2 border-accent/80 shadow-lg ring-1 ring-accent/30'
+              : 'border border-line hover:border-accent/40',
           ]}
         >
           {/* Badge di atas foto */}
           <div class="absolute left-3.5 top-3.5 z-10">
             {isGrand ? (
-              <span class="inline-block rounded-[4px] bg-accent px-3 py-1 font-heading text-[11px] font-extrabold uppercase tracking-widest text-on-accent shadow-sm">
+              <span class="inline-block rounded-[4px] bg-accent px-3 py-1 font-heading text-[11px] font-extrabold uppercase tracking-widest text-on-accent shadow-md">
                 Grand Prize
               </span>
             ) : (
-              <span class="inline-block rounded-[4px] bg-dark px-2.5 py-1 font-heading text-[11px] font-bold uppercase tracking-wider text-white shadow-sm">
+              <span class="inline-block rounded-[4px] bg-darker/90 px-2.5 py-1 font-heading text-[11px] font-bold uppercase tracking-wider text-white shadow-md border border-white/10">
                 {p.quantity} Unit
               </span>
             )}
           </div>
 
-          {/* Area Foto Hadiah */}
-          <div class="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden bg-alt/60 p-6">
+          {/* Area Foto Hadiah: Studio showcase box putih */}
+          <div class="relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden bg-white/95 p-6 rounded-t-[calc(var(--t-radius)-1px)]">
             <Photo
               image={p.image}
               alt={p.title}
@@ -48,18 +48,18 @@ const { prizes } = Astro.props;
           {/* Keterangan Hadiah */}
           <div class="flex flex-1 flex-col p-5 sm:p-6">
             <div class="flex items-baseline gap-2">
-              <span class="font-display text-4xl sm:text-5xl leading-none text-primary">
+              <span class="font-display text-4xl sm:text-5xl leading-none text-accent">
                 {p.quantity}
               </span>
-              <span class="font-heading text-xs font-bold uppercase tracking-widest text-ink-soft">
+              <span class="font-heading text-xs font-bold uppercase tracking-widest text-white/70">
                 Unit
               </span>
             </div>
-            <h3 class="mt-3 font-heading text-base font-bold leading-snug text-dark">
+            <h3 class="mt-3 font-heading text-base font-bold leading-snug text-white">
               {p.title}
             </h3>
             {p.description && (
-              <p class="mt-1 text-xs text-ink-soft leading-relaxed">
+              <p class="mt-1 text-xs text-dark-ink leading-relaxed">
                 {p.description}
               </p>
             )}

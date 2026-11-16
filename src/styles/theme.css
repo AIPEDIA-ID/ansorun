@@ -20,24 +20,35 @@
   /* Font: diatur di src/config.ts (fonts) — satu tempat untuk link, @font-face & peran font:
      --t-font-heading (Neospeed), --t-font-body (Open Sans), --t-font-tag (Osaca), --t-font-display (Golf). */
 
-  /* Palet ANSORUN 2027 (diambil dari KV, jersey, BIB, medali): teal + hijau + lime neon */
-  --t-primary: #027757;     /* hijau jersey: banner, tombol sekunder, angka countdown */
-  --t-accent: #dfff40;      /* lime titling: tombol utama, stripe, nomor */
-  --t-highlight: #bce930;   /* breadcrumb aktif, label kecil di bg gelap */
+  /* Palet ANSORUN 2027 (diambil langsung dari slide PDF proposal & KV): */
+  --t-primary: #027757;         /* hijau jersey */
+  --t-accent: #dfff40;          /* lime aksen titling & tombol utama */
+  --t-highlight: #bce930;       /* highlight teks & badge di bg gelap */
 
-  --t-paper: #ffffff;       /* latar halaman */
-  --t-surface: #ffffff;     /* kartu, input, header solid, lightbox */
-  --t-on-accent: #01373d;   /* teks di atas LIME harus gelap (tombol, nomor, ikon) */
-  --t-on-dark: #ffffff;     /* teks/garis di atas foto & section gelap */
-  --t-alt: #f0f6f4;
-  --t-ink: #1f3a3d;
-  --t-ink-soft: #587074;
-  --t-line: #dce6e4;
-  --t-dark: #01373d;        /* teal gelap: section gelap */
-  --t-darker: #012a2f;      /* footer */
-  --t-dark-ink: #9fc0bd;
+  /* Latar halaman & kartu: LEBIH TERANG (lighter) mengikuti slide PDF proposal */
+  --t-paper: #24505d;           /* latar section */
+  --t-surface: #193e4a;         /* kartu jernih dan tegas */
+  --t-on-accent: #01373d;       /* teks di atas LIME */
+  --t-on-dark: #ffffff;         /* teks putih tegas */
+  --t-alt: #1f4753;             /* sub-panel kartu */
+  --t-ink: #ffffff;             /* teks utama */
+  --t-ink-soft: #eaf6f8;        /* copy sekunder terang dan sangat jelas dibaca */
+  --t-line: #3e7482;            /* garis batas kartu tegas */
+  --t-dark: #204753;            /* teal */
+  --t-darker: #14333c;          /* footer */
+  --t-dark-ink: #eaf6f8;        /* copy teks isi jernih dan terbaca jelas */
 
-  --t-radius: 4px;
+  /* Gradien atmosferik dinamis LEBIH TERANG mengikuti slide PDF proposal */
+  --t-grad-top: #2e6473;        /* teal segar atas lebih terang */
+  --t-grad-mid: #265563;        /* teal atmosferik tengah */
+  --t-grad-glow: #397566;       /* pendaran moss/zaitun khas proposal */
+  --t-grad-dark: #1e4753;       /* dasar teal yang tetap terang */
+  --t-card-fill: #173843;       /* kartu kontras tegas di atas latar */
+  --t-card-line: #3e7482;       /* garis kartu tampak jelas */
+  --t-card-hl-fill: #224d43;    /* kartu highlight zaitun */
+  --t-card-hl-line: #4e8a75;    /* garis highlight */
+
+  --t-radius: 6px;
   --t-container: 1140px;
   --t-header-h: 76px;
 }
@@ -46,9 +57,14 @@
 :root {
   --t-primary-dark: color-mix(in srgb, var(--t-primary) 80%, black);
   --t-accent-dark: color-mix(in srgb, var(--t-accent) 82%, black);
-  --t-banner: color-mix(in srgb, var(--t-primary) 42%, var(--t-dark)); /* banner halaman dalam: lebih tenang dari primary */
-  --t-tint: color-mix(in srgb, var(--t-primary) 8%, white);
-  --t-dark-card: color-mix(in srgb, var(--t-dark) 86%, white);
+  --t-banner: color-mix(in srgb, var(--t-primary) 35%, var(--t-grad-mid));
+  --t-tint: color-mix(in srgb, var(--t-primary) 14%, transparent);
+  --t-dark-card: var(--t-card-fill);
+  --t-gradient:
+    radial-gradient(90% 65% at 50% 0%, color-mix(in srgb, var(--t-grad-top) 90%, transparent), transparent 100%),
+    radial-gradient(80% 55% at 85% 55%, color-mix(in srgb, var(--t-grad-glow) 75%, transparent), transparent 100%),
+    radial-gradient(70% 50% at 15% 35%, color-mix(in srgb, var(--t-grad-mid) 75%, transparent), transparent 100%),
+    linear-gradient(180deg, var(--t-grad-top) 0%, var(--t-grad-mid) 40%, var(--t-grad-dark) 100%);
 }
 
 /* Expose token ke Tailwind: bg-primary, text-ink, font-heading, dst. */
@@ -78,33 +94,51 @@
 /* ---------- 2. SKIN ---------- */
 @layer base {
   html { font-size: 15px; scroll-behavior: smooth; scroll-padding-top: calc(var(--t-header-h) + 16px); }
-  body { font-family: var(--t-font-body); color: var(--t-ink); background: var(--t-paper); line-height: 1.75; }
-  a { color: var(--t-primary); transition: color .2s; }
-  a:hover { color: var(--t-primary-dark); }
-  h1, h2, h3, h4 { font-family: var(--t-font-heading); line-height: 1.2; font-weight: 700; color: var(--t-dark); }
+  body {
+    font-family: var(--t-font-body);
+    color: var(--t-on-dark);
+    background-color: var(--t-grad-dark);
+    background-image: var(--t-gradient);
+    background-attachment: fixed;
+    line-height: 1.75;
+  }
+  a { color: var(--t-highlight); transition: color .2s; }
+  a:hover { color: var(--t-accent); }
+  h1, h2, h3, h4 { font-family: var(--t-font-heading); line-height: 1.2; font-weight: 700; color: var(--t-on-dark); }
 }
 
 @layer components {
   .container-x { width: 100%; max-width: var(--t-container); margin-inline: auto; padding-inline: 20px; }
-  .section { padding-block: 88px; }
+  .section { padding-block: 76px; }
+  @media (max-width: 768px) {
+    .section { padding-block: 52px; }
+  }
   .on-dark { color: var(--t-on-dark); }
   .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: var(--t-on-dark); }
   .on-dark a:not(.btn) { color: var(--t-on-dark); }
-  .bg-dark-section { background: var(--t-dark); }
+  .bg-dark-section { background: transparent; }
+
+  /* Rangkaian alur gelap atmosferik mengikuti PDF proposal */
+  .dark-flow {
+    background-color: var(--t-grad-dark);
+    background-image: var(--t-gradient);
+    background-attachment: fixed;
+  }
+  .dark-flow > section { background: transparent; }
 
   /* Teks dengan penekanan: **tebal** dari CMS */
   .rich strong { font-weight: 800; }
-  .rich-accent strong { color: var(--t-primary-dark); }          /* di latar terang: aksen neon tidak terbaca */
+  .rich-accent strong { color: var(--t-accent); }
   .on-dark .rich-accent strong { color: var(--t-accent); }
 
   /* Label kecil di atas judul */
-  .eyebrow { font: italic 500 13px var(--t-font-tag); letter-spacing: .18em; text-transform: uppercase; color: var(--t-primary); }
-  .on-dark .eyebrow { color: var(--t-highlight); }
+  .eyebrow { font: italic 500 13px var(--t-font-tag); letter-spacing: .18em; text-transform: uppercase; color: var(--t-accent); }
+  .on-dark .eyebrow { color: var(--t-accent); }
 
   /* Judul section tengah */
-  .section-heading { text-align: center; max-width: 720px; margin: 0 auto 48px; }
-  .section-heading h2 { font-size: clamp(28px, 4vw, 42px); margin-top: 10px; }
-  .section-heading p { margin-top: 14px; color: var(--t-ink-soft); }
+  .section-heading { text-align: center; max-width: 720px; margin: 0 auto 44px; }
+  .section-heading h2 { font-size: clamp(28px, 4vw, 42px); margin-top: 10px; color: var(--t-on-dark); }
+  .section-heading p { margin-top: 12px; color: var(--t-dark-ink); }
   .on-dark .section-heading p { color: var(--t-dark-ink); }
 
   /* ---- Header: transparan di atas hero, glassy frosted saat scroll ---- */
@@ -139,7 +173,7 @@
   .nav a:hover { color: inherit; }
   .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
   .header.is-solid .nav a::after, .header.is-open .nav a::after { background: var(--t-accent); }
-  .header-cta { padding: 9px 20px; font-size: 12px; border-bottom-width: 3px; }
+  .header-cta { padding: 9px 22px; font-size: 12px; }
 
   /* ---- Menu mobile (hamburger) ---- */
   .nav-toggle { display: grid; place-items: center; width: 44px; height: 44px; cursor: pointer; color: inherit; background: transparent; border: 1px solid color-mix(in srgb, currentColor 40%, transparent); border-radius: var(--t-radius); }
@@ -194,9 +228,14 @@
   .hero-eyebrow { font: italic 500 clamp(15px, 2vw, 22px) var(--t-font-tag); letter-spacing: .04em; }
 
   /* ---- Hero poster: KV utuh di bawah header, lalu band CTA ---- */
-  .hero-poster { position: relative; overflow: hidden; color: var(--t-on-dark); background: var(--t-dark); padding-top: var(--t-header-h); }
-  .hero-poster > img { display: block; width: 100%; height: auto; }
-  .hero-poster .stripe-band { margin-top: 0; }
+  .hero-poster { position: relative; overflow: hidden; color: var(--t-on-dark); background: transparent; padding-top: var(--t-header-h); }
+  .hero-poster-media { position: relative; width: 100%; overflow: hidden; }
+  .hero-poster-media img { display: block; width: 100%; height: auto; }
+  .hero-fade-bottom {
+    position: absolute; inset-inline: 0; bottom: 0; height: 35%; pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--t-grad-dark) 55%, transparent) 50%, var(--t-grad-dark) 100%);
+  }
+  .hero-poster .stripe-band { margin-top: 0; margin-bottom: 0; }
 
   /* ---- Banner halaman dalam ---- */
   .page-banner {
@@ -220,40 +259,42 @@
   .on-dark .count-label { color: var(--t-dark-ink); }
   .count-label { font: 600 13px var(--t-font-heading); letter-spacing: .3em; text-transform: uppercase; color: var(--t-ink-soft); margin-top: 8px; }
 
-  /* ---- Tombol Sporty Atletik Timbul (3D Tactile Edge) ---- */
+  /* ---- Tombol timbul (3D tactile edge) ---- */
   .btn {
     display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
-    padding: 13px 28px;
-    font: 800 13px/1 var(--t-font-heading); letter-spacing: .08em; text-transform: uppercase;
+    padding: 13px 30px;
+    font: 700 13px var(--t-font-heading); letter-spacing: .06em; text-transform: uppercase;
     color: var(--t-on-accent); background: var(--t-accent);
     border: 1px solid var(--t-accent-dark);
     border-bottom: 4px solid var(--t-accent-dark);
-    border-radius: var(--t-radius);
-    box-shadow: 0 4px 14px rgb(0 0 0 / .16);
-    transition: transform .1s ease, border-bottom-width .1s ease, box-shadow .1s ease, background-color .15s ease;
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgb(0 0 0 / .18);
+    transition: transform .1s ease, border-bottom-width .1s ease, box-shadow .1s ease, background-color .15s ease, border-color .15s ease;
   }
   .btn:hover {
     color: var(--t-on-accent);
-    background: var(--t-accent-dark);
+    background: var(--t-accent);
     border-color: var(--t-accent-dark);
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgb(0 0 0 / .25);
+    box-shadow: 0 6px 18px rgb(0 0 0 / .26);
   }
   .btn:active {
     transform: translateY(2px);
     border-bottom-width: 2px;
-    box-shadow: 0 1px 4px rgb(0 0 0 / .15);
+    box-shadow: 0 2px 4px rgb(0 0 0 / .16);
   }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-sm { padding: 9px 20px; font-size: 11.5px; border-bottom-width: 3px; }
+  .btn-sm:active { border-bottom-width: 2px; }
   .btn-blue {
     background: var(--t-primary);
-    border: 1px solid var(--t-primary-dark);
+    border-color: var(--t-primary-dark);
     border-bottom: 4px solid var(--t-primary-dark);
     color: var(--t-on-dark);
   }
   .btn-blue:hover {
-    background: color-mix(in srgb, var(--t-primary) 85%, black);
-    border-color: color-mix(in srgb, var(--t-primary) 75%, black);
+    background: var(--t-primary);
+    border-color: var(--t-primary-dark);
     color: var(--t-on-dark);
     transform: translateY(-2px);
   }
@@ -263,12 +304,12 @@
   }
   .btn-outline {
     background: color-mix(in srgb, var(--t-darker) 65%, transparent);
-    border: 1px solid color-mix(in srgb, var(--t-on-dark) 35%, transparent);
-    border-bottom: 4px solid color-mix(in srgb, var(--t-on-dark) 55%, transparent);
+    border-color: color-mix(in srgb, var(--t-on-dark) 40%, transparent);
+    border-bottom: 4px solid color-mix(in srgb, var(--t-on-dark) 65%, transparent);
     color: var(--t-on-dark);
   }
   .btn-outline:hover {
-    background: color-mix(in srgb, var(--t-darker) 40%, transparent);
+    background: color-mix(in srgb, var(--t-darker) 45%, transparent);
     border-color: var(--t-accent);
     border-bottom-color: var(--t-accent-dark);
     color: var(--t-accent);
@@ -279,21 +320,78 @@
     border-bottom-width: 2px;
   }
 
-  /* ---- Kartu ---- */
-  .card { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
-  .card-dark { background: var(--t-dark-card); border: 1px solid color-mix(in srgb, var(--t-on-dark) 10%, transparent); border-radius: var(--t-radius); color: var(--t-on-dark); }
-  .on-dark .card {
-    background: var(--t-dark-card);
-    border-color: color-mix(in srgb, var(--t-on-dark) 14%, transparent);
+  /* ---- Kartu Kaca Bergaris Tegas & Berkontras Jelas ---- */
+  .card {
+    background: color-mix(in srgb, var(--t-card-fill) 92%, transparent);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--t-card-line);
+    border-radius: var(--t-radius);
     color: var(--t-on-dark);
+    box-shadow: 0 8px 24px rgb(0 0 0 / .3);
+  }
+  .card h1, .card h2, .card h3, .card h4 { color: var(--t-on-dark); }
+
+  /* ---- Section About & Kartu Konsep Sosial dari Proposal PDF ---- */
+  .section-about {
+    background: color-mix(in srgb, var(--t-darker) 90%, transparent);
+    border-block: 1px solid color-mix(in srgb, var(--t-line) 45%, transparent);
+    position: relative;
+  }
+  .concept-card {
+    background: color-mix(in srgb, var(--t-surface) 95%, transparent);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--t-card-line);
+    border-radius: var(--t-radius);
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    color: var(--t-on-dark);
+    box-shadow: 0 8px 24px rgb(0 0 0 / .28);
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .concept-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--t-accent);
+    box-shadow: 0 12px 30px rgb(0 0 0 / .38);
+  }
+  .concept-card .concept-num {
+    font-family: var(--t-font-display);
+    font-size: clamp(38px, 4vw, 48px);
+    line-height: 1;
+    color: var(--t-accent);
+    margin-bottom: 12px;
+  }
+  .concept-card h3 {
+    font-family: var(--t-font-heading);
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--t-on-dark);
+    margin-bottom: 8px;
+  }
+  .concept-card p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--t-dark-ink);
+  }
+  .card-dark {
+    background: color-mix(in srgb, var(--t-card-fill) 92%, transparent);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid var(--t-card-line);
+    border-radius: var(--t-radius);
+    color: var(--t-on-dark);
+    box-shadow: 0 8px 24px rgb(0 0 0 / .3);
+  }
+  .card .bg-alt { background: color-mix(in srgb, var(--t-on-dark) 8%, transparent); }
+  .on-dark .card {
+    background: color-mix(in srgb, var(--t-card-fill) 92%, transparent);
+    border-color: var(--t-card-line);
+    color: var(--t-on-dark);
+    box-shadow: 0 8px 24px rgb(0 0 0 / .3);
   }
   .on-dark .card h3, .on-dark .card h4 { color: var(--t-on-dark); }
   .on-dark .card .bg-alt { background: color-mix(in srgb, var(--t-on-dark) 6%, transparent); }
-  .card-grand-prize {
-    background: color-mix(in srgb, var(--t-darker) 70%, var(--t-dark));
-    border: 2px solid color-mix(in srgb, var(--t-accent) 45%, transparent);
-    box-shadow: 0 8px 28px rgb(0 0 0 / .35);
-  }
   .thumb { display: block; overflow: hidden; border-radius: var(--t-radius); background: var(--t-alt); }
   a.thumb img { transition: transform .35s; }
   a.thumb:hover img { transform: scale(1.05); }
@@ -305,54 +403,101 @@
   .entry a { text-decoration: underline; }
   .entry ul { list-style: disc; padding-left: 22px; }
   .entry ol { list-style: decimal; padding-left: 22px; }
-  .entry blockquote { font-style: italic; border-left: 4px solid var(--t-primary); padding-left: 18px; }
+  .entry blockquote { font-style: italic; border-left: 4px solid var(--t-accent); padding-left: 18px; }
   .entry img { max-width: 100%; border-radius: var(--t-radius); }
   .entry table { border-collapse: collapse; width: 100%; min-width: 280px; }
-  .entry th, .entry td { border: 1px solid var(--t-line); padding: 8px 12px; text-align: left; }
-  .on-dark .entry { color: color-mix(in srgb, var(--t-on-dark) 85%, transparent); }
+  .entry th, .entry td { border: 1px solid var(--t-line); padding: 10px 14px; text-align: left; }
+  .entry th {
+    background: color-mix(in srgb, var(--t-on-dark) 8%, transparent);
+    font-family: var(--t-font-heading);
+    font-weight: 700;
+    color: var(--t-accent);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: .06em;
+  }
+  .on-dark .entry { color: var(--t-dark-ink); }
   .on-dark .entry th, .on-dark .entry td { border-color: color-mix(in srgb, var(--t-on-dark) 15%, transparent); }
 
   /* ---- Tab pill ---- */
   .tabs-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
   .tab-btn {
-    padding: 9px 20px; cursor: pointer;
-    font: 700 12.5px var(--t-font-heading); letter-spacing: .04em;
-    color: var(--t-ink); background: var(--t-surface); border: 1px solid var(--t-line); border-radius: 999px;
+    padding: 10px 22px; cursor: pointer;
+    font: 700 13px var(--t-font-heading); letter-spacing: .04em;
+    color: var(--t-on-dark);
+    background: color-mix(in srgb, var(--t-card-fill) 80%, transparent);
+    border: 1px solid var(--t-card-line);
+    border-radius: 999px;
     transition: background .2s, color .2s, border-color .2s;
   }
-  .tab-btn:hover { border-color: var(--t-primary); color: var(--t-primary); }
-  .tab-btn[aria-selected="true"] { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
+  .tab-btn:hover { border-color: var(--t-accent); color: var(--t-accent); }
+  .tab-btn[aria-selected="true"] { background: var(--t-accent); border-color: var(--t-accent); color: var(--t-on-accent); }
   .tab-panel { margin-top: 28px; }
 
   /* ---- Langkah bernomor (How to Join, Racepack) ---- */
-  .step-num { position: absolute; top: 14px; right: 20px; font: italic 400 56px/1 var(--t-font-display); color: color-mix(in srgb, var(--t-primary) 14%, transparent); }
+  .step-num { position: absolute; top: 14px; right: 20px; font: italic 400 56px/1 var(--t-font-display); color: color-mix(in srgb, var(--t-accent) 22%, transparent); }
   .on-dark .step-num { color: color-mix(in srgb, var(--t-accent) 22%, transparent); }
-  .step-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--t-radius); background: var(--t-primary); color: var(--t-on-dark); }
-  .on-dark .step-icon { background: var(--t-accent); color: var(--t-on-accent); }
+  .step-icon {
+    display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--t-radius);
+    background: color-mix(in srgb, var(--t-accent) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--t-accent) 35%, transparent);
+    color: var(--t-accent);
+  }
+  .on-dark .step-icon {
+    background: color-mix(in srgb, var(--t-accent) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--t-accent) 35%, transparent);
+    color: var(--t-accent);
+  }
 
   /* ---- Video embed ---- */
-  .video-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--t-radius); background: var(--t-darker); }
+  .video-frame {
+    position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+    border-radius: var(--t-radius); background: var(--t-darker);
+    border: 2px solid var(--t-card-line);
+    box-shadow: 0 8px 30px rgb(0 0 0 / .35);
+    transition: border-color .25s ease, box-shadow .25s ease;
+  }
+  .video-frame:hover {
+    border-color: color-mix(in srgb, var(--t-accent) 60%, transparent);
+    box-shadow: 0 12px 36px rgb(0 0 0 / .45);
+  }
   .video-play { position: absolute; inset: 0; display: grid; place-items: center; cursor: pointer; background: color-mix(in srgb, var(--t-darker) 35%, transparent); transition: background .2s; }
   .video-play:hover { background: color-mix(in srgb, var(--t-darker) 15%, transparent); }
   .video-play-btn { display: grid; place-items: center; width: 84px; height: 84px; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); transition: transform .2s; }
   .video-play:hover .video-play-btn { transform: scale(1.08); }
 
   /* ---- Peta rute: klik untuk zoom ---- */
-  .route-map { position: relative; display: block; width: 100%; overflow: hidden; padding: 0; cursor: zoom-in; background: var(--t-alt); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .route-map { position: relative; display: block; width: 100%; overflow: hidden; padding: 0; cursor: zoom-in; background: color-mix(in srgb, var(--t-card-fill) 85%, transparent); border: 1px solid var(--t-card-line); border-radius: var(--t-radius); }
   .route-map img { transition: transform .35s; }
   .route-map:hover img { transform: scale(1.02); }
   .route-map-hint { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font: 700 12px var(--t-font-heading); letter-spacing: .04em; color: var(--t-on-accent); background: var(--t-accent); border-radius: 999px; }
   dialog.lightbox-wide { max-width: min(96vw, 1500px); }
 
   /* ---- Kontak ---- */
-  .contact-card { display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .contact-card {
+    display: flex; align-items: center; gap: 14px; padding: 16px;
+    background: color-mix(in srgb, var(--t-card-fill) 85%, transparent);
+    border: 1px solid var(--t-card-line);
+    border-radius: var(--t-radius);
+    color: var(--t-on-dark);
+  }
   .contact-card .step-icon { flex: none; width: 40px; height: 40px; }
+  .contact-card p.font-heading { color: var(--t-on-dark); }
+  .contact-card a { color: var(--t-dark-ink); }
+  .contact-card a:hover { color: var(--t-accent); }
 
   /* ---- Kartu info (racepack) ---- */
-  .info-card { display: flex; gap: 16px; padding: 22px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .info-card {
+    display: flex; gap: 16px; padding: 22px;
+    background: color-mix(in srgb, var(--t-card-fill) 85%, transparent);
+    border: 1px solid var(--t-card-line);
+    border-radius: var(--t-radius);
+    color: var(--t-on-dark);
+  }
   .info-card .step-icon { flex: none; width: 44px; height: 44px; }
-  .info-card h3 { font-size: 15px; }
-  .tbd { color: var(--t-ink-soft); font-style: italic; }
+  .info-card h3 { font-size: 15px; color: var(--t-on-dark); }
+  .info-card p { color: var(--t-dark-ink); }
+  .tbd { color: var(--t-dark-ink); font-style: italic; }
 
   /* ---- Pemilih item race pack ---- */
   .rp-item {
@@ -366,16 +511,27 @@
   .rp-icon { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: var(--t-radius); background: var(--t-accent); color: var(--t-on-accent); }
 
   /* ---- FAQ accordion ---- */
-  details.faq { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); margin-bottom: 10px; }
+  details.faq {
+    background: color-mix(in srgb, var(--t-card-fill) 85%, transparent);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border: 1px solid var(--t-card-line);
+    border-radius: var(--t-radius);
+    margin-bottom: 12px;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  details.faq[open] {
+    border-color: color-mix(in srgb, var(--t-accent) 55%, transparent);
+    box-shadow: 0 4px 16px rgb(0 0 0 / .16);
+  }
   details.faq > summary {
     cursor: pointer; list-style: none; position: relative;
-    padding: 18px 56px 18px 22px; font: 700 15px var(--t-font-heading); color: var(--t-dark);
+    padding: 18px 56px 18px 22px; font: 700 15px/1.4 var(--t-font-heading); color: var(--t-on-dark);
   }
   details.faq > summary::-webkit-details-marker { display: none; }
-  details.faq > summary::after { content: "+"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: 400; color: var(--t-primary); }
-  details.faq[open] > summary { color: var(--t-primary); }
+  details.faq > summary::after { content: "+"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); font-size: 22px; font-weight: 400; color: var(--t-accent); }
+  details.faq[open] > summary { color: var(--t-accent); }
   details.faq[open] > summary::after { content: "–"; }
-  details.faq > .entry { padding: 0 22px 20px; }
+  details.faq > .entry { padding: 0 22px 20px; color: var(--t-dark-ink); font-size: 14px; line-height: 1.65; }
 
   /* ---- Form ---- */
   .field {

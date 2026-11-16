@@ -34,7 +34,7 @@ const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
           <div class="card grid min-h-[240px] place-items-center p-8 text-center tbd">{ui.tbd}</div>
         )}
         <div class="card p-6">
-          <h3 class="font-display text-4xl text-primary">{c.name}</h3>
+          <h3 class="font-display text-4xl text-accent">{c.name}</h3>
           <div class="entry mt-3 text-sm" set:html={md(c.routeDetail)} />
         </div>
       </div>
