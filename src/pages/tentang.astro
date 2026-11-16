@@ -16,7 +16,7 @@ const { about, faqs } = await getAbout();
   <section class="section">
     <div class="container-x grid gap-12 md:grid-cols-[1fr_1.5fr]">
       <div>
-        <h2 class="rich rich-accent text-[clamp(34px,5vw,52px)] font-extrabold leading-[1.05] text-primary" set:html={rich(about.sectionTitle)} />
+        <h2 class="rich rich-accent title-italic text-[clamp(34px,5vw,52px)] font-light leading-[1.05] text-primary" set:html={rich(about.sectionTitle)} />
         <div class="my-6 h-[3px] w-16 bg-accent"></div>
         <p class="font-light italic text-ink-soft">&ldquo;{about.quote}&rdquo;</p>
       </div>
@@ -37,7 +37,7 @@ const { about, faqs } = await getAbout();
       </div>
       {
         faqs.map((f, i) => (
-          <details class="faq" open={i === 0}>
+          <details class="faq" name="faq" open={i === 0}>
             <summary>{f.question}</summary>
             <div class="entry" set:html={md(f.answer)} />
           </details>
@@ -47,7 +47,7 @@ const { about, faqs } = await getAbout();
         site.contactUrl && (
           <p class="mt-12 text-center">
             <span class="mb-3 block text-ink-soft">{ui.faqContact}</span>
-            <a class="btn btn-blue" href={site.contactUrl}>{ui.contactButton}</a>
+            <a class="btn btn-primary" href={site.contactUrl}>{ui.contactButton}</a>
           </p>
         )
       }

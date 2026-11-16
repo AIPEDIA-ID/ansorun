@@ -8,7 +8,7 @@ description: Gaya web "tema WordPress ~2018" yang datar, solid, dan tidak terlih
 Rasa visual: tema premium WordPress/ThemeForest sekitar 2017-2019. Datar, solid, tegas, rapi. **Bukan** gaya 2000-an (tabel, bevel, gradient tombol) dan **bukan** gaya "AI default" (gradient ungu, glassmorphism, kartu melayang).
 
 ## Aturan keras (jangan dilanggar)
-- Warna solid. Tidak ada gradient dekoratif (satu-satunya gradient: overlay gelap di atas foto hero dan mask untuk stripe).
+- Warna solid. Tidak ada gradient dekoratif acak. Pengecualian: overlay gelap di atas foto hero, mask stripe, dan **gradient latar section/banner bila brand klien memakainya** (satu gradient, didefinisikan sebagai token `--t-grad-*` + `--t-gradient`, bukan ditulis ulang per section).
 - Tidak ada glassmorphism, `backdrop-blur`, glow, neon shadow, atau bayangan besar. Bayangan hanya tipis (header solid, lightbox).
 - Tidak ada emoji sebagai ikon. Ikon = SVG stroke tunggal, ukuran konsisten.
 - Tidak ada ungu/indigo sebagai warna default. Mulai dari biru, hijau, atau merah dari brand.
@@ -40,7 +40,7 @@ Semua nilai visual lewat token CSS di satu file (`src/styles/theme.css`, blok `T
 ## Kontras (sering salah)
 - Aksen terang (lime/neon) butuh teks gelap di atasnya; aksen gelap butuh teks putih -> atur `--t-on-accent` setiap ganti aksen.
 - Warna aksen terang tidak boleh dipakai sebagai warna teks di latar putih. Teks penekanan di latar terang = `--t-primary-dark`; di latar gelap = aksen.
-- Banner halaman dalam jangan sekontras warna primary penuh: pakai `--t-banner` (campuran primary + dark).
+- Banner halaman dalam jangan sekontras warna primary penuh: pakai latar gelap yang sama dengan section gelap (`--t-gradient`). Cek kontras teks kecil terhadap **kedua ujung** gradient.
 - Stripe/dekorasi tidak boleh menutupi navigasi.
 
 ## Konten & CMS

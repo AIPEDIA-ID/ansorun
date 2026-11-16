@@ -1,5 +1,5 @@
 /**
- * Pagar kualitas ringan: warna tidak boleh ditulis langsung di luar blok TOKENS
+ * Pagar kualitas ringan: (1) warna tidak boleh ditulis langsung di luar blok TOKENS
  * theme.css (supaya ganti tema cukup di satu tempat), lalu build harus lolos.
  *   npm run check
  */
@@ -28,6 +28,13 @@ for (const f of walk('src').filter((f) => /\.(astro|ts)$/.test(f))) {
   readFileSync(f, 'utf8').split('\n').forEach((line, i) => {
     if (COLOR.test(line)) problems.push(`${f}:${i + 1}  ${line.trim()}`);
   });
+}
+
+// 3. Setiap nama di icon-names.mjs harus punya path di Icon.astro.
+const { ICON_NAMES } = await import('../src/lib/icon-names.mjs');
+const iconSrc = readFileSync('src/components/Icon.astro', 'utf8');
+for (const name of ICON_NAMES) {
+  if (!new RegExp(`^\\s+${name}:`, 'm').test(iconSrc)) problems.push(`Icon.astro: ikon "${name}" belum punya path`);
 }
 
 if (problems.length) {

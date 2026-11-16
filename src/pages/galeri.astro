@@ -3,13 +3,13 @@ import Base from '../layouts/Base.astro';
 import PageBanner from '../components/PageBanner.astro';
 import Gallery from '../components/Gallery.astro';
 import { getSiteData, getGallery } from '../lib/content';
-import { rich } from '../lib/text';
+import { plain, rich } from '../lib/text';
 
 const { site } = await getSiteData();
 const photos = await getGallery();
 ---
 
-<Base title="Galeri" description={site.galleryText}>
+<Base title="Galeri" description={`Galeri foto ${plain(site.eventName)}. ${site.galleryText}`}>
   <PageBanner crumb="Galeri" />
   <section class="section">
     <div class="container-x">

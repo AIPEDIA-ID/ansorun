@@ -1,23 +1,40 @@
 ---
 import { getSiteData } from '../lib/content';
+import { img } from '../lib/datocms';
 import { rich } from '../lib/text';
+import type { Img } from '../lib/types';
 
-interface Props { crumb: string }
-const { crumb } = Astro.props;
+interface Props {
+  crumb: string;
+  /** Judul banner. Default: judul dari Site Settings */
+  title?: string;
+  /** Teks kecil di kanan. Default: tagline + kategori */
+  subtitle?: string;
+  /** Slogan di bawah judul (mis. "GET YOUR RACEPACK. GET READY TO RUN.") */
+  tagline?: string;
+  image?: Img | null;
+}
+const { crumb, title, subtitle, tagline, image = null } = Astro.props;
 const { site } = await getSiteData();
+const bg = image ? `background-image:url(${img(image.url, 1920)})` : '';
 ---
 
-<section class="page-banner">
+<section class:list={['page-banner', image && 'has-image']} style={bg}>
   <div class="stripe-stack" aria-hidden="true"></div>
-  <div class="container-x relative">
+  <div class="container-x">
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">Beranda</a> <span class="mx-2 opacity-60">&rsaquo;</span> <span class="current">{crumb}</span>
     </nav>
     <div class="mt-16 flex flex-wrap items-end justify-between gap-6">
-      <h1 class="rich" set:html={rich(site.bannerTitle)} />
-      <p class="text-right text-lg font-light leading-snug">
-        {site.tagline}<br />{site.categories}
-      </p>
+      <div>
+        <h1 class="rich" set:html={rich(title ?? site.bannerTitle)} />
+        {tagline && <p class="banner-tagline">{tagline}</p>}
+      </div>
+      {subtitle !== '' && (
+        <p class="max-w-sm text-right text-lg font-light leading-snug">
+          {subtitle ?? <>{site.tagline}<br />{site.categories}</>}
+        </p>
+      )}
     </div>
   </div>
 </section>

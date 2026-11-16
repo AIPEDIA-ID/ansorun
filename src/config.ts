@@ -5,26 +5,50 @@
 export const LOCALE = 'id-ID';
 export const TIMEZONE = 'Asia/Jakarta';
 
-export const nav = [
+import { isLive } from './lib/pages.mjs';
+
+// Semua halaman; yang masuk daftar HIDDEN_PATHS (src/lib/pages.mjs) otomatis tidak muncul di menu.
+const allPages = [
   { href: '/', label: 'Beranda' },
   { href: '/tentang', label: 'Tentang' },
-  { href: '/lari', label: 'Lari' },
+  { href: '/racepack', label: 'Racepack' },
   { href: '/galeri', label: 'Galeri' },
 ] as const;
+export const nav = allPages.filter((p) => isLive(p.href));
 
 export const ui = {
-  explore: 'Jelajahi',
+  explore: 'Jelajahi Event',
   units: { days: 'Hari', hours: 'Jam', minutes: 'Menit', seconds: 'Detik' },
   countdownDone: 'Event sedang berlangsung. Sampai jumpa di garis finis!',
-  followInstagram: 'Follow di Instagram',
-  galleryEyebrow: 'Galeri',
-  viewAllPhotos: 'Lihat Semua Foto',
-  galleryEmpty: 'Foto akan segera ditambahkan.',
+  // Label kecil di atas judul section (Beranda)
+  eyebrows: {
+    about: 'Tentang event dan misi sosial',
+    steps: 'Konsep sosial',
+    highlights: 'Video promo',
+    race: 'Kategori, jadwal, lokasi, rute',
+    prizes: 'Hadiah dan perlengkapan peserta',
+    join: 'Pendaftaran dan pengambilan race pack',
+    faq: 'Informasi tambahan dan kontak',
+  },
+  feeLabel: 'Biaya pendaftaran',
+  prizesHeading: 'Hadiah utama',
+  learnMore: 'Selengkapnya',
+  seeRacepack: 'Info Racepack Collection',
+  joinRegister: 'Pendaftaran',
+  joinCollect: 'Race pack collection',
+  videoSoon: 'Video promo segera hadir',
+  videoPlay: 'Putar video',
+  mapZoom: 'Ketuk peta untuk membuka ukuran penuh',
+  sponsorsTitle: 'Didukung oleh',
+  contactHeading: 'Kontak panitia',
+  racepackInfoHeading: 'Informasi pengambilan race pack',
+  website: 'Website resmi',
+  email: 'Email',
   closeLightbox: 'Tutup',
   newsletterTitle: 'Tetap Bergerak',
-  newsletterText: 'Dapatkan pembaruan eksklusif, tips latihan, dan info pendaftaran early bird langsung ke email Anda.',
+  newsletterText: 'Dapatkan pembaruan jadwal race pack, rundown, dan info penting ANSORUN langsung ke email Anda.',
   newsletterPlaceholder: 'Masukkan alamat email Anda',
-  newsletterConsent: 'Dengan mengirimkan alamat email Anda, Anda setuju untuk menerima buletin, informasi acara, dan pembaruan resmi dari penyelenggara.',
+  newsletterConsent: 'Dengan mengirimkan alamat email Anda, Anda setuju untuk menerima informasi acara dan pembaruan resmi dari penyelenggara.',
   newsletterButton: 'Berlangganan',
   newsletterSending: 'Mengirim…',
   newsletterSuccess: 'Terima kasih! Silakan cek email Anda untuk konfirmasi.',
@@ -33,7 +57,6 @@ export const ui = {
   newsletterPrivacy: 'Kami menghormati privasi Anda. Berhenti berlangganan kapan saja.',
   faqContact: 'Masih memiliki pertanyaan?',
   contactButton: 'Hubungi Kami',
-  stepsNoticeTitle: 'Penting',
   comingSoon: 'Segera Hadir',
   backToTop: 'Kembali ke atas',
 };

@@ -8,6 +8,7 @@
  * environment (DATOCMS_ENVIRONMENT=sandbox-1) sebelum ke primary.
  */
 import { buildClient } from '@datocms/cma-client-node';
+import { ICON_NAMES } from '../src/lib/icon-names.mjs';
 
 const apiToken = process.env.DATOCMS_CMA_TOKEN;
 if (!apiToken) {
@@ -42,13 +43,14 @@ const color = (label, key) =>
 /* ---- model ---- */
 const iconSelect = (label, key) =>
   f(label, key, 'string', {
-    validators: { enum: { values: ['shirt', 'medal', 'bib', 'bag', 'star'] } },
+    validators: { enum: { values: [...ICON_NAMES] } },
     appearance: {
       editor: 'string_select',
-      parameters: { options: ['shirt', 'medal', 'bib', 'bag', 'star'].map((v) => ({ label: v, value: v })) },
+      parameters: { options: ICON_NAMES.map((v) => ({ label: v, value: v })) },
       addons: [],
     },
   });
+const file = (label, key) => f(label, key, 'file');
 
 const models = [
   {
@@ -58,7 +60,7 @@ const models = [
       plainText('Judul banner halaman dalam (**tebal**, baris baru boleh)', 'banner_title'),
       str('Tagline', 'tagline'),
       plainText('SEO: deskripsi Beranda (±155 karakter)', 'meta_description'),
-      str('Kategori (mis. "HM • 10K • 5K")', 'categories'),
+      str('Kategori (mis. "5K • 10K")', 'categories'),
       f('Tanggal & jam event', 'event_date', 'date_time', { validators: req }),
       str('Lokasi', 'location', true),
       str('Hero: baris kecil di atas headline', 'hero_eyebrow'),
@@ -70,17 +72,12 @@ const models = [
       color('Warna aksen (override tema)', 'accent_color'),
       url('URL pendaftaran', 'registration_url'),
       str('Label tombol pendaftaran', 'registration_label'),
-      plainText('Countdown: judul (**tebal**)', 'countdown_title'),
-      str('Countdown: teks', 'countdown_text'),
-      plainText('Instagram: judul (**tebal**)', 'instagram_title'),
-      str('Instagram: teks', 'instagram_text'),
-      str('Instagram: handle', 'instagram_handle'),
-      image('Instagram: gambar latar', 'instagram_image'),
-      url('Instagram: URL', 'instagram_url'),
       plainText('Galeri: judul (**tebal**)', 'gallery_title'),
       str('Galeri: teks', 'gallery_text'),
       url('Endpoint form newsletter (action URL)', 'newsletter_action'),
-      str('Link kontak (mailto: / URL)', 'contact_url'),
+      url('Website resmi', 'website_url'),
+      str('Link email kontak (mailto: / URL)', 'contact_url'),
+      url('Instagram', 'instagram_url'),
       url('TikTok', 'tiktok_url'),
       url('Facebook', 'facebook_url'),
       url('X', 'x_url'),
@@ -89,22 +86,55 @@ const models = [
     ],
   },
   {
-    name: 'Sponsor', api_key: 'sponsor', sortable: true,
+    name: 'Halaman Beranda', api_key: 'home_page', singleton: true,
     fields: [
-      str('Nama', 'name', true),
-      str('Peran (mis. "Powered by", "Presented by")', 'role', true),
-      image('Logo', 'logo'),
-      url('URL', 'url'),
+      plainText('About: judul (**tebal**, baris baru boleh)', 'about_title'),
+      markdown('About: isi ringkas', 'about_body'),
+      str('Konsep sosial: judul', 'steps_title'),
+      str('Penerima manfaat: judul', 'beneficiaries_title'),
+      plainText('Highlights: judul (**tebal**)', 'highlights_title'),
+      str('Highlights: teks', 'highlights_text'),
+      url('Highlights: link video YouTube (kosong = placeholder)', 'video_url'),
+      image('Highlights: poster video (kosong = thumbnail YouTube)', 'video_poster'),
+      plainText('Race information: judul (**tebal**)', 'race_title'),
+      str('Race information: teks', 'race_text'),
+      str('Biaya pendaftaran (teks bebas)', 'fee_value'),
+      plainText('Catatan biaya', 'fee_note'),
+      str('Judul rundown', 'rundown_title'),
+      str('Judul rute', 'routes_title'),
+      plainText('Prizes & racepack: judul (**tebal**)', 'prizes_title'),
+      str('Prizes & racepack: teks', 'prizes_text'),
+      str('Judul race pack peserta', 'racepack_title'),
+      str('Teks race pack peserta', 'racepack_text'),
+      image('Gambar race pack (flat-lay)', 'racepack_image'),
+      plainText('How to join: judul (**tebal**)', 'join_title'),
+      str('How to join: teks', 'join_text'),
+      plainText('FAQ & kontak: judul (**tebal**)', 'faq_title'),
+      str('FAQ & kontak: teks', 'faq_text'),
+      str('Kontak: judul', 'contact_title'),
+      str('Kontak: teks', 'contact_text'),
     ],
   },
-  {
-    name: 'Footer Link', api_key: 'footer_link', sortable: true,
-    fields: [
-      str('Grup kolom (mis. "Event", "Peserta")', 'group', true),
-      str('Label', 'label', true),
-      str('URL (boleh relatif, mis. /tentang)', 'url', true),
-    ],
-  },
+  { name: 'Sponsor', api_key: 'sponsor', sortable: true,
+    fields: [str('Nama', 'name', true), str('Peran (mis. "Powered by")', 'role', true), image('Logo', 'logo'), url('URL', 'url')] },
+  { name: 'Footer Link', api_key: 'footer_link', sortable: true,
+    fields: [str('Grup kolom (mis. "Event")', 'group', true), str('Label', 'label', true), str('URL (boleh relatif, mis. /tentang)', 'url', true)] },
+  { name: 'Kontak Panitia', api_key: 'contact', sortable: true,
+    fields: [str('Nama', 'name', true), str('Nomor telepon', 'phone', true)] },
+  { name: 'Langkah Konsep Sosial', api_key: 'about_step', sortable: true,
+    fields: [str('Judul', 'title', true), plainText('Deskripsi', 'description'), iconSelect('Ikon', 'icon')] },
+  { name: 'Penerima Manfaat', api_key: 'beneficiary', sortable: true,
+    fields: [str('Judul', 'title', true), iconSelect('Ikon', 'icon')] },
+  { name: 'Info Race (kartu)', api_key: 'race_fact', sortable: true,
+    fields: [str('Nilai (mis. "31 Jan 2027")', 'value', true), str('Keterangan', 'note'), iconSelect('Ikon', 'icon')] },
+  { name: 'Rundown', api_key: 'rundown_item', sortable: true,
+    fields: [str('Jam (mis. "05.30")', 'time', true), str('Acara', 'label', true)] },
+  { name: 'Rute Lari', api_key: 'race_route', sortable: true,
+    fields: [str('Judul (mis. "Rute 5K")', 'title', true), markdown('Keterangan rute', 'description'), image('Gambar peta', 'image')] },
+  { name: 'Hadiah', api_key: 'prize', sortable: true,
+    fields: [str('Jumlah (mis. "5")', 'quantity', true), str('Nama hadiah', 'title', true), image('Foto hadiah (PNG transparan paling bagus)', 'image'), iconSelect('Ikon (cadangan bila tanpa foto)', 'icon')] },
+  { name: 'Langkah Cara Daftar', api_key: 'join_step', sortable: true,
+    fields: [str('Judul', 'title', true), plainText('Deskripsi', 'description'), iconSelect('Ikon', 'icon')] },
   {
     name: 'Halaman Tentang', api_key: 'about_page', singleton: true,
     fields: [
@@ -118,53 +148,34 @@ const models = [
       str('FAQ: teks', 'faq_text'),
     ],
   },
+  { name: 'FAQ', api_key: 'faq', sortable: true,
+    fields: [str('Pertanyaan', 'question', true), markdown('Jawaban', 'answer', true)] },
   {
-    name: 'FAQ', api_key: 'faq', sortable: true,
-    fields: [str('Pertanyaan', 'question', true), markdown('Jawaban', 'answer', true)],
-  },
-  {
-    name: 'Halaman Lari', api_key: 'lari_page', singleton: true,
+    name: 'Halaman Racepack', api_key: 'racepack_page', singleton: true,
     fields: [
       plainText('SEO: deskripsi halaman (±155 karakter)', 'meta_description'),
-      plainText('Judul race pack (**tebal**)', 'racepack_title'),
-      plainText('Intro race pack', 'racepack_intro'),
-      str('Lokasi pengambilan', 'racepack_venue'),
-      markdown('Jadwal pengambilan', 'racepack_schedule'),
-      str('Judul langkah pengambilan', 'steps_title'),
-      str('Teks langkah pengambilan', 'steps_text'),
-      markdown('Catatan diwakilkan', 'proxy_note'),
-      f('File surat kuasa', 'proxy_file', 'file'),
+      image('Banner: gambar latar', 'banner_image'),
+      plainText('Judul (**tebal**, baris baru boleh)', 'title'),
+      str('Slogan', 'slogan'),
+      plainText('Intro', 'intro'),
+      plainText('Judul tiga langkah (**tebal**)', 'steps_title'),
+      plainText('Judul isi race pack (**tebal**)', 'items_title'),
+      str('Teks isi race pack', 'items_text'),
+      file('File surat kuasa', 'proxy_file'),
       str('Label tombol surat kuasa', 'proxy_file_label'),
-      plainText('Komunitas: judul (**tebal**)', 'community_title'),
-      plainText('Komunitas: teks', 'community_text'),
-      image('Komunitas: gambar latar', 'community_image'),
-      url('Komunitas: link', 'community_url'),
-      plainText('Informasi event: judul (**tebal**)', 'info_title'),
-      plainText('Informasi event: teks', 'info_text'),
     ],
   },
-  {
-    name: 'Isi Race Pack', api_key: 'racepack_item', sortable: true,
+  { name: 'Info Pengambilan Racepack', api_key: 'racepack_detail', sortable: true,
+    fields: [str('Judul (mis. "Jam operasional")', 'title', true), markdown('Isi', 'content', true), iconSelect('Ikon', 'icon')] },
+  { name: 'Langkah Pengambilan Racepack', api_key: 'racepack_step', sortable: true,
+    fields: [str('Judul', 'title', true), plainText('Deskripsi', 'description'), iconSelect('Ikon', 'icon')] },
+  { name: 'Isi Race Pack', api_key: 'racepack_item', sortable: true,
     fields: [
-      str('Judul', 'title', true),
-      plainText('Deskripsi', 'description'),
-      iconSelect('Ikon', 'icon'),
-      str('Caption preview (mis. "Jersey by Brand")', 'caption'),
-      image('Gambar preview', 'image'),
-    ],
-  },
-  {
-    name: 'Langkah Race Pack', api_key: 'racepack_step', sortable: true,
-    fields: [plainText('Deskripsi', 'description', true), image('Gambar', 'image')],
-  },
-  {
-    name: 'Tab Informasi Event', api_key: 'info_tab', sortable: true,
-    fields: [str('Judul tab', 'title', true), markdown('Isi', 'content', true)],
-  },
-  {
-    name: 'Foto Galeri', api_key: 'gallery_photo', sortable: true,
-    fields: [image('Foto', 'image', true), str('Caption', 'caption')],
-  },
+      str('Judul', 'title', true), plainText('Deskripsi', 'description'), iconSelect('Ikon', 'icon'),
+      str('Caption preview', 'caption'), image('Gambar preview (kosong = gambar race pack Beranda)', 'image'),
+    ] },
+  { name: 'Foto Galeri', api_key: 'gallery_photo', sortable: true,
+    fields: [image('Foto', 'image', true), str('Caption', 'caption')] },
 ];
 
 const existing = new Set((await client.itemTypes.list()).map((m) => m.api_key));

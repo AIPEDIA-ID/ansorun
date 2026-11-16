@@ -3,10 +3,10 @@
 /* =====================================================================
    THEME — satu-satunya tempat untuk mengubah tampilan situs.
 
-   Struktur halaman mengikuti digiland.co.id (header transparan di atas
-   hero, countdown, CTA Instagram, galeri, newsletter, footer gelap).
-   Skin-nya sengaja datar ala tema WordPress ~2018: warna solid, tanpa
-   gradient/glass, Montserrat + Open Sans.
+   Skin datar ala tema WordPress ~2018: warna solid, tanpa glass,
+   Montserrat + Open Sans. Palet saat ini: teal gelap + lime (ANSORUN).
+   Gradient hanya dipakai untuk latar section gelap & banner, lewat token
+   --t-grad-* (mengikuti latar slide di proposal klien).
 
    1. TOKENS : warna, font, ukuran. Ubah di sini untuk feedback klien.
                (Warna utama/aksen juga bisa di-override dari DatoCMS
@@ -19,23 +19,32 @@
 :root {
   /* Font: diatur di src/config.ts (fonts) — satu tempat untuk link & nama font. */
 
-  --t-primary: #2563d6;     /* banner, tombol sekunder, angka countdown */
-  --t-accent: #ef3340;      /* tombol utama, stripe, nomor */
-  --t-highlight: #ff6670;   /* breadcrumb aktif, label kecil di bg gelap */
+  --t-primary: #0b6477;     /* teal: link, tab aktif, judul di latar terang */
+  --t-accent: #d4f53c;      /* lime: tombol utama, stripe, ikon, angka */
+  --t-highlight: #d4f53c;   /* breadcrumb aktif, label kecil di bg gelap */
 
   --t-paper: #ffffff;       /* latar halaman */
   --t-surface: #ffffff;     /* kartu, input, header solid, lightbox */
-  --t-on-accent: #ffffff;   /* teks di atas warna aksen (tombol, nomor, ikon) */
+  --t-on-accent: #0b2a35;   /* teks di atas warna aksen (tombol, nomor, ikon) */
   --t-on-dark: #ffffff;     /* teks/garis di atas foto & section gelap */
-  --t-alt: #f3f5f8;
-  --t-ink: #38414d;
-  --t-ink-soft: #6f7a87;
-  --t-line: #e1e5ea;
-  --t-dark: #071a4a;        /* section gelap */
-  --t-darker: #040f30;      /* footer */
-  --t-dark-ink: #9aa7ba;
+  --t-alt: #eef4f4;
+  --t-ink: #2a3b41;
+  --t-ink-soft: #5d7279;
+  --t-line: #d9e4e5;
+  --t-dark: #17404a;        /* section gelap */
+  --t-darker: #0b2a35;      /* footer, kartu di atas section gelap */
+  --t-dark-ink: #d3e2e4;
 
-  --t-radius: 4px;
+  /* Latar section gelap (gradient ala proposal): teal terang di atas -> teal gelap -> zaitun di bawah */
+  --t-grad-top: #1e4550;    /* teal (diukur dari latar slide proposal) */
+  --t-grad-mid: #2b5057;
+  --t-grad-glow: #576344;   /* cahaya zaitun di bawah, seperti latar slide */
+  --t-card-fill: #15363d;       /* kartu gelap (diukur dari slide: #15363f) */
+  --t-card-line: #4f676e;       /* garis tipis abu-teal (slide: #50686f) */
+  --t-card-hl-fill: #4d6954;    /* kartu penerima manfaat: hijau zaitun (slide: #4d6954) */
+  --t-card-hl-line: #90af48;    /* garis lime-zaitun (slide: #90af48) */
+
+  --t-radius: 6px;          /* kartu, gambar, tab, kolom isian (tombol tetap pill) */
   --t-container: 1140px;
   --t-header-h: 76px;
 }
@@ -44,14 +53,18 @@
 :root {
   --t-primary-dark: color-mix(in srgb, var(--t-primary) 80%, black);
   --t-accent-dark: color-mix(in srgb, var(--t-accent) 82%, black);
-  --t-banner: color-mix(in srgb, var(--t-primary) 42%, var(--t-dark)); /* banner halaman dalam: lebih tenang dari primary */
+  --t-gradient:
+    radial-gradient(60% 26% at 50% 70%, color-mix(in srgb, var(--t-grad-glow) 75%, transparent), transparent 100%),
+    linear-gradient(180deg, var(--t-grad-top) 0%, var(--t-grad-mid) 46%, color-mix(in srgb, var(--t-grad-mid) 55%, var(--t-grad-glow)) 80%, var(--t-grad-top) 100%);
   --t-tint: color-mix(in srgb, var(--t-primary) 8%, white);
-  --t-dark-card: color-mix(in srgb, var(--t-dark) 86%, white);
+  --t-dark-card: color-mix(in srgb, var(--t-dark) 45%, var(--t-darker));
+  --t-line-dark: color-mix(in srgb, var(--t-darker) 78%, var(--t-on-dark)); /* garis tipis di latar gelap (solid, bukan transparan) */
 }
 
 /* Expose token ke Tailwind: bg-primary, text-ink, font-heading, dst. */
 @theme inline {
   --font-heading: var(--t-font-heading);
+  --radius-card: var(--t-radius);
   --color-white: var(--t-on-dark);
   --color-on-accent: var(--t-on-accent);
   --font-sans: var(--t-font-body);
@@ -69,6 +82,7 @@
   --color-dark: var(--t-dark);
   --color-darker: var(--t-darker);
   --color-dark-card: var(--t-dark-card);
+  --color-dark-ink: var(--t-dark-ink);
 }
 
 /* ---------- 2. SKIN ---------- */
@@ -86,7 +100,10 @@
   .on-dark { color: var(--t-on-dark); }
   .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: var(--t-on-dark); }
   .on-dark a:not(.btn) { color: var(--t-on-dark); }
-  .bg-dark-section { background: var(--t-dark); }
+  .bg-dark-section { background-color: var(--t-grad-mid); background-image: var(--t-gradient); }
+  /* Rangkaian section gelap: satu latar gradient yang menyambung (section di dalamnya transparan) */
+  .dark-flow { background-color: var(--t-grad-mid); background-image: var(--t-gradient); background-size: 100% 1500px; background-repeat: repeat-y; }
+  .dark-flow > section { background: transparent; }
 
   /* Teks dengan penekanan: **tebal** dari CMS */
   .rich strong { font-weight: 800; }
@@ -119,7 +136,13 @@
     font: 700 13px var(--t-font-heading); letter-spacing: .04em;
     color: inherit; position: relative;
   }
+  @media (max-width: 480px) {
+    .site-title { font-size: 17px; }
+    .nav a { padding: 8px 9px; font-size: 12px; }
+    .nav a::after { left: 9px; right: 9px; }
+  }
   .nav a::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 2px; height: 3px; background: var(--t-accent); transform: scaleX(0); transition: transform .2s; }
+  .header.is-solid .nav a::after { background: var(--t-primary); }
   .nav a:hover { color: inherit; }
   .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
 
@@ -150,7 +173,13 @@
     background-color: var(--t-primary-dark);
     background-size: cover; background-position: 70% center;
   }
-  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--t-darker) 75%, transparent), color-mix(in srgb, var(--t-darker) 15%, transparent) 70%); }
+  /* Overlay gelap: kiri (teks terbaca) + atas (menu terbaca di atas foto terang) */
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--t-darker) 60%, transparent), transparent 30%),
+      linear-gradient(90deg, color-mix(in srgb, var(--t-darker) 80%, transparent), color-mix(in srgb, var(--t-darker) 25%, transparent) 70%);
+  }
   .hero > * { position: relative; }
   .hero h1 { color: var(--t-on-dark); font-weight: 300; font-size: clamp(40px, 7.4vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
   .hero-eyebrow { font: 500 clamp(15px, 2vw, 22px) var(--t-font-heading); letter-spacing: .04em; text-transform: uppercase; }
@@ -159,18 +188,21 @@
   .page-banner {
     position: relative; overflow: hidden; color: var(--t-on-dark);
     padding: calc(var(--t-header-h) + 24px) 0 64px;
-    background-color: var(--t-banner);
+    background-color: var(--t-grad-mid); background-image: var(--t-gradient);
     background-size: cover; background-position: center;
   }
+  .page-banner.has-image::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 68%, transparent); }
+  .page-banner > .container-x { position: relative; }
   .page-banner h1 { color: var(--t-on-dark); font-weight: 300; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -.02em; }
+  .banner-tagline { margin-top: 14px; font: italic 800 clamp(14px, 1.8vw, 20px)/1.3 var(--t-font-heading); letter-spacing: .06em; text-transform: uppercase; color: var(--t-accent); }
   .breadcrumb { font: 600 13px var(--t-font-heading); }
   .breadcrumb a { color: var(--t-on-dark); }
   .breadcrumb a:hover { color: var(--t-highlight); }
   .breadcrumb .current { color: var(--t-highlight); }
 
-  /* ---- Countdown ---- */
-  .count-num { font: italic 800 clamp(56px, 11vw, 132px)/1 var(--t-font-heading); color: var(--t-primary); font-variant-numeric: tabular-nums; }
-  .count-label { font: 600 13px var(--t-font-heading); letter-spacing: .3em; text-transform: uppercase; color: var(--t-ink-soft); margin-top: 8px; }
+  /* ---- Countdown (di dalam hero) ---- */
+  .count-num { font: italic 800 clamp(34px, 6.4vw, 68px)/1 var(--t-font-heading); color: var(--t-accent); font-variant-numeric: tabular-nums; }
+  .count-label { font: 600 11px var(--t-font-heading); letter-spacing: .28em; text-transform: uppercase; color: var(--t-on-dark); opacity: .75; margin-top: 6px; }
 
   /* ---- Tombol solid datar ---- */
   .btn {
@@ -183,14 +215,25 @@
   }
   .btn:hover { color: var(--t-on-accent); background: var(--t-accent-dark); border-color: var(--t-accent-dark); }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
-  .btn-blue { background: var(--t-primary); border-color: var(--t-primary); }
-  .btn-blue:hover { background: var(--t-primary-dark); border-color: var(--t-primary-dark); }
+  /* Variasi: .btn (lime) | .btn-primary (teal) | .btn-outline (di latar gelap) | .btn-outline-primary (di latar terang) */
+  .btn-primary { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
+  .btn-primary:hover { background: var(--t-primary-dark); border-color: var(--t-primary-dark); color: var(--t-on-dark); }
   .btn-outline { background: transparent; border-color: var(--t-on-dark); color: var(--t-on-dark); }
   .btn-outline:hover { background: var(--t-surface); border-color: var(--t-on-dark); color: var(--t-dark); }
+  .btn-outline-primary { background: transparent; border-color: var(--t-primary); color: var(--t-primary); }
+  .btn-outline-primary:hover { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
+
+  /* Fokus keyboard: terlihat di latar terang dan gelap */
+  :focus-visible { outline: 3px solid var(--t-primary); outline-offset: 2px; }
+  .on-dark :focus-visible, .hero :focus-visible, .page-banner :focus-visible, .site-footer :focus-visible, .card-dark :focus-visible,
+  .header:not(.is-solid) :focus-visible { outline-color: var(--t-accent); }
 
   /* ---- Kartu ---- */
-  .card { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
-  .card-dark { background: var(--t-dark-card); border: 1px solid color-mix(in srgb, var(--t-on-dark) 10%, transparent); border-radius: var(--t-radius); color: var(--t-on-dark); }
+  .card { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); box-shadow: 0 1px 2px rgb(0 0 0 / .04); }
+  .card-olive { background: var(--t-card-hl-fill); border: 1px solid var(--t-card-hl-line); border-radius: var(--t-radius); color: var(--t-on-dark); }
+  .card-dark { background: var(--t-card-fill); border: 1px solid var(--t-card-line); border-radius: var(--t-radius); color: var(--t-on-dark); }
+  .card-accent { border-top: 3px solid var(--t-accent); }   /* garis aksen di atas kartu, khas kotak ikon tema WP */
+  .card-dark h2, .card-dark h3, .card-dark h4, .card-dark a:not(.btn) { color: var(--t-on-dark); }
   .thumb { display: block; overflow: hidden; border-radius: var(--t-radius); background: var(--t-alt); }
   a.thumb img { transition: transform .35s; }
   a.thumb:hover img { transform: scale(1.05); }
@@ -213,10 +256,10 @@
   .tab-btn {
     padding: 9px 20px; cursor: pointer;
     font: 700 12.5px var(--t-font-heading); letter-spacing: .04em;
-    color: var(--t-ink); background: var(--t-surface); border: 1px solid var(--t-line); border-radius: 999px;
+    color: var(--t-ink); background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius);
     transition: background .2s, color .2s, border-color .2s;
   }
-  .tab-btn:hover { border-color: var(--t-primary); color: var(--t-primary); }
+  .tab-btn:hover:not([aria-selected="true"]) { border-color: var(--t-primary); color: var(--t-primary); }
   .tab-btn[aria-selected="true"] { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
   .tab-panel { margin-top: 28px; }
 
@@ -224,24 +267,37 @@
   .rp-item {
     display: flex; gap: 14px; width: 100%; text-align: left; cursor: pointer;
     padding: 14px 16px; color: var(--t-on-dark);
-    background: color-mix(in srgb, var(--t-on-dark) 4%, transparent); border: 2px solid color-mix(in srgb, var(--t-on-dark) 10%, transparent); border-radius: var(--t-radius);
+    background: color-mix(in srgb, var(--t-on-dark) 6%, var(--t-dark-card));
+    border: 0; border-left: 4px solid transparent; border-radius: var(--t-radius);
     transition: border-color .2s, background .2s;
   }
-  .rp-item:hover { border-color: color-mix(in srgb, var(--t-on-dark) 35%, transparent); }
-  .rp-item[aria-selected="true"] { border-color: var(--t-accent); background: color-mix(in srgb, var(--t-accent) 12%, transparent); }
-  .rp-icon { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: var(--t-radius); background: var(--t-accent); color: var(--t-on-accent); }
+  .rp-item:hover { background: color-mix(in srgb, var(--t-on-dark) 11%, var(--t-dark-card)); }
+  .rp-item[aria-selected="true"] { border-left-color: var(--t-accent); background: color-mix(in srgb, var(--t-accent) 14%, var(--t-dark-card)); }
+  .rp-icon { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); }
 
   /* ---- FAQ accordion ---- */
-  details.faq { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); margin-bottom: 10px; }
+  details.faq { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: 0; }
+  details.faq + details.faq { margin-top: -1px; }          /* garis antar item menyatu, ala accordion tema WP */
+  details.faq:first-of-type { border-radius: var(--t-radius) var(--t-radius) 0 0; }
+  details.faq:last-of-type { border-radius: 0 0 var(--t-radius) var(--t-radius); }
   details.faq > summary {
     cursor: pointer; list-style: none; position: relative;
-    padding: 18px 56px 18px 22px; font: 700 15px var(--t-font-heading); color: var(--t-dark);
+    padding: 18px 60px 18px 22px; font: 700 15px var(--t-font-heading); color: var(--t-dark);
+    transition: background .15s, color .15s;
   }
   details.faq > summary::-webkit-details-marker { display: none; }
-  details.faq > summary::after { content: "+"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: 400; color: var(--t-accent); }
-  details.faq[open] > summary { color: var(--t-primary); }
-  details.faq[open] > summary::after { content: "–"; }
-  details.faq > .entry { padding: 0 22px 20px; }
+  details.faq > summary:hover { background: var(--t-tint); }
+  details.faq > summary:focus-visible { outline-offset: -3px; }
+  /* Ikon + / – digambar dengan CSS supaya sejajar di semua font */
+  details.faq > summary::after {
+    content: ""; position: absolute; right: 22px; top: 50%; width: 14px; height: 14px; margin-top: -7px; color: var(--t-primary);
+    background:
+      linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat,
+      linear-gradient(currentColor, currentColor) center / 2px 100% no-repeat;
+  }
+  details.faq[open] > summary { color: var(--t-primary); border-bottom: 1px solid var(--t-line); }
+  details.faq[open] > summary::after { background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat; }
+  details.faq > .entry { padding: 16px 22px 20px; }
 
   /* ---- Form ---- */
   .field {
@@ -252,15 +308,89 @@
 
   /* ---- Footer ---- */
   .site-footer { background: var(--t-darker); color: var(--t-dark-ink); font-size: 14px; }
-  .site-footer h4 { font-size: 14px; color: var(--t-on-dark); margin-bottom: 18px; }
+  .footer-heading { font: 700 14px/1.2 var(--t-font-heading); color: var(--t-on-dark); margin-bottom: 18px; }
   .site-footer a { color: var(--t-dark-ink); }
   .site-footer a:hover { color: var(--t-on-dark); }
-  .social-btn { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid color-mix(in srgb, var(--t-on-dark) 18%, transparent); border-radius: var(--t-radius); color: var(--t-on-dark); background: color-mix(in srgb, var(--t-on-dark) 4%, transparent); }
+  .social-btn { display: grid; place-items: center; width: 38px; height: 38px; border-radius: var(--t-radius); color: var(--t-on-dark); background: color-mix(in srgb, var(--t-on-dark) 10%, var(--t-darker)); }
   .site-footer a.social-btn { color: var(--t-on-dark); }
-  .social-btn:hover { background: var(--t-accent); border-color: var(--t-accent); }
-  .footer-rule { height: 4px; background: linear-gradient(90deg, var(--t-highlight), var(--t-accent) 50%, var(--t-primary)); }
+  .social-btn:hover, .site-footer a.social-btn:hover { background: var(--t-accent); border-color: var(--t-accent); color: var(--t-on-accent); }
+  .footer-bottom { border-top: 1px solid var(--t-line-dark); }
+  .footer-rule { height: 4px; background: var(--t-accent); }
+
+  /* ---- Section gelap (gaya slide PDF): kartu transparan bergaris tipis ---- */
+  .on-dark .card, .on-dark .tab-panel {
+    background: var(--t-card-fill); border-color: var(--t-card-line); color: var(--t-on-dark); box-shadow: none;
+  }
+  .on-dark .card-accent { border-top-width: 1px; border-top-color: var(--t-card-line); }
+  .section-heading h2, .title-italic { font-style: italic; }  /* judul section seragam: baris tipis + baris tebal, miring */
+  .on-dark .section-heading h2 .rich-accent strong, .on-dark .rich-accent strong { color: var(--t-accent); }
+  .on-dark .tab-btn { background: var(--t-card-fill); border-color: var(--t-card-line); color: var(--t-on-dark); }
+  .on-dark .tab-btn[aria-selected="true"] { background: var(--t-accent); border-color: var(--t-accent); color: var(--t-on-accent); }
+  .on-dark .row-line { border-bottom-color: var(--t-card-line); }
+  .on-dark .row-line span:not(.chip) { color: var(--t-on-dark); }
+
+  /* ---- Kartu konsep sosial: pakai tipe kartu standar (.card .card-accent) di section terang ---- */
+  .step-num { position: absolute; right: 22px; top: 18px; font: italic 800 34px/1 var(--t-font-heading); color: var(--t-primary); }
+  .on-dark .step-num, .card-dark .step-num { color: var(--t-accent); }
+  .step-arrow { display: none; align-items: center; justify-content: center; color: var(--t-primary); }
+  @media (min-width: 768px) { .step-arrow { display: flex; } }
+
+  /* Sub-judul di dalam section (mis. Pendaftaran / Race pack collection) */
+  .join-group { margin-bottom: 20px; font: italic 700 clamp(20px, 2.4vw, 26px)/1.2 var(--t-font-heading); }
+  .join-group::before { content: ""; display: inline-block; width: 28px; height: 4px; margin-right: 12px; vertical-align: middle; background: var(--t-accent); }
+
+  /* Garis pemisah antar blok dalam satu section (mis. Hadiah | Race pack) */
+  .block-divider { height: 1px; margin: 72px 0 56px; background: var(--t-card-line); }
+
+  /* ---- Kartu hadiah: foto produk (PNG/WebP transparan) di atas, jumlah + nama di bawah ---- */
+  .prize-card { display: flex; flex-direction: column; overflow: hidden; }
+  .prize-media { position: relative; display: flex; align-items: center; justify-content: center; height: 210px; padding: 28px 18px 18px; background: color-mix(in srgb, var(--t-on-dark) 5%, transparent); }
+  .prize-media img { max-width: 100%; max-height: 160px; width: auto; height: auto; object-fit: contain; filter: drop-shadow(0 8px 10px rgb(0 0 0 / .35)); }
+  .prize-qty { position: absolute; top: 10px; right: 16px; }
+  .prize-body { padding: 16px 20px 20px; }
+
+  /* ---- Ikon bulat (kartu info, langkah, hadiah) ---- */
+  .icon-chip { flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); }
+  .icon-chip-lg { width: 64px; height: 64px; }
+
+  /* Label waktu / angka kecil (rundown) */
+  .chip { display: inline-block; min-width: 4.5rem; padding: 4px 14px; text-align: center; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); font: 700 14px var(--t-font-heading); }
+
+  /* Baris daftar bergaris bawah (rundown) */
+  .row-line { display: flex; align-items: center; gap: 16px; padding: 12px 4px; border-bottom: 1px solid var(--t-line); }
+
+  /* Nomor langkah besar */
+  .num { font: italic 800 34px/1 var(--t-font-heading); color: var(--t-primary); }
+  .on-dark .num { color: var(--t-accent); }
+
+  /* Nilai besar di kartu info */
+  .stat { font: italic 800 clamp(22px, 2.6vw, 30px)/1.15 var(--t-font-heading); color: var(--t-primary); }
+  .on-dark .stat { color: var(--t-accent); }
+
+  /* Pembungkus video 16:9 */
+  .video-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--t-radius); background: var(--t-darker); }
+  .video-frame iframe, .video-frame > button, .video-frame > .video-empty { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-frame img { width: 100%; height: 100%; object-fit: cover; }
+  .video-empty { background: color-mix(in srgb, var(--t-darker) 45%, transparent); }
+  .video-label { display: inline-block; margin-top: 16px; padding: 7px 16px; border-radius: 999px; background: var(--t-darker); color: var(--t-on-dark); font: 700 12px/1.2 var(--t-font-heading); letter-spacing: .18em; text-transform: uppercase; }
+
+  /* Peta rute: bisa diketuk untuk dibuka ukuran penuh */
+  .route-map { display: block; position: relative; }
+  .route-map img { display: block; width: 100%; height: auto; border-radius: var(--t-radius); }
+  .route-map-hint { margin-top: 8px; font-size: 12px; color: var(--t-dark-ink); }
+  .play-btn { position: absolute; inset: 0; display: grid; place-items: center; cursor: pointer; background: color-mix(in srgb, var(--t-darker) 35%, transparent); transition: background .2s; }
+  .play-btn:hover { background: color-mix(in srgb, var(--t-darker) 15%, transparent); }
+  .play-btn > span { display: grid; place-items: center; width: 84px; height: 84px; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); }
 
   /* ---- Lightbox ---- */
   dialog.lightbox { max-width: min(92vw, 960px); padding: 10px; border: 0; border-radius: var(--t-radius); background: var(--t-surface); margin: auto; }
   dialog.lightbox::backdrop { background: rgb(0 0 0 / .8); }
+}
+
+/* Utility Tailwind di dalam kartu & section gelap (layer utilities menang atas components) */
+@layer utilities {
+  .rp-viewer img { object-fit: contain; }   /* flat-lay tampil utuh, tidak terpotong */
+  .on-dark .text-dark, .on-dark .text-ink { color: var(--t-on-dark); }
+  .on-dark .text-ink-soft { color: var(--t-dark-ink); }
+  .on-dark .bg-alt { background: transparent; }
 }

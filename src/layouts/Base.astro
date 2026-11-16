@@ -4,6 +4,7 @@ import { getSiteData } from '../lib/content';
 import { img } from '../lib/datocms';
 import { plain } from '../lib/text';
 import { fonts, nav, ui } from '../config';
+import { isLive } from '../lib/pages.mjs';
 import Icon from '../components/Icon.astro';
 
 interface Props { title?: string; description?: string }
@@ -30,7 +31,7 @@ const eventLd = {
   url: canonical,
   ...(ogImage && { image: [ogImage] }),
   ...(site.registrationUrl && {
-    offers: { '@type': 'Offer', url: site.registrationUrl, availability: 'https://schema.org/InStock' },
+    offers: { '@type': 'Offer', url: new URL(site.registrationUrl, Astro.site).href, availability: 'https://schema.org/InStock' },
   }),
 };
 
@@ -61,6 +62,7 @@ const socials = ([
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={metaDesc} />
+    {!isLive(path) && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -111,18 +113,18 @@ const socials = ([
             ))}
           </ul>
         </div>
-        <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
+        <div class="grid gap-8 sm:grid-cols-[repeat(auto-fit,minmax(150px,1fr))]">
           {
             [...groups].map(([group, links]) => (
               <div>
-                <h4>{group}</h4>
+                <p class="footer-heading">{group}</p>
                 <ul class="space-y-2.5">{links.map((l) => <li><a href={l.url}>{l.label}</a></li>)}</ul>
               </div>
             ))
           }
         </div>
       </div>
-      <div class="container-x border-t border-white/10 py-6 text-[13px]">
+      <div class="container-x footer-bottom py-6 text-[13px]">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span>{site.footerNote}</span>
           <a href="#top">{ui.backToTop} &uarr;</a>

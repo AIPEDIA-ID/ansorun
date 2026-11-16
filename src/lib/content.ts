@@ -6,8 +6,9 @@ import { LOCALE, TIMEZONE } from '../config';
 import { dato } from './datocms';
 import * as fb from './fallback';
 import type {
-  AboutPage, Faq, GalleryPhoto, InfoTab, LariPage, RacepackItem,
-  RacepackStep, SiteData, SiteSettings,
+  AboutPage, AboutStep, Beneficiary, Contact, Faq, GalleryPhoto, HomePage, JoinStep, Prize,
+  RaceFact, RaceRoute, RacepackInfo, RacepackItem, RacepackPage, RacepackStep, RundownItem,
+  SiteData, SiteSettings,
 } from './types';
 
 /** Buang null / string kosong supaya tidak menimpa fallback */
@@ -18,9 +19,6 @@ function defined<T extends object>(obj: T | null | undefined): Partial<T> {
   ) as Partial<T>;
 }
 
-/** Pakai list CMS bila ada isinya, kalau tidak pakai fallback */
-const listOr = <T>(cms: T[] | null | undefined, fallback: T[]): T[] => (cms && cms.length ? cms : fallback);
-
 const IMG = 'url alt width height';
 
 // Memoize per build agar tiap halaman tidak query ulang
@@ -30,6 +28,21 @@ const once = <T>(key: string, fn: () => Promise<T>): Promise<T> => {
   return memo.get(key) as Promise<T>;
 };
 
+/** Koleksi berurutan: pakai isi CMS bila ada, kalau tidak pakai fallback. */
+const collection = <T>(key: string, query: string, fields: string, fallback: T[], limit = 100) =>
+  once<T[]>(key, async () => {
+    const data = await dato<Record<string, T[]>>(`{ ${query}(orderBy: _position_ASC, first: ${limit}) { ${fields} } }`);
+    const rows = data?.[query];
+    return rows && rows.length ? rows : fallback;
+  });
+
+/** Singleton: field kosong jatuh ke fallback. */
+const singleton = <T extends object>(key: string, query: string, fields: string, fallback: T) =>
+  once<T>(key, async () => {
+    const data = await dato<Record<string, Partial<T> | null>>(`{ ${query} { ${fields} } }`);
+    return { ...fallback, ...defined(data?.[query]) } as T;
+  });
+
 /* ---------------------------------------------------------------- site */
 export const getSiteData = () =>
   once<SiteData>('site', async () => {
@@ -38,23 +51,16 @@ export const getSiteData = () =>
         primaryColor: { hex: string } | null;
         accentColor: { hex: string } | null;
       }) | null;
-      allSponsors: SiteData['sponsors'];
-      allFooterLinks: SiteData['footerLinks'];
     }>(`{
       siteSetting {
         eventName bannerTitle tagline metaDescription categories eventDate location
         heroEyebrow heroHeadline heroSubheadline heroImage { ${IMG} } logo { ${IMG} }
         primaryColor { hex } accentColor { hex }
         registrationUrl registrationLabel
-        countdownTitle countdownText
-        instagramTitle instagramText instagramHandle instagramImage { ${IMG} } instagramUrl
         galleryTitle galleryText
-        newsletterAction contactUrl tiktokUrl facebookUrl xUrl threadsUrl footerNote
+        newsletterAction websiteUrl contactUrl instagramUrl tiktokUrl facebookUrl xUrl threadsUrl footerNote
       }
-      allSponsors(orderBy: _position_ASC) { name url role logo { ${IMG} } }
-      allFooterLinks(orderBy: _position_ASC) { group label url }
     }`);
-
     const s = data?.siteSetting;
     return {
       site: {
@@ -63,63 +69,69 @@ export const getSiteData = () =>
         primaryColor: s?.primaryColor?.hex ?? null,
         accentColor: s?.accentColor?.hex ?? null,
       },
-      sponsors: listOr(data?.allSponsors, fb.sponsors),
-      footerLinks: listOr(data?.allFooterLinks, fb.footerLinks),
+      sponsors: await collection('sponsors', 'allSponsors', `name url role logo { ${IMG} }`, fb.sponsors),
+      footerLinks: await collection('footerLinks', 'allFooterLinks', 'group label url', fb.footerLinks),
     };
+  });
+
+export const getContacts = () => collection<Contact>('contacts', 'allContacts', 'name phone', fb.contacts);
+export const getFaqs = () => collection<Faq>('faqs', 'allFaqs', 'question answer', fb.faqs);
+export const getRacepackItems = () =>
+  collection<RacepackItem>('racepackItems', 'allRacepackItems', `title description icon caption image { ${IMG} }`, fb.racepackItems);
+
+/* ---------------------------------------------------------------- home */
+export const getHome = () =>
+  once('home', async () => {
+    const [home, aboutSteps, beneficiaries, facts, rundown, routes, prizes, joinSteps] = await Promise.all([
+      singleton<HomePage>('homePage', 'homePage', `
+        aboutTitle aboutBody stepsTitle beneficiariesTitle
+        highlightsTitle highlightsText videoUrl videoPoster { ${IMG} }
+        raceTitle raceText feeValue feeNote rundownTitle routesTitle
+        prizesTitle prizesText racepackTitle racepackText racepackImage { ${IMG} }
+        joinTitle joinText faqTitle faqText contactTitle contactText`, fb.home),
+      collection<AboutStep>('aboutSteps', 'allAboutSteps', 'title description icon', fb.aboutSteps),
+      collection<Beneficiary>('beneficiaries', 'allBeneficiaries', 'title icon', fb.beneficiaries),
+      collection<RaceFact>('raceFacts', 'allRaceFacts', 'value note icon', fb.raceFacts),
+      collection<RundownItem>('rundown', 'allRundownItems', 'time label', fb.rundown),
+      collection<RaceRoute>('routes', 'allRaceRoutes', `title description image { ${IMG} }`, fb.routes),
+      collection<Prize>('prizes', 'allPrizes', `quantity title icon image { ${IMG} }`, fb.prizes),
+      collection<JoinStep>('joinSteps', 'allJoinSteps', 'title description icon', fb.joinSteps),
+    ]);
+    return { home, aboutSteps, beneficiaries, facts, rundown, routes, prizes, joinSteps };
   });
 
 /* --------------------------------------------------------------- about */
 export const getAbout = () =>
-  once('about', async () => {
-    const data = await dato<{ aboutPage: AboutPage | null; allFaqs: Faq[] }>(`{
-      aboutPage { metaDescription sectionTitle eyebrow quote body faqEyebrow faqTitle faqText }
-      allFaqs(orderBy: _position_ASC) { question answer }
-    }`);
-    return {
-      about: { ...fb.about, ...defined(data?.aboutPage) } as AboutPage,
-      faqs: listOr(data?.allFaqs, fb.faqs),
-    };
-  });
+  once('about', async () => ({
+    about: await singleton<AboutPage>('aboutPage', 'aboutPage', 'metaDescription sectionTitle eyebrow quote body faqEyebrow faqTitle faqText', fb.about),
+    faqs: await getFaqs(),
+  }));
 
-/* ---------------------------------------------------------------- lari */
-type LariRaw = Omit<LariPage, 'proxyFileUrl'> & { proxyFile: { url: string } | null };
+/* ------------------------------------------------------------ racepack */
+type RacepackRaw = Omit<RacepackPage, 'proxyFileUrl'> & { proxyFile?: { url: string } | null };
 
-export const getLari = () =>
-  once('lari', async () => {
-    const data = await dato<{
-      lariPage: LariRaw | null;
-      allRacepackItems: RacepackItem[];
-      allRacepackSteps: RacepackStep[];
-      allInfoTabs: InfoTab[];
-    }>(`{
-      lariPage {
-        metaDescription racepackTitle racepackIntro racepackVenue racepackSchedule
-        stepsTitle stepsText proxyNote proxyFile { url } proxyFileLabel
-        communityTitle communityText communityImage { ${IMG} } communityUrl
-        infoTitle infoText
-      }
-      allRacepackItems(orderBy: _position_ASC) { title description icon caption image { ${IMG} } }
-      allRacepackSteps(orderBy: _position_ASC) { description image { ${IMG} } }
-      allInfoTabs(orderBy: _position_ASC) { title content }
-    }`);
-    const raw = data?.lariPage;
-    const { proxyFile, ...rest } = raw ?? ({} as Partial<LariRaw>);
+export const getRacepack = () =>
+  once('racepack', async () => {
+    const raw = await singleton<RacepackRaw>('racepackPage', 'racepackPage', `
+      metaDescription bannerImage { ${IMG} } title slogan intro stepsTitle itemsTitle itemsText
+      proxyFile { url } proxyFileLabel`, { ...fb.racepackPage });
+    const { proxyFile, ...rest } = raw;
+    const [info, steps, items] = await Promise.all([
+      collection<RacepackInfo>('racepackInfo', 'allRacepackDetails', 'title content icon', fb.racepackInfo),
+      collection<RacepackStep>('racepackSteps', 'allRacepackSteps', 'title description icon', fb.racepackSteps),
+      getRacepackItems(),
+    ]);
     return {
-      lari: { ...fb.lari, ...defined(rest), proxyFileUrl: proxyFile?.url ?? null } as LariPage,
-      items: listOr(data?.allRacepackItems, fb.racepackItems),
-      steps: listOr(data?.allRacepackSteps, fb.racepackSteps),
-      tabs: listOr(data?.allInfoTabs, fb.infoTabs),
+      page: { ...rest, proxyFileUrl: proxyFile?.url ?? fb.racepackPage.proxyFileUrl } as RacepackPage,
+      info,
+      steps,
+      items,
     };
   });
 
 /* -------------------------------------------------------------- galeri */
 export const getGallery = async (limit?: number): Promise<GalleryPhoto[]> => {
-  const all = await once<GalleryPhoto[]>('gallery', async () => {
-    const data = await dato<{ allGalleryPhotos: GalleryPhoto[] }>(`{
-      allGalleryPhotos(orderBy: _position_ASC, first: 100) { caption image { ${IMG} } }
-    }`);
-    return listOr(data?.allGalleryPhotos, fb.gallery);
-  });
+  const all = await collection<GalleryPhoto>('gallery', 'allGalleryPhotos', `caption image { ${IMG} }`, fb.gallery);
   return limit ? all.slice(0, limit) : all;
 };
 

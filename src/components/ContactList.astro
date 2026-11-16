@@ -1,0 +1,49 @@
+---
+import Icon from './Icon.astro';
+import { telHref } from '../lib/contact';
+import { ui } from '../config';
+import type { Contact } from '../lib/types';
+
+/** Daftar kontak panitia. Dipakai di Beranda (FAQ & Contact) dan halaman Racepack agar tampilannya seragam. */
+interface Props { contacts: Contact[]; websiteUrl?: string | null; email?: string | null; columns?: boolean }
+const { contacts, websiteUrl = null, email = null, columns = false } = Astro.props;
+---
+
+<ul class:list={columns ? 'grid gap-5 sm:grid-cols-3' : 'space-y-4'}>
+  {
+    contacts.map((c) => {
+      const href = telHref(c.phone);
+      return (
+        <li class="flex items-center gap-4">
+          <span class="icon-chip"><Icon name="phone" size={22} /></span>
+          <div class="text-sm">
+            <p class="font-heading font-bold text-dark">{c.name}</p>
+            {href ? <a href={href}>{c.phone}</a> : <span class="text-ink-soft">{c.phone}</span>}
+          </div>
+        </li>
+      );
+    })
+  }
+  {
+    websiteUrl && (
+      <li class="flex items-center gap-4">
+        <span class="icon-chip"><Icon name="globe" size={22} /></span>
+        <div class="text-sm">
+          <p class="font-heading font-bold text-dark">{ui.website}</p>
+          <a href={websiteUrl} rel="noopener" target="_blank">{websiteUrl.replace(/^https?:\/\//, '')}</a>
+        </div>
+      </li>
+    )
+  }
+  {
+    email && (
+      <li class="flex items-center gap-4">
+        <span class="icon-chip"><Icon name="mail" size={22} /></span>
+        <div class="text-sm">
+          <p class="font-heading font-bold text-dark">{ui.email}</p>
+          <a href={email}>{email.replace(/^mailto:/, '')}</a>
+        </div>
+      </li>
+    )
+  }
+</ul>

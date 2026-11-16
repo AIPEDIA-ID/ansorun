@@ -1,0 +1,48 @@
+---
+import Icon from './Icon.astro';
+import { img } from '../lib/datocms';
+import { youtubeId } from '../lib/video';
+import { ui } from '../config';
+import type { Img } from '../lib/types';
+
+interface Props { url: string | null; poster?: Img | null; title?: string }
+const { url, poster = null, title = 'Video promo' } = Astro.props;
+const id = youtubeId(url);
+// Poster: gambar dari CMS, kalau tidak ada pakai thumbnail YouTube
+const posterSrc = poster ? img(poster.url, 1280) : id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+---
+
+{
+  id ? (
+    // Facade: iframe baru dimuat saat diklik (hemat bandwidth, dan memakai youtube-nocookie)
+    <div class="video-frame" data-video={id} data-title={title}>
+      <button type="button" class="play-btn" aria-label={`${ui.videoPlay}: ${title}`}>
+        {posterSrc && <img src={posterSrc} alt="" loading="lazy" class="absolute inset-0 -z-10" />}
+        <span><Icon name="play" size={34} /></span>
+      </button>
+    </div>
+  ) : (
+    <div class="video-frame">
+      {posterSrc && <img src={posterSrc} alt="" loading="lazy" />}
+      <div class="video-empty grid place-items-center text-center on-dark">
+        <div>
+          <span class="icon-chip icon-chip-lg mx-auto"><Icon name="play" size={28} /></span>
+          <p class="video-label">{ui.videoSoon}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video]').forEach((box) => {
+    box.querySelector('button')?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.video}?autoplay=1&rel=0`;
+      f.title = box.dataset.title ?? 'Video';
+      f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      box.replaceChildren(f);
+    });
+  });
+</script>

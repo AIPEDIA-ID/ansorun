@@ -17,7 +17,7 @@ const escape = (s: string) =>
 export const rich = (src: string | null | undefined): string =>
   escape(src ?? '')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\r?\n/g, '<br>');
+    .replace(/\r?\n/g, ' <br>'); // spasi sebelum <br> agar pembaca layar tidak menyambung kata
 
 /** Versi teks polos (untuk <title>, alt, dll.) */
 export const plain = (src: string | null | undefined): string =>

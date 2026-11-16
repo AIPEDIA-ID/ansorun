@@ -1,8 +1,8 @@
 ---
 import { md } from '../lib/text';
-import type { InfoTab } from '../lib/types';
+import type { TabItem } from '../lib/types';
 
-interface Props { tabs: InfoTab[] }
+interface Props { tabs: TabItem[] }
 const { tabs } = Astro.props;
 ---
 
@@ -18,7 +18,7 @@ const { tabs } = Astro.props;
   </div>
   {
     tabs.map((t, i) => (
-      <div role="tabpanel" class="tab-panel card p-8 entry" id={`panel-${i}`} aria-labelledby={`tab-${i}`} hidden={i !== 0} set:html={md(t.content)} />
+      <div role="tabpanel" class="tab-panel card p-4 sm:p-8 entry" id={`panel-${i}`} aria-labelledby={`tab-${i}`} hidden={i !== 0} set:html={md(t.content)} />
     ))
   }
 </div>
