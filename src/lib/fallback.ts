@@ -117,7 +117,7 @@ Dan acara ini juga menjadi salah satu sarana kolaborasi toleransi antar umat ber
 3. **Berbagi dari pelari:** Disalurkan langsung oleh GP Ansor Bersama Organisasi lintas Agama Bersama perwakilan pelari
 
 **Penerima manfaat:** Panti Asuhan Anak Yatim Piatu, Panti Jompo, Masyarakat Kurang Mampu`,
-  faqTitle: 'FAQ & **Contact**',
+  faqTitle: '**FAQ**',
 };
 
 /* ---- HOME 03: EVENT HIGHLIGHTS (video promo) -> home.videoId ---- */

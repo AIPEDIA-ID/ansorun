@@ -37,6 +37,8 @@ export const ui = {
   newsletterDemo: 'Mode contoh: form belum terhubung ke layanan email.',
   newsletterPrivacy: 'Kami menghormati privasi Anda. Berhenti berlangganan kapan saja.',
   contactLabel: 'Kontak',
+  contactTitle: '**Contact**',
+  routePick: 'Pilih kategori rute',
   openMap: 'Buka peta',
   menuOpen: 'Buka menu',
   menuClose: 'Tutup menu',
@@ -59,7 +61,7 @@ export const ui = {
  *      tag = Osaca Medium Italic (tagline, eyebrow) | display = Golf Italic (judul besar, angka; hanya ukuran besar)
  */
 export const fonts = {
-  href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap',
+  href: 'https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Open+Sans:wght@400;600;700&display=swap',
   faces: [
     { family: 'Neospeed', file: 'neospeed.woff2', style: 'normal' },
     { family: 'Neospeed', file: 'neospeed-oblique.woff2', style: 'italic' },
@@ -69,7 +71,7 @@ export const fonts = {
     { family: 'Osaca', file: 'osaca-medium-italic.woff2', style: 'italic' },
   ],
   heading: '"Neospeed", "Montserrat", "Helvetica Neue", Arial, sans-serif',
-  body: '"Open Sans", "Helvetica Neue", Arial, sans-serif',
+  body: '"Carlito", "Calibri", "Open Sans", Arial, sans-serif', // Carlito = padanan gratis Calibri (font isi di PDF proposal)
   tag: '"Osaca", "Open Sans", Arial, sans-serif',
   display: '"Golf", "Neospeed", Arial, sans-serif',
 };

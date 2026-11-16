@@ -38,6 +38,7 @@
   --t-dark-ink: #9fc0bd;
 
   --t-radius: 4px;
+  --t-radius-card: 14px;
   --t-container: 1140px;
   --t-header-h: 76px;
 }
@@ -48,6 +49,7 @@
   --t-accent-dark: color-mix(in srgb, var(--t-accent) 82%, black);
   --t-banner: color-mix(in srgb, var(--t-primary) 42%, var(--t-dark)); /* banner halaman dalam: lebih tenang dari primary */
   --t-tint: color-mix(in srgb, var(--t-primary) 8%, white);
+  --t-shadow: 0 1px 2px color-mix(in srgb, var(--t-darker) 10%, transparent), 0 12px 26px -16px color-mix(in srgb, var(--t-darker) 40%, transparent);
   --t-dark-card: color-mix(in srgb, var(--t-dark) 86%, white);
 }
 
@@ -77,7 +79,7 @@
 
 /* ---------- 2. SKIN ---------- */
 @layer base {
-  html { font-size: 17px; scroll-behavior: smooth; scroll-padding-top: calc(var(--t-header-h) + 16px); }
+  html { font-size: 19px; scroll-behavior: smooth; scroll-padding-top: calc(var(--t-header-h) + 16px); }
   body { font-family: var(--t-font-body); color: var(--t-ink); background: var(--t-paper); line-height: 1.75; }
   a { color: var(--t-primary); transition: color .2s; }
   a:hover { color: var(--t-primary-dark); }
@@ -87,24 +89,39 @@
 @layer components {
   .container-x { width: 100%; max-width: var(--t-container); margin-inline: auto; padding-inline: 20px; }
   .section { padding-block: clamp(52px, 6.5vw, 84px); }
+  .section-tight { padding-block: clamp(36px, 4.5vw, 56px); }
+  .section-tight .section-heading { margin-bottom: 22px; }
+  .section-tight .section-heading h2 { font-size: clamp(28px, 3.6vw, 40px); }
+  .fact .step-icon { width: 42px; height: 42px; }
   .on-dark { color: var(--t-on-dark); }
   .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: var(--t-on-dark); }
   .on-dark a:not(.btn) { color: var(--t-on-dark); }
   .bg-dark-section { background: var(--t-dark); }
   /* Latar section terang: gradient lembut berbasis token (atas permintaan, menggantikan tekstur) */
-  .bg-pattern {
-    background-color: var(--t-alt);
+  /* Latar section terang: dua gradient yang saling menyambung tanpa sambungan terlihat.
+     .bg-fade  : putih -> hijau muda (turun), pendar lime di kanan atas
+     .bg-pattern: hijau muda -> putih (naik), pendar hijau di kiri bawah
+     Urutan pakai: fade, pattern, fade, ... sehingga warna ujung selalu bertemu. */
+  .bg-fade {
+    background-color: var(--t-paper);
     background-image:
-      radial-gradient(60% 90% at 100% 0%, color-mix(in srgb, var(--t-accent) 26%, transparent), transparent 70%),
-      radial-gradient(55% 80% at 0% 100%, color-mix(in srgb, var(--t-primary) 16%, transparent), transparent 70%);
+      radial-gradient(55% 70% at 100% 0%, color-mix(in srgb, var(--t-accent) 40%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--t-paper), color-mix(in srgb, var(--t-primary) 20%, var(--t-paper)));
   }
-  .bg-fade { background-image: linear-gradient(180deg, var(--t-paper), color-mix(in srgb, var(--t-primary) 9%, var(--t-paper))); }
+  .bg-pattern {
+    background-color: var(--t-paper);
+    background-image:
+      radial-gradient(55% 70% at 0% 100%, color-mix(in srgb, var(--t-primary) 30%, transparent), transparent 70%),
+      linear-gradient(180deg, color-mix(in srgb, var(--t-primary) 20%, var(--t-paper)), var(--t-paper));
+  }
+  /* Siluet: garis tepi hijau mengikuti bentuk benda (untuk gambar berlatar transparan) */
+  .silhouette { filter: drop-shadow(2px 0 0 var(--t-primary)) drop-shadow(-2px 0 0 var(--t-primary)) drop-shadow(0 2px 0 var(--t-primary)) drop-shadow(0 -2px 0 var(--t-primary)) drop-shadow(0 10px 10px color-mix(in srgb, var(--t-darker) 22%, transparent)); }
   /* Ubin langkah bernomor (About) */
-  .flow-tile { position: relative; padding: 22px 22px 22px 24px; background: var(--t-surface); border: 1px solid var(--t-line); border-top: 4px solid var(--t-primary); border-radius: var(--t-radius); }
-  .flow-tile .n { font: 400 40px/1 var(--t-font-display); color: var(--t-primary); }
+  .flow-tile { position: relative; padding: 22px 22px 22px 24px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .flow-tile .n { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; background: var(--t-primary); color: var(--t-accent); font: 400 22px/1 var(--t-font-display); box-shadow: 0 8px 16px -8px color-mix(in srgb, var(--t-primary) 75%, transparent); }
   /* Latar foto penuh: satu-satunya gradient/overlay yang diizinkan (gelap di atas foto) */
   .photo-bg { position: relative; background-size: cover; background-position: center; background-color: var(--t-dark); }
-  .photo-bg::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 86%, transparent); }
+  .photo-bg::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 92%, transparent); }
   .photo-bg > * { position: relative; }
 
   /* Teks dengan penekanan: **tebal** dari CMS */
@@ -123,7 +140,7 @@
   /* Garis aksen pendek di bawah judul section */
   .section-heading h2::after { content: ""; display: block; width: 56px; height: 4px; margin: 14px auto 0; background: var(--t-primary); }
   .on-dark .section-heading h2::after { background: var(--t-accent); }
-  .photo-frame-wide { aspect-ratio: 16 / 9; object-fit: cover; object-position: center bottom; }
+  .photo-frame-wide { aspect-ratio: 2.1 / 1; object-fit: cover; object-position: center bottom; }
   .photo-frame { display: block; width: 100%; height: auto; border-radius: var(--t-radius); }
   .on-dark .section-heading p { color: var(--t-dark-ink); }
 
@@ -275,7 +292,7 @@
   }
   .tab-btn:hover { border-color: var(--t-primary); color: var(--t-primary); }
   .tab-btn[aria-selected="true"] { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
-  .tab-panel { margin-top: 28px; }
+  .tab-panel { margin-top: 18px; }
 
   /* ---- Langkah bernomor (How to Join, Racepack) ---- */
   .step-num { position: absolute; top: 14px; right: 20px; font: italic 400 56px/1 var(--t-font-display); color: color-mix(in srgb, var(--t-primary) 14%, transparent); }
@@ -308,7 +325,7 @@
   /* Fakta besar tanpa kotak (Race Information) dan daftar jam */
   .fact-value { font: 800 clamp(24px, 3vw, 34px)/1.15 var(--t-font-heading); color: var(--t-primary); }
   .fact-sub { margin-top: 8px; font-size: 14px; color: var(--t-ink-soft); }
-  .time-row { display: flex; align-items: baseline; gap: 20px; padding-block: 9px; border-bottom: 1px solid var(--t-line); }
+  .time-row { display: flex; align-items: baseline; gap: 20px; padding-block: 6px; border-bottom: 1px solid var(--t-line); }
   .time-row .t { flex: none; width: 92px; font: 400 24px/1 var(--t-font-display); color: var(--t-primary); }
   /* Fakta Race Information: tiga kolom bersekat garis */
   .fact { padding: 8px 24px; text-align: center; }
@@ -316,6 +333,69 @@
   /* Foto berbingkai (matte putih + garis tipis) */
   .photo-matte { padding: 8px; background: var(--t-paper); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
   .photo-matte img { display: block; width: 100%; border-radius: 2px; }
+  /* Kedalaman: bayangan tipis, hover mengangkat, sorotan di belakang produk, zebra rundown */
+  /* Sistem kartu: sudut 14px, permukaan bergradien tipis, highlight dalam, bayangan berlapis, hover mengangkat */
+  .card, .flow-tile, .info-card, details.faq {
+    border-radius: var(--t-radius-card);
+    border-color: color-mix(in srgb, var(--t-primary) 14%, var(--t-line));
+    background-image: linear-gradient(160deg, var(--t-surface) 50%, color-mix(in srgb, var(--t-primary) 7%, var(--t-surface)));
+    box-shadow: var(--t-shadow), inset 0 1px 0 var(--t-surface);
+  }
+  .flow-tile, .info-card, details.faq { transition: transform .2s, box-shadow .2s, border-color .2s; }
+  .flow-tile:hover, .info-card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--t-primary) 45%, var(--t-line)); box-shadow: 0 20px 34px -18px color-mix(in srgb, var(--t-primary) 60%, transparent), inset 0 1px 0 var(--t-surface); }
+  details.faq:hover { border-color: color-mix(in srgb, var(--t-primary) 40%, var(--t-line)); }
+  details.faq[open] { border-color: color-mix(in srgb, var(--t-primary) 45%, var(--t-line)); box-shadow: 0 18px 30px -18px color-mix(in srgb, var(--t-primary) 55%, transparent), inset 0 1px 0 var(--t-surface); }
+  .card-dark, .tl-card { border-radius: var(--t-radius-card); background-image: linear-gradient(160deg, color-mix(in srgb, var(--t-on-dark) 9%, var(--t-dark-card)), var(--t-dark-card)); border-color: color-mix(in srgb, var(--t-on-dark) 16%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--t-on-dark) 14%, transparent), 0 16px 28px -18px var(--t-darker); }
+  .tl-card { transition: transform .2s; }
+  .tl-item:hover .tl-card { transform: translateY(-4px); }
+  /* Motif lintasan pada kartu: tambalan stripe diagonal di pojok kanan atas + angka hantu di pojok kanan bawah */
+  ol:has(> .flow-tile), ol:has(> .tl-item) { counter-reset: step; }
+  .flow-tile, .tl-item { counter-increment: step; }
+  .flow-tile, .info-card, .tl-card { position: relative; overflow: hidden; }
+  .flow-tile > *, .info-card > *, .tl-card > * { position: relative; z-index: 1; }
+  .flow-tile::after, .info-card::after, .tl-card::after {
+    content: ""; position: absolute; top: 0; right: 0; width: 88px; height: 36px; pointer-events: none; transition: width .3s;
+    background: repeating-linear-gradient(115deg, color-mix(in srgb, var(--t-primary) 70%, transparent) 0 5px, transparent 5px 12px);
+    -webkit-mask-image: linear-gradient(270deg, #000, transparent); mask-image: linear-gradient(270deg, #000, transparent);
+  }
+  .tl-card::after { background: repeating-linear-gradient(115deg, var(--t-accent) 0 5px, transparent 5px 12px); }
+  .flow-tile:hover::after, .info-card:hover::after, .tl-item:hover .tl-card::after { width: 150px; }
+  .flow-tile::before, .tl-card::before { content: counter(step, decimal-leading-zero); position: absolute; right: 14px; bottom: -22px; font: 400 104px/1 var(--t-font-display); color: color-mix(in srgb, var(--t-primary) 9%, transparent); pointer-events: none; }
+  .tl-card::before { color: color-mix(in srgb, var(--t-on-dark) 7%, transparent); }
+  .photo-matte { border-radius: var(--t-radius-card); box-shadow: var(--t-shadow); }
+  .photo-matte img { border-radius: 8px; }
+  .spot { border-radius: var(--t-radius); background: radial-gradient(closest-side, color-mix(in srgb, var(--t-primary) 16%, transparent), transparent); }
+  .time-row { padding-inline: 12px; }
+  .time-row:nth-child(odd) { background: color-mix(in srgb, var(--t-primary) 6%, transparent); }
+  /* Section gelap bergradien dengan pendar lime dan hijau */
+  .bg-dark-glow {
+    background-color: var(--t-dark);
+    background-image:
+      radial-gradient(60% 90% at 100% 0%, color-mix(in srgb, var(--t-accent) 20%, transparent), transparent 70%),
+      radial-gradient(55% 80% at 0% 100%, color-mix(in srgb, var(--t-primary) 45%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--t-dark), var(--t-darker));
+  }
+  /* Timeline How to Join (proposal hal. 19): tanggal lime miring, titik pada garis putus-putus, kartu */
+  .tl-date { text-align: center; font: italic 700 16px var(--t-font-heading); color: var(--t-accent); }
+  .tl-track { position: relative; height: 24px; margin: 12px 0 18px; }
+  .tl-dot { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); border-radius: 999px; background: var(--t-dark); border: 3px solid var(--t-accent); }
+  .tl-item.is-now .tl-dot { background: var(--t-accent); }
+  .tl-item.is-now .tl-card { background: color-mix(in srgb, var(--t-accent) 18%, var(--t-dark-card)); border-color: color-mix(in srgb, var(--t-accent) 45%, transparent); }
+  @media (min-width: 1024px) {
+    .tl-track::before { content: ""; position: absolute; left: -12px; right: -12px; top: 50%; border-top: 2px dashed var(--t-accent); }
+    .tl-item:first-child .tl-track::before { left: 50%; }
+    .tl-item:last-child .tl-track::before { right: 50%; }
+  }
+  .tl-card { padding: 20px; }
+  .tl-card h3 { font-size: 16px; }
+  /* Pengalih kategori (5K / 10K): kontrol segmen, aktif berwarna penuh dan timbul */
+  .seg { display: inline-flex; gap: 4px; padding: 5px; background: color-mix(in srgb, var(--t-primary) 10%, var(--t-paper)); border: 1px solid var(--t-line); border-radius: 14px; }
+  .seg .tab-btn { min-width: 96px; padding: 10px 26px; border: 0; border-radius: 10px; background: transparent; color: var(--t-primary); font: 800 16px var(--t-font-heading); cursor: pointer; transition: background .15s, color .15s; }
+  .seg .tab-btn:hover { background: var(--t-paper); color: var(--t-primary-dark); }
+  .seg .tab-btn[aria-selected="true"] { background: var(--t-primary); color: var(--t-on-dark); box-shadow: 0 3px 0 var(--t-primary-dark); }
+  /* Subjudul dengan garis bawah pendek (underscore) */
+  .sub-title { position: relative; padding-bottom: 10px; }
+  .sub-title::after { content: ""; position: absolute; left: 0; bottom: 0; width: 48px; height: 3px; background: var(--t-primary); }
   .tbd { color: var(--t-ink-soft); font-style: italic; }
 
   /* ---- Pemilih item race pack ---- */
@@ -330,7 +410,7 @@
   .rp-icon { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: var(--t-radius); background: var(--t-accent); color: var(--t-on-accent); }
 
   /* ---- FAQ accordion ---- */
-  details.faq { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); margin-bottom: 10px; }
+  details.faq { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); margin-bottom: 10px; box-shadow: var(--t-shadow); }
   details.faq > summary {
     cursor: pointer; list-style: none; position: relative;
     padding: 18px 56px 18px 22px; font: 700 15px var(--t-font-heading); color: var(--t-dark);

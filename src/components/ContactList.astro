@@ -9,21 +9,21 @@ const { contact } = Astro.props;
 <div>
   {
     contact.people.length > 0 && (
-      <div class="overflow-x-auto">
-        <table class="w-full border-collapse bg-paper text-left text-sm">
+      <div class="card overflow-x-auto">
+        <table class="w-full border-collapse bg-paper text-left text-[0.8rem] sm:text-sm">
           <thead>
             <tr class="bg-primary text-white">
-              <th class="px-4 py-3 font-heading font-bold">Nama</th>
-              <th class="px-4 py-3 font-heading font-bold">Telepon</th>
-              <th class="px-4 py-3 text-right font-heading font-bold">WhatsApp</th>
+              <th class="px-2.5 py-3 sm:px-4 font-heading font-bold">Nama</th>
+              <th class="px-2.5 py-3 sm:px-4 font-heading font-bold">Telepon</th>
+              <th class="px-2.5 py-3 sm:px-4 text-right font-heading font-bold">WhatsApp</th>
             </tr>
           </thead>
           <tbody>
             {contact.people.map((p) => (
               <tr class="border-b border-line">
-                <td class="px-4 py-3 font-bold text-ink">{p.name}</td>
-                <td class="px-4 py-3 whitespace-nowrap"><a href={`tel:${p.phone.replace(/\D/g, '')}`}>{fmtPhone(p.phone)}</a></td>
-                <td class="px-4 py-3 text-right"><a class="btn btn-blue btn-sm" href={waLink(p.phone)} rel="noopener" target="_blank" aria-label={`WhatsApp ${p.name}`}>Chat</a></td>
+                <td class="px-2.5 py-3 sm:px-4 font-bold text-ink">{p.name}</td>
+                <td class="px-2.5 py-3 sm:px-4 whitespace-nowrap"><a href={`tel:${p.phone.replace(/\D/g, '')}`}>{fmtPhone(p.phone)}</a></td>
+                <td class="px-2.5 py-3 sm:px-4 text-right"><a class="btn btn-blue btn-sm !px-3" href={waLink(p.phone)} rel="noopener" target="_blank" aria-label={`WhatsApp ${p.name}`}>Chat</a></td>
               </tr>
             ))}
           </tbody>
