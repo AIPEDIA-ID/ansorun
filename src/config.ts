@@ -41,7 +41,7 @@ export const ui = {
   menuOpen: 'Buka menu',
   menuClose: 'Tutup menu',
   zoomMap: 'Perbesar peta',
-  prizesLabel: 'Hadiah',
+  racepackItemsLabel: 'Perlengkapan peserta',
   stepsNoticeTitle: 'Penting',
   comingSoon: 'Segera Hadir',
   backToTop: 'Kembali ke atas',

@@ -1,0 +1,36 @@
+---
+import Icon from './Icon.astro';
+import { md, waLink, fmtPhone } from '../lib/text';
+import type { ContactInfo } from '../lib/types';
+
+interface Props { contact: ContactInfo; compact?: boolean }
+const { contact, compact = false } = Astro.props;
+---
+
+<div class:list={['contact-list', compact && 'is-compact']}>
+  {
+    contact.people.length > 0 && (
+      <ul class:list={['grid gap-3', !compact && 'sm:grid-cols-3']}>
+        {contact.people.map((p) => (
+          <li class="contact-card">
+            <span class="step-icon"><Icon name="phone" size={20} /></span>
+            <div class="min-w-0">
+              <p class="font-heading text-[15px] font-bold text-dark">{p.name}</p>
+              <p class="text-sm"><a href={`tel:${p.phone.replace(/\D/g, '')}`}>{fmtPhone(p.phone)}</a></p>
+            </div>
+            <a class="btn btn-blue ml-auto !px-4 !py-2 !text-[11px]" href={waLink(p.phone)} rel="noopener" target="_blank" aria-label={`WhatsApp ${p.name}`}>WhatsApp</a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {contact.note && <div class="entry mt-4 text-sm" set:html={md(contact.note)} />}
+  {
+    (contact.website || contact.email) && (
+      <p class="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm">
+        {contact.website && <a href={contact.website} rel="noopener" target="_blank">{contact.website.replace(/^https?:\/\//, '')}</a>}
+        {contact.email && <a href={`mailto:${contact.email}`}>{contact.email}</a>}
+      </p>
+    )
+  }
+</div>

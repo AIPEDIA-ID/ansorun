@@ -6,21 +6,17 @@ import Steps from '../components/Steps.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import Icon from '../components/Icon.astro';
 import RouteTabs from '../components/RouteTabs.astro';
-import { getSiteData, getAbout, getHome, formatDate } from '../lib/content';
+import Prizes from '../components/Prizes.astro';
+import ContactList from '../components/ContactList.astro';
+import { getSiteData, getAbout, getHome, getContact, formatDate } from '../lib/content';
 import { img } from '../lib/datocms';
 import { md, rich } from '../lib/text';
 import { ui } from '../config';
 
 const { site, sponsors } = await getSiteData();
 const { about, faqs } = await getAbout();
-const { home, categories, raceInfo, prizes, items, joinSteps, contact } = await getHome();
-
-// Hadiah -> markdown daftar; kontak -> baris tautan
-const prizesMd = prizes.map((p) => `- **${p.title}**${p.description ? `: ${p.description}` : ''}`).join('\n');
-const contactLinks = [
-  contact.email && { label: contact.email, href: `mailto:${contact.email}` },
-  contact.whatsapp && { label: `WhatsApp ${contact.whatsapp}`, href: `https://wa.me/${contact.whatsapp.replace(/\D/g, '')}` },
-].filter(Boolean) as { label: string; href: string }[];
+const { home, categories, raceInfo, prizes, items, joinSteps } = await getHome();
+const contact = await getContact();
 
 // Kelompokkan sponsor per peran, urutan mengikuti CMS (kosong = tidak ditampilkan)
 const groups = new Map<string, typeof sponsors>();
@@ -152,13 +148,23 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 05. PRIZES & RACEPACK: hadiah dan perlengkapan peserta -->
-  <section class="section bg-dark-section on-dark" id="hadiah">
+  <!-- 05a. PRIZES: hadiah (dipisah dari racepack atas permintaan) -->
+  <section class="section" id="hadiah">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.prizesTitle)} />
       </div>
-      <RacepackViewer venue={ui.prizesLabel} schedule={prizesMd} items={items} />
+      <Prizes prizes={prizes} />
+    </div>
+  </section>
+
+  <!-- 05b. RACEPACK: perlengkapan peserta -->
+  <section class="section bg-dark-section on-dark" id="racepack">
+    <div class="container-x">
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(home.racepackTitle)} />
+      </div>
+      <RacepackViewer venue={ui.racepackItemsLabel} schedule="" items={items} />
     </div>
   </section>
 
@@ -190,14 +196,9 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
           </details>
         ))
       }
-      <div class="mt-12 text-center" id="kontak">
-        <h3 class="text-lg">{ui.contactLabel}</h3>
-        <div class="entry mt-2 text-sm" set:html={md(contact.note)} />
-        {contactLinks.length > 0 && (
-          <p class="mt-4 flex flex-wrap justify-center gap-3">
-            {contactLinks.map((c) => <a class="btn btn-blue" href={c.href} rel="noopener">{c.label}</a>)}
-          </p>
-        )}
+      <div class="mt-14" id="kontak">
+        <h3 class="mb-4 text-center text-lg">{ui.contactLabel}</h3>
+        <ContactList contact={contact} compact />
       </div>
     </div>
   </section>

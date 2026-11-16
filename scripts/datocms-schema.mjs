@@ -127,7 +127,8 @@ const models = [
       str('03 Event Highlights: ID video YouTube (mis. jNQXAC9IVRw)', 'video_id'),
       plainText('04 Race Information: judul (**tebal**)', 'race_title'),
       plainText('04 Rute: judul section (**tebal**)', 'route_title'),
-      plainText('05 Prizes & Racepack: judul (**tebal**)', 'prizes_title'),
+      plainText('05 Prizes: judul (**tebal**)', 'prizes_title'),
+      plainText('05 Racepack: judul (**tebal**)', 'racepack_title'),
       plainText('06 How to Join: judul (**tebal**)', 'join_title'),
     ],
   },
@@ -194,15 +195,24 @@ const models = [
   },
   {
     name: 'Section 05: Hadiah', api_key: 'prize', sortable: true,
-    fields: [str('Judul hadiah', 'title', true), plainText('Deskripsi', 'description')],
+    fields: [
+      f('Jumlah (mis. 5)', 'quantity', 'integer'),
+      str('Nama hadiah (mis. Motor Listrik Polytron Fox 200)', 'title', true),
+      plainText('Deskripsi (opsional)', 'description'),
+      image('Foto hadiah', 'image'),
+    ],
   },
   {
     name: 'Section 07: Kontak', api_key: 'contact_info', singleton: true,
     fields: [
+      url('Website', 'website'),
       str('Email', 'email'),
-      str('WhatsApp (format internasional tanpa +, mis. 62812xxxx)', 'whatsapp'),
       markdown('Catatan kontak', 'note'),
     ],
+  },
+  {
+    name: 'Section 07: Narahubung', api_key: 'contact_person', sortable: true,
+    fields: [str('Nama', 'name', true), str('Nomor WhatsApp (format lokal, mis. 0812xxxx)', 'phone', true)],
   },
   {
     name: 'Foto Galeri', api_key: 'gallery_photo', sortable: true,

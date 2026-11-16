@@ -74,7 +74,8 @@ export const sponsors: Sponsor[] = [];
 export const footerLinks: FooterLink[] = [
   { group: 'Event', label: 'About ANSORUN', url: '/#tentang' },
   { group: 'Event', label: 'Race Information', url: '/#race' },
-  { group: 'Event', label: 'Prizes & Racepack', url: '/#hadiah' },
+  { group: 'Event', label: 'Prizes', url: '/#hadiah' },
+  { group: 'Event', label: 'Racepack', url: '/#racepack' },
   { group: 'Peserta', label: 'How to Join', url: '/#daftar' },
   { group: 'Peserta', label: 'Racepack Collection', url: '/racepack' },
   { group: 'Peserta', label: 'FAQ & Contact', url: '/#faq' },
@@ -146,12 +147,13 @@ export const raceInfo: RaceInfo = {
 };
 
 /* ---- HOME 05: PRIZES & RACEPACK (hadiah dan perlengkapan peserta) ---- */
-// Hadiah utama: proposal hal. 13. CATATAN: merek dari proposal, konfirmasi klien boleh ditampilkan
+// Hadiah utama: proposal hal. 13 (foto = potongan gambar dari proposal, public/brand/hadiah-*.webp).
+// CATATAN: merek dari proposal, konfirmasi klien boleh ditampilkan
 export const prizes: Prize[] = [
-  { title: '1 Grandprize', description: 'BYD ATTO 1' },
-  { title: '5 Motor Listrik', description: 'Polytron Fox 200' },
-  { title: '10 Jam Garmin Runner', description: '' },
-  { title: '25 Headset Runner', description: '' },
+  { quantity: 1, title: 'Grandprize BYD ATTO 1', description: '', image: brand('hadiah-mobil.webp', 'BYD ATTO 1', 900, 459) },
+  { quantity: 5, title: 'Motor Listrik Polytron Fox 200', description: '', image: brand('hadiah-motor.webp', 'Motor listrik Polytron Fox 200', 338, 444) },
+  { quantity: 10, title: 'Jam Garmin Runner', description: '', image: brand('hadiah-jam.webp', 'Jam Garmin Runner', 409, 482) },
+  { quantity: 25, title: 'Headset Runner', description: '', image: brand('hadiah-headset.webp', 'Headset Runner', 450, 314) },
 ];
 
 // Perlengkapan: 4 item pertama = desain di assets_bank (Alt 1); sisanya dari daftar racepack proposal hal. 10 (tanpa gambar).
@@ -185,7 +187,17 @@ export const faqs: Faq[] = [
   { question: 'Bagaimana cara mengambil racepack?', answer: 'Lihat halaman [Racepack](/racepack) untuk informasi pengambilan.' },
 ];
 
-export const contact: ContactInfo = { email: '', whatsapp: '', note: ph('kontak') }; // TODO(data)
+// Kontak dari proposal hal. 27. CATATAN: nomor mungkin pribadi, klien meminta tetap dipasang
+export const contact: ContactInfo = {
+  people: [
+    { name: 'Dika', phone: '082118990008' },
+    { name: 'Hesti', phone: '082114338181' },
+    { name: 'Komet', phone: '08122720154' },
+  ],
+  website: 'https://www.ansorun.com',
+  email: '',
+  note: '',
+};
 
 /* ---- Judul section Beranda ---- */
 export const home: HomePage = {
@@ -194,7 +206,8 @@ export const home: HomePage = {
   videoId: 'jNQXAC9IVRw', // TODO(data): ID dummy, ganti dengan ID video YouTube promo yang asli
   raceTitle: 'Race **Information**',
   routeTitle: 'Rute **Lari**',
-  prizesTitle: 'Prizes & **Racepack**',
+  prizesTitle: '**Prizes**',
+  racepackTitle: '**Racepack**',
   joinTitle: 'How to **Join**',
 };
 

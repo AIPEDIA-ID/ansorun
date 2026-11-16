@@ -233,7 +233,7 @@ Legenda: `- [x]` terisi dari proposal (lihat bagian 14 untuk catatan asumsi), `-
 - [ ] Peta lokasi resmi dari klien (sementara link pencarian Google Maps buatan kami)
 
 **Home 05, PRIZES & RACEPACK**
-- [x] Hadiah: BYD ATTO 1, 5 Polytron Fox 200, 10 Garmin Runner, 25 headset runner
+- [x] Hadiah: BYD ATTO 1, 5 Polytron Fox 200, 10 Garmin Runner, 25 headset runner (section sendiri dengan foto dari proposal hal. 13)
 - [x] Deskripsi item: Jersey, Air Minum, Roti, Multivitamin, Kartu E-Money, Kalender Puasa
 - [ ] Deskripsi Finisher Medal, BIB, Tas Serut
 - [ ] Keputusan klien: Alt 1 atau Alt 2 untuk jersey, medali, BIB, tas (PDF memuat kedua alternatif di halaman 1 dan 2)
@@ -246,7 +246,7 @@ Legenda: `- [x]` terisi dari proposal (lihat bagian 14 untuk catatan asumsi), `-
 **Home 07, FAQ & CONTACT**
 - [x] FAQ awal (5 pertanyaan dari fakta proposal)
 - [ ] FAQ resmi dari klien
-- [ ] Kontak panitia: proposal hal. 27 memuat tiga nomor telepon dan www.ansorun.com, belum dipasang (butuh izin klien)
+- [x] Kontak panitia dari proposal hal. 27 (Dika, Hesti, Komet + www.ansorun.com) dipasang atas permintaan; catatan: nomor mungkin pribadi, tetap tandai untuk konfirmasi
 
 **Halaman 2, RACEPACK**
 - [ ] Hero image khusus halaman Racepack (sementara KV)
@@ -255,7 +255,7 @@ Legenda: `- [x]` terisi dari proposal (lihat bagian 14 untuk catatan asumsi), `-
 - [ ] Lokasi pengambilan
 - [ ] Dokumen yang harus dibawa
 - [ ] Mekanisme pengambilan yang diwakilkan (dan file surat kuasa bila ada)
-- [ ] Informasi kontak panitia
+- [x] Informasi kontak panitia (memakai kontak proposal hal. 27)
 - [ ] Deskripsi singkat tiap dari tiga langkah visual (judul sudah dari dokumen)
 
 **Umum**
@@ -427,6 +427,7 @@ Belum atau berbeda:
 - [ ] Stiker logo dan salep peregang otot (gambar racepack hal. 20) tidak dimasukkan
 - [ ] Kontak (hal. 27) dan www.ansorun.com belum ditampilkan
 - Disengaja tidak dipasang: harga dan benefit sponsor, publikasi, desain gate/a-board/photobooth
+- Kontak hal. 27 sekarang dipasang atas permintaan klien (lihat bagian 18)
 
 ### C. Terhadap digiland.co.id
 
@@ -450,3 +451,10 @@ Berbeda:
 - [ ] Foto atau ilustrasi untuk tiga langkah racepack (atau kartu bergaya digiland bila klien memberi foto)
 - [ ] Ganti video dummy dan isi URL registrasi sebelum publikasi
 - [ ] Tampilkan tahap penyaluran takjil (Ramadan 1448 H) bila klien setuju
+
+## 18. Revisi: Prizes dipisah dari Racepack, kontak dipasang
+
+- **Prizes dan Racepack dipisah** menjadi dua section (`#hadiah` dan `#racepack`), sehingga Home menjadi 9 blok. Ini **menyimpang dari `content_structure.md`** yang menulis "Prizes & Racepack" sebagai satu section; beri tahu klien. Hadiah tampil sebagai kartu dengan foto produk (potongan gambar dari proposal hal. 13: `public/brand/hadiah-mobil|motor|jam|headset.webp`) dan jumlah. Racepack tetap memakai pemilih item (jersey, medali, BIB, tas, dan seterusnya). Judul masing-masing section ada di model "Judul Section Beranda" (`prizes_title`, `racepack_title`).
+- Model hadiah di CMS sekarang punya `quantity`, `title`, `description`, `image`.
+- **Kontak** dari proposal hal. 27: tiga narahubung (nama dan nomor, tombol WhatsApp berupa link `wa.me` dengan awalan 62) dan situs www.ansorun.com. Tampil di FAQ & Contact (Home) dan di kartu Kontak panitia (halaman Racepack) lewat komponen `ContactList.astro`. Di CMS: model "Section 07: Kontak" (website, email, catatan) dan "Section 07: Narahubung" (daftar nama dan nomor).
+- [ ] Konfirmasi ke klien: nomor di hal. 27 boleh tampil publik (kemungkinan nomor pribadi) dan merek hadiah boleh ditampilkan. Foto hadiah berasal dari proposal, periksa hak pakainya.

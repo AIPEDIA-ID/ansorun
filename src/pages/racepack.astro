@@ -3,11 +3,13 @@ import Base from '../layouts/Base.astro';
 import PageBanner from '../components/PageBanner.astro';
 import Steps from '../components/Steps.astro';
 import Icon from '../components/Icon.astro';
-import { getRacepack } from '../lib/content';
+import ContactList from '../components/ContactList.astro';
+import { getRacepack, getContact } from '../lib/content';
 import { md, rich } from '../lib/text';
 import { ui } from '../config';
 
 const { page, steps } = await getRacepack();
+const contact = await getContact();
 
 // Kartu informasi: tanggal, jam, lokasi, dokumen, kontak
 const info = [
@@ -53,7 +55,7 @@ const info = [
           <span class="step-icon"><Icon name="phone" size={22} /></span>
           <div>
             <h3>Kontak panitia</h3>
-            <div class:list={['entry mt-1 text-sm', page.contact === ui.tbd && 'tbd']} set:html={md(page.contact)} />
+            <div class="mt-2"><ContactList contact={contact} compact /></div>
           </div>
         </div>
       </div>

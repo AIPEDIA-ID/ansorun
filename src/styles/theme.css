@@ -271,6 +271,10 @@
   .route-map-hint { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font: 700 12px var(--t-font-heading); letter-spacing: .04em; color: var(--t-on-accent); background: var(--t-accent); border-radius: 999px; }
   dialog.lightbox-wide { max-width: min(96vw, 1500px); }
 
+  /* ---- Kontak ---- */
+  .contact-card { display: flex; align-items: center; gap: 14px; padding: 16px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .contact-card .step-icon { flex: none; width: 40px; height: 40px; }
+
   /* ---- Kartu info (racepack) ---- */
   .info-card { display: flex; gap: 16px; padding: 22px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
   .info-card .step-icon { flex: none; width: 44px; height: 44px; }

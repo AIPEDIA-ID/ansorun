@@ -112,14 +112,22 @@ export interface RaceInfo {
 
 /** Section 05: hadiah (perlengkapan = RacepackItem) */
 export interface Prize {
-  title: string;
+  quantity: number | null; // jumlah hadiah, mis. 5
+  title: string; // mis. "Motor Listrik Polytron Fox 200"
   description: string;
+  image: Img | null;
 }
 
 /** Section 07: kontak */
+export interface ContactPerson {
+  name: string;
+  phone: string; // format lokal, mis. 0812xxxx
+}
+
 export interface ContactInfo {
+  people: ContactPerson[];
+  website: string;
   email: string;
-  whatsapp: string; // nomor internasional tanpa +, mis. 62812xxxx
   note: string; // markdown
 }
 
@@ -131,6 +139,7 @@ export interface HomePage {
   raceTitle: RichText;
   routeTitle: RichText;
   prizesTitle: RichText;
+  racepackTitle: RichText;
   joinTitle: RichText;
 }
 

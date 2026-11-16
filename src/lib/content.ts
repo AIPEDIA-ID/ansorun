@@ -6,7 +6,7 @@ import { LOCALE, TIMEZONE } from '../config';
 import { dato } from './datocms';
 import * as fb from './fallback';
 import type {
-  AboutPage, ContactInfo, Faq, GalleryPhoto, HomePage, Prize, RaceCategory, RaceInfo,
+  AboutPage, ContactInfo, ContactPerson, Faq, GalleryPhoto, HomePage, Prize, RaceCategory, RaceInfo,
   RacepackItem, RacepackPage, SiteData, SiteSettings, Step,
 } from './types';
 
@@ -91,18 +91,16 @@ export const getHome = () =>
       allPrizes: Prize[];
       allRacepackItems: RacepackItem[];
       allStepItems: Step[];
-      contactInfo: ContactInfo | null;
     }>(`{
-      homePage { metaDescription videoTitle videoId raceTitle routeTitle prizesTitle joinTitle }
+      homePage { metaDescription videoTitle videoId raceTitle routeTitle prizesTitle racepackTitle joinTitle }
       raceInfo {
         scheduleDate scheduleDetail locationName locationAddress locationMapUrl locationMapImage { ${IMG} }
         routeDetail routeMapUrl
       }
       allRaceCategories(orderBy: _position_ASC) { name detail routeDetail routeMapImage { ${IMG} } }
-      allPrizes(orderBy: _position_ASC) { title description }
+      allPrizes(orderBy: _position_ASC) { quantity title description image { ${IMG} } }
       allRacepackItems(orderBy: _position_ASC) { title description icon caption image { ${IMG} } }
       allStepItems(filter: { group: { eq: "join" } }, orderBy: _position_ASC) { title description icon }
-      contactInfo { email whatsapp note }
     }`);
     const info = { ...fb.raceInfo, ...defined(data?.raceInfo) } as RaceInfo;
     return {
@@ -112,8 +110,21 @@ export const getHome = () =>
       prizes: listOr(data?.allPrizes, fb.prizes),
       items: listOr(data?.allRacepackItems, fb.racepackItems),
       joinSteps: listOr(data?.allStepItems, fb.joinSteps),
-      contact: { ...fb.contact, ...defined(data?.contactInfo) } as ContactInfo,
     };
+  });
+
+/* ------------------------------------------------------------- kontak */
+export const getContact = () =>
+  once<ContactInfo>('contact', async () => {
+    const data = await dato<{ contactInfo: Omit<ContactInfo, 'people'> | null; allContactPeople: ContactPerson[] }>(`{
+      contactInfo { website email note }
+      allContactPeople(orderBy: _position_ASC) { name phone }
+    }`);
+    return {
+      ...fb.contact,
+      ...defined(data?.contactInfo),
+      people: listOr(data?.allContactPeople, fb.contact.people),
+    } as ContactInfo;
   });
 
 /* ----------------------------------------------------------- racepack */
