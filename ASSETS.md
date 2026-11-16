@@ -8,13 +8,13 @@ Format: foto → JPG/WebP kualitas 80–85, hasil akhir ≤ 400 KB per gambar. L
 
 | # | Aset | Ukuran / rasio | Sumber di PDF | Field di Dato |
 |---|---|---|---|---|
-| 1 | **Logo ANSORUN** (satu warna, teal gelap, latar transparan) | SVG, atau PNG tinggi ≥ 176 px. Tampil setinggi 44 px | Lettering di slide 1, 27 | Site Settings → Logo |
-| 2 | **Foto hero** (tanpa teks tertanam; objek utama di sisi kanan karena sisi kiri tertutup overlay gelap) | 1920×1080 min., 16:9 | Slide 1 (KV) — butuh versi **tanpa teks/logo** | Site Settings → Hero: gambar latar |
+| 1 | ~~Logo ANSORUN~~ **sudah terpasang** dari `.docs/assets_bank/KV DSGN` (versi gelap + hitam). Idealnya SVG vektor dari file .cdr | – | `public/brand/` | Site Settings → Logo / Logo latar terang |
+| 2 | ~~Foto hero~~ **KV approved sudah terpasang** (layout KV, `public/brand/kv.webp`) | – | `.docs/assets_bank/KV DSGN` | Site Settings → Hero: KV lengkap |
 | 3 | **Peta rute 5K** | 1700×956 (16:9) | Slide 11 | Rute Lari → "Rute 5K" → Gambar peta |
 | 4 | **Peta rute 10K** | 1700×956 (16:9) | Slide 12 | Rute Lari → "Rute 10K" → Gambar peta |
 | 5 | **Flat-lay isi race pack** | 1700×1070 (≈16:10) | Slide 20 (tanpa tepi lime) | Halaman Beranda → Gambar race pack |
 | 6 | **Logo sponsor** (versi putih/terang, latar transparan, satu file per sponsor) | SVG atau PNG ≥ 480×128 | Dari tiap sponsor | Sponsor → Logo (+ isi Peran) |
-| 7 | **Favicon** | `public/favicon.svg` + `public/favicon.ico` | Ikon "A" di slide 20 / logo | Ganti file di folder `public/` (saat ini masih favicon bawaan Astro) |
+| 7 | ~~Favicon~~ **sudah terpasang** (huruf A dari logo) | `public/favicon.png` + `.ico` | – | – |
 | 8 | **Nomor telepon panitia** (teks) | – | Slide 27 | Kontak Panitia |
 
 ## Opsional (meningkatkan kualitas)

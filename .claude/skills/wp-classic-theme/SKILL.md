@@ -9,7 +9,7 @@ Rasa visual: tema premium WordPress/ThemeForest sekitar 2017-2019. Datar, solid,
 
 ## Aturan keras (jangan dilanggar)
 - Warna solid. Tidak ada gradient dekoratif acak. Pengecualian: overlay gelap di atas foto hero, mask stripe, dan **gradient latar section/banner bila brand klien memakainya** (satu gradient, didefinisikan sebagai token `--t-grad-*` + `--t-gradient`, bukan ditulis ulang per section).
-- Tidak ada glassmorphism, `backdrop-blur`, glow, neon shadow, atau bayangan besar. Bayangan hanya tipis (header solid, lightbox).
+- Tidak ada glassmorphism, `backdrop-blur`, glow, neon shadow, atau bayangan besar. Bayangan hanya tipis (header solid, lightbox). (pengecualian: header/nav kaca `backdrop-filter` bila diminta klien, hanya di header).
 - Tidak ada emoji sebagai ikon. Ikon = SVG stroke tunggal, ukuran konsisten.
 - Tidak ada ungu/indigo sebagai warna default. Mulai dari biru, hijau, atau merah dari brand.
 - Radius kecil (4px) untuk kartu/input gambar; **pill penuh hanya** untuk tombol, tab, input newsletter.

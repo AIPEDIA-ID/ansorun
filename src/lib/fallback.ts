@@ -14,6 +14,8 @@ import type {
 const un = (id: string, alt: string): Img => ({ url: `https://images.unsplash.com/photo-${id}`, alt, width: null, height: null });
 // Gambar dari proposal klien (public/sample/) — placeholder sampai file asli dikirim.
 const sample = (file: string, alt: string, width: number, height: number): Img => ({ url: `/sample/${file}`, alt, width, height });
+// Aset brand final dari klien (diekspor dari .docs/assets_bank, lihat AGENTS.md)
+const brand = (file: string, alt: string, width: number, height: number, ogUrl?: string): Img => ({ url: `/brand/${file}`, alt, width, height, ...(ogUrl && { ogUrl }) });
 // Logo sponsor palsu (brand fiktif) — hanya untuk gambaran; file ada di public/dummy/
 const dummyLogo = (file: string, alt: string): Img => ({ url: `/dummy/sponsor-${file}.svg`, alt, width: 240, height: 64 });
 
@@ -31,17 +33,19 @@ const photo = {
 /* ---- situs ---- */
 export const site: SiteSettings = {
   eventName: 'ANSORUN 2027',
-  bannerTitle: '**ANSORUN**\n2027',
+  bannerTitle: '**ANSORUN** 2027',
   tagline: 'Tiap ayunan kaki, hadirkan jalan berbagi',
   metaDescription: 'ANSORUN 2027 Run to Ramadhan: lari 5K dan 10K di GBK Jakarta pada 31 Januari 2027. Hasil pendaftaran dikonversi menjadi takjil untuk yang membutuhkan.',
   categories: '5K • 10K',
   eventDate: '2027-01-31T05:30:00+07:00',
   location: 'GBK, Senayan, Jakarta',
   heroEyebrow: 'Run to Ramadhan',
-  heroHeadline: '**ANSORUN**\n2027',
+  heroHeadline: '**ANSORUN** 2027',
   heroSubheadline: 'Tiap ayunan kaki, hadirkan jalan berbagi.',
   heroImage: photo.trail,
-  logo: null,
+  logo: brand('logo-on-dark.webp', 'ANSORUN 2027 Run to Ramadan', 1000, 275),
+  logoOnLight: brand('logo-on-light.webp', 'ANSORUN 2027 Run to Ramadan', 1000, 275),
+  heroKv: brand('kv.webp', 'Key visual ANSORUN 2027 Run to Ramadan', 2400, 1351, '/brand/kv-og.jpg'),
   primaryColor: null,
   accentColor: null,
   registrationUrl: '/#join', // sementara menuju section How to Join; ganti dengan URL pendaftaran asli
@@ -66,10 +70,13 @@ export const sponsors: Sponsor[] = [
 ];
 
 export const footerLinks: FooterLink[] = [
+  { group: 'Event', label: 'Event Highlights', url: '/#highlights' },
   { group: 'Event', label: 'Race Information', url: '/#race' },
+  { group: 'Event', label: 'Hadiah & Race Pack', url: '/#prizes' },
   { group: 'Peserta', label: 'Cara Mendaftar', url: '/#join' },
   { group: 'Peserta', label: 'Racepack Collection', url: '/racepack' },
-  { group: 'Peserta', label: 'FAQ & Kontak', url: '/#faq' },
+  { group: 'Peserta', label: 'FAQ', url: '/#faq' },
+  { group: 'Peserta', label: 'Kontak', url: '/#kontak' },
 ];
 
 /* Kontak panitia: isi nomor asli di DatoCMS (model "Kontak Panitia"). */
@@ -81,32 +88,32 @@ export const contacts: Contact[] = [
 
 /* ---- beranda ---- */
 export const home: HomePage = {
-  aboutTitle: 'About\n**ANSORUN**',
+  aboutTitle: 'About **ANSORUN**',
   aboutBody: `**ANSORUN 2027 “Run to Ramadhan”** adalah ajang lari 5K dan 10K yang menyambut bulan suci Ramadhan 1448 H dengan semangat sehat, bergerak, dan berbagi.
 
 Bukan sekadar lomba lari: hasil pendaftaran peserta dikonversi menjadi paket takjil buka puasa untuk anak yatim piatu, lansia di panti jompo, dan masyarakat kurang mampu.`,
   stepsTitle: 'Dari garis start menjadi takjil buka puasa',
   beneficiariesTitle: 'Penerima manfaat',
-  highlightsTitle: 'Event\n**Highlights**',
+  highlightsTitle: 'Event **Highlights**',
   highlightsText: 'Saksikan cuplikan semangat berbagi dan berlari bersama di ANSORUN.',
   videoUrl: null,
   videoPoster: photo.sprint,
-  raceTitle: 'Race\n**Information**',
+  raceTitle: 'Race **Information**',
   raceText: 'Satu pagi, ribuan langkah kebaikan.',
   feeValue: 'Rp150.000 (5K) · Rp200.000 (10K)',
   feeNote: 'Sudah termasuk race pack lengkap. Hasil pendaftaran dikonversi menjadi takjil untuk yang membutuhkan pada bulan Ramadhan 2027.',
   rundownTitle: 'Rundown Race Day (Tentatif)',
   routesTitle: 'Rute Lari',
-  prizesTitle: 'Prizes &\n**Racepack**',
+  prizesTitle: 'Prizes & **Racepack**',
   prizesText: 'Hadiah utama menanti para pelari, dan setiap peserta membawa pulang race pack lengkap.',
   racepackTitle: 'Race pack peserta',
   racepackText: 'Perlengkapan untuk menemani lari dan puasa Anda.',
   racepackImage: sample('racepack.jpg', 'Isi race pack ANSORUN 2027', 1700, 1068),
-  joinTitle: 'How\n**to Join**',
+  joinTitle: 'How **to Join**',
   joinText: 'Daftar dulu, lalu ambil race pack Anda. Semuanya dalam enam langkah.',
-  faqTitle: 'FAQ &\n**Contact**',
-  faqText: 'Informasi tambahan seputar ANSORUN 2027. Belum menemukan jawabannya? Hubungi panitia.',
-  contactTitle: 'Hubungi panitia',
+  faqTitle: 'Pertanyaan yang **Sering Diajukan**',
+  faqText: 'Informasi tambahan seputar ANSORUN 2027.',
+  contactTitle: 'Hubungi **Panitia**',
   contactText: 'Kami siap membantu pendaftaran, race pack, dan informasi lainnya.',
 };
 
@@ -125,7 +132,7 @@ export const beneficiaries: Beneficiary[] = [
 export const raceFacts: RaceFact[] = [
   { value: '31 Jan 2027', note: 'Hari Minggu', icon: 'calendar' },
   { value: '05.30 WIB', note: 'Flag off 10K · 5K pukul 06.00 WIB', icon: 'clock' },
-  { value: 'Parkir Timur GBK / Hutan Kota GBK', note: 'Senayan, Jakarta', icon: 'pin' },
+  { value: 'GBK Senayan', note: 'Parkir Timur / Hutan Kota GBK, Jakarta (lokasi final TBC)', icon: 'pin' },
   { value: '5K & 10K', note: 'Kategori umum', icon: 'route' },
 ];
 
@@ -171,7 +178,7 @@ export const joinSteps: JoinStep[] = [
 /* ---- tentang ---- */
 export const about: AboutPage = {
   metaDescription: 'Kenali ANSORUN 2027 Run to Ramadhan: misi sosial, konsep takjil, dan jawaban atas pertanyaan yang sering diajukan peserta.',
-  sectionTitle: 'TENTANG\n**ANSORUN**',
+  sectionTitle: 'TENTANG **ANSORUN**',
   eyebrow: 'ANSORUN 2027 · RUN TO RAMADHAN',
   quote: 'Tiap ayunan kaki, hadirkan jalan berbagi.',
   body: `**ANSORUN 2027 “Run to Ramadhan”** adalah ajang lari 5K dan 10K yang menyambut bulan suci Ramadhan 1448 H dengan semangat sehat, bergerak, dan berbagi.
@@ -182,7 +189,7 @@ Acara ini juga menjadi salah satu sarana kolaborasi toleransi antarumat beragama
 
 Dalam momentum ini hadir pula **Podcast ANSOR Feat Clash of Religion**, podcast lintas agama yang sekaligus menjadi endorsement kegiatan, mengajak masyarakat berolahraga lari di hari Minggu dan berbagi berkah dari hasil sumbangan para pelari di bulan Ramadhan.`,
   faqEyebrow: 'Questions & Answers',
-  faqTitle: 'Pertanyaan yang\n**Sering Diajukan**',
+  faqTitle: 'Pertanyaan yang **Sering Diajukan**',
   faqText: 'Temukan informasi yang perlu Anda ketahui tentang ANSORUN 2027.',
 };
 
@@ -199,10 +206,10 @@ export const faqs: Faq[] = [
 export const racepackPage: RacepackPage = {
   metaDescription: 'Racepack Collection ANSORUN 2027: tanggal, jam, lokasi, dokumen yang dibawa, dan cara pengambilan race pack.',
   bannerImage: photo.laces,
-  title: 'Racepack\n**Collection**',
+  title: 'Racepack **Collection**',
   slogan: 'GET YOUR RACEPACK. GET READY TO RUN.',
   intro: 'Semua informasi pengambilan race pack ANSORUN 2027 ada di sini. Siapkan dokumen Anda dan ikuti tiga langkah berikut.',
-  stepsTitle: 'Tiga langkah\n**mengambil race pack**',
+  stepsTitle: 'Tiga langkah **mengambil race pack**',
   itemsTitle: 'Isi **race pack**',
   itemsText: 'Pilih item untuk melihat detailnya.',
   proxyFileUrl: null,
@@ -224,12 +231,15 @@ export const racepackSteps: RacepackStep[] = [
 ];
 
 export const racepackItems: RacepackItem[] = [
-  { title: 'Kaos Lari', description: 'Jersey resmi ANSORUN 2027.', icon: 'shirt', caption: null, image: null },
+  { title: 'Kaos Lari', description: 'Jersey resmi ANSORUN 2027.', icon: 'shirt', caption: 'Jersey Event', image: sample('race/jersey.webp', 'Jersey ANSORUN 2027 tampak depan dan belakang', 900, 517) },
+  { title: 'Tas Serut', description: 'Tas serut bermotif ANSORUN 2027.', icon: 'bag', caption: 'Tas Serut', image: sample('race/tas-serut.webp', 'Tas serut ANSORUN 2027', 700, 540) },
   { title: 'Air Minum', description: 'Hidrasi sebelum dan sesudah lari.', icon: 'bottle', caption: null, image: null },
   { title: 'Roti', description: 'Asupan energi untuk peserta.', icon: 'bread', caption: null, image: null },
   { title: 'Multivitamin', description: 'Menjaga daya tahan tubuh.', icon: 'pill', caption: null, image: null },
+  { title: 'Salep Peregang Otot', description: 'Untuk otot yang kaku setelah berlari.', icon: 'bandage', caption: null, image: null },
   { title: 'Kartu E-Money', description: 'Edisi khusus ANSORUN 2027 (TBC).', icon: 'wallet', caption: null, image: null },
-  { title: 'Kalender Puasa', description: 'Jadwal imsakiyah Ramadhan 1448 H.', icon: 'calendar', caption: null, image: null },
+  { title: 'Jadwal Puasa Ramadan', description: 'Kalender imsakiyah Ramadhan 1448 H.', icon: 'calendar', caption: null, image: null },
+  { title: 'Stiker Logo ANSORUN', description: 'Stiker dengan logo ANSORUN 2027.', icon: 'sticker', caption: null, image: null },
 ];
 
 /* ---- galeri ---- */

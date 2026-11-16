@@ -20,7 +20,6 @@ const bg = image ? `background-image:url(${img(image.url, 1920)})` : '';
 ---
 
 <section class:list={['page-banner', image && 'has-image']} style={bg}>
-  <div class="stripe-stack" aria-hidden="true"></div>
   <div class="container-x">
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="/">Beranda</a> <span class="mx-2 opacity-60">&rsaquo;</span> <span class="current">{crumb}</span>

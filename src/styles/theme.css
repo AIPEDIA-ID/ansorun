@@ -39,6 +39,7 @@
   --t-grad-top: #1e4550;    /* teal (diukur dari latar slide proposal) */
   --t-grad-mid: #2b5057;
   --t-grad-glow: #576344;   /* cahaya zaitun di bawah, seperti latar slide */
+  --t-hero-edge: color-mix(in srgb, var(--t-darker) 55%, transparent);
   --t-card-fill: #15363d;       /* kartu gelap (diukur dari slide: #15363f) */
   --t-card-line: #4f676e;       /* garis tipis abu-teal (slide: #50686f) */
   --t-card-hl-fill: #4d6954;    /* kartu penerima manfaat: hijau zaitun (slide: #4d6954) */
@@ -96,7 +97,7 @@
 
 @layer components {
   .container-x { width: 100%; max-width: var(--t-container); margin-inline: auto; padding-inline: 20px; }
-  .section { padding-block: 88px; }
+  .section { padding-block: 72px; }
   .on-dark { color: var(--t-on-dark); }
   .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: var(--t-on-dark); }
   .on-dark a:not(.btn) { color: var(--t-on-dark); }
@@ -111,24 +112,38 @@
   .on-dark .rich-accent strong { color: var(--t-accent); }
 
   /* Label kecil di atas judul */
-  .eyebrow { font: 700 12px var(--t-font-heading); letter-spacing: .22em; text-transform: uppercase; color: var(--t-primary); }
+  .eyebrow { font: 700 12px var(--t-font-heading); letter-spacing: .08em; text-transform: uppercase; color: var(--t-primary); }
   .on-dark .eyebrow { color: var(--t-highlight); }
 
   /* Judul section tengah */
-  .section-heading { text-align: center; max-width: 720px; margin: 0 auto 48px; }
+  .section-heading { text-align: center; max-width: 880px; margin: 0 auto 40px; }
+  .section-heading h2 { text-wrap: balance; }
   .section-heading h2 { font-size: clamp(28px, 4vw, 42px); margin-top: 10px; }
   .section-heading p { margin-top: 14px; color: var(--t-ink-soft); }
   .on-dark .section-heading p { color: var(--t-dark-ink); }
 
   /* ---- Header: transparan di atas hero, solid saat scroll ---- */
+  /* Header kaca (glass): melayang di atas hero; gelap di atas hero, terang setelah scroll */
   .header {
     position: fixed; inset-inline: 0; top: 0; z-index: 50;
     color: var(--t-on-dark);
-    transition: background-color .25s, box-shadow .25s, color .25s;
+    background: color-mix(in srgb, var(--t-darker) 34%, transparent);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5); backdrop-filter: blur(16px) saturate(1.5);
+    border-bottom: 1px solid color-mix(in srgb, var(--t-on-dark) 16%, transparent);
+    transition: background-color .25s, box-shadow .25s, color .25s, border-color .25s;
   }
-  .header.is-solid { background: var(--t-surface); color: var(--t-dark); box-shadow: 0 2px 14px rgb(0 0 0 / .12); }
-  .header .logo-img { filter: brightness(0) invert(1); transition: filter .25s; }
-  .header.is-solid .logo-img { filter: none; }
+  .header.is-solid {
+    background: color-mix(in srgb, var(--t-surface) 90%, transparent); color: var(--t-dark);
+    border-bottom-color: color-mix(in srgb, var(--t-dark) 10%, transparent); box-shadow: 0 2px 14px rgb(0 0 0 / .1);
+  }
+  /* Logo: dua file (latar gelap / terang) bila tersedia; satu file memakai filter putih saat header transparan */
+  .logo-img { display: block; height: 40px; width: auto; }
+  @media (min-width: 640px) { .logo-img { height: 52px; } }
+  .header .logo-on-light { display: none; }
+  .header.is-solid .logo-on-dark { display: none; }
+  .header.is-solid .logo-on-light { display: block; }
+  .header .logo-filter { filter: brightness(0) invert(1); transition: filter .25s; }
+  .header.is-solid .logo-filter { filter: none; }
   .site-title { font: 800 20px var(--t-font-heading); letter-spacing: -.2px; text-transform: uppercase; color: inherit; }
   .site-title:hover { color: inherit; opacity: .85; }
   .nav a {
@@ -145,25 +160,6 @@
   .header.is-solid .nav a::after { background: var(--t-primary); }
   .nav a:hover { color: inherit; }
   .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
-
-  /* ---- Stripe diagonal (motif lintasan) ---- */
-  .stripe-band {
-    height: 38px; pointer-events: none;
-    background:
-      linear-gradient(90deg, var(--t-accent) 0 38%, transparent 38%),
-      repeating-linear-gradient(115deg, var(--t-accent) 0 6px, transparent 6px 14px);
-    -webkit-mask-image: linear-gradient(90deg, #000 0 60%, transparent);
-            mask-image: linear-gradient(90deg, #000 0 60%, transparent);
-  }
-  .stripe-band-r { transform: scaleX(-1); }
-  .stripe-stack { position: absolute; right: 0; top: var(--t-header-h); height: 44%; width: 46%; pointer-events: none; opacity: .9;
-    background:
-      repeating-linear-gradient(115deg, var(--t-highlight) 0 5px, transparent 5px 11px) 100% 22% / 80% 34px no-repeat,
-      repeating-linear-gradient(115deg, var(--t-on-dark) 0 5px, transparent 5px 11px) 100% 52% / 62% 34px no-repeat,
-      repeating-linear-gradient(115deg, var(--t-highlight) 0 5px, transparent 5px 11px) 100% 82% / 90% 34px no-repeat;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 70%);
-            mask-image: linear-gradient(90deg, transparent, #000 70%);
-  }
 
   /* ---- Hero ---- */
   .hero {
@@ -183,6 +179,39 @@
   .hero > * { position: relative; }
   .hero h1 { color: var(--t-on-dark); font-weight: 300; font-size: clamp(40px, 7.4vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
   .hero-eyebrow { font: 500 clamp(15px, 2vw, 22px) var(--t-font-heading); letter-spacing: .04em; text-transform: uppercase; }
+
+  /* ---- Hero layout KV: gambar KV utuh (judul sudah ada di gambar), countdown & CTA di bawahnya ---- */
+  .hero-kv { position: relative; overflow: hidden; color: var(--t-on-dark); padding-top: var(--t-header-h); background-color: var(--t-grad-mid); background-image: var(--t-gradient); }
+  .hero-kv-media { position: relative; }
+  .hero-kv-img { position: relative; z-index: 1; display: block; width: 100%; height: auto; }
+  .hero-kv-bg { display: none; }
+  .hero-kv-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 28px 48px; padding-block: 36px 64px; }
+
+  /* Desktop: hero full cover. KV menutupi layar (object-fit: cover); header kaca di atasnya, countdown + tombol
+     dalam satu panel kaca kecil di kanan bawah (kiri bawah KV berisi tanggal & QR pendaftaran). */
+  @media (min-width: 1024px) and (min-height: 600px) and (min-aspect-ratio: 3/2) {
+    .hero-kv { height: 100svh; min-height: 620px; padding-top: 0; }
+    .hero-kv-media { position: absolute; inset: 0; }
+    .hero-kv-bg { display: none; }
+    /* KV mulai sedikit di bawah tepi atas supaya tagline tidak tertutup header */
+    .hero-kv-img { position: absolute; inset: 28px 0 0 0; width: 100%; height: calc(100% - 28px); object-fit: cover; object-position: 30% 20%; }
+    .hero-kv::after { content: ""; position: absolute; inset-inline: 0; bottom: 0; height: 26%; z-index: 2; pointer-events: none;
+      background: linear-gradient(0deg, color-mix(in srgb, var(--t-darker) 55%, transparent), transparent); }
+    .hero-kv-bar {
+      position: absolute; z-index: 3; bottom: 32px; width: auto; max-width: none; margin: 0;
+      right: max(24px, calc((100vw - var(--t-container)) / 2 + 20px));
+      flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 28px; padding: 12px 20px; bottom: 24px;
+      background: color-mix(in srgb, var(--t-darker) 46%, transparent);
+      -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+      border: 1px solid color-mix(in srgb, var(--t-on-dark) 16%, transparent); border-radius: var(--t-radius);
+    }
+    .hero-kv-bar > div > p { margin-bottom: 6px !important; font-size: 12px; }
+    .hero-kv-bar .count-num { font-size: clamp(26px, 2.6vw, 36px); }
+    .hero-kv-bar .count-label { font-size: 10px; margin-top: 2px; }
+    .hero-kv-bar .btn { padding: 9px 20px; font-size: 12px; }
+  }
+
+
 
   /* ---- Banner halaman dalam ---- */
   .page-banner {
@@ -232,7 +261,7 @@
   .card { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); box-shadow: 0 1px 2px rgb(0 0 0 / .04); }
   .card-olive { background: var(--t-card-hl-fill); border: 1px solid var(--t-card-hl-line); border-radius: var(--t-radius); color: var(--t-on-dark); }
   .card-dark { background: var(--t-card-fill); border: 1px solid var(--t-card-line); border-radius: var(--t-radius); color: var(--t-on-dark); }
-  .card-accent { border-top: 3px solid var(--t-accent); }   /* garis aksen di atas kartu, khas kotak ikon tema WP */
+  .card-accent { }   /* penanda kartu (tanpa dekorasi tambahan) */
   .card-dark h2, .card-dark h3, .card-dark h4, .card-dark a:not(.btn) { color: var(--t-on-dark); }
   .thumb { display: block; overflow: hidden; border-radius: var(--t-radius); background: var(--t-alt); }
   a.thumb img { transition: transform .35s; }
@@ -252,7 +281,7 @@
   .on-dark .entry { color: color-mix(in srgb, var(--t-on-dark) 85%, transparent); }
 
   /* ---- Tab pill ---- */
-  .tabs-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .tabs-list { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
   .tab-btn {
     padding: 9px 20px; cursor: pointer;
     font: 700 12.5px var(--t-font-heading); letter-spacing: .04em;
@@ -321,8 +350,8 @@
   .on-dark .card, .on-dark .tab-panel {
     background: var(--t-card-fill); border-color: var(--t-card-line); color: var(--t-on-dark); box-shadow: none;
   }
-  .on-dark .card-accent { border-top-width: 1px; border-top-color: var(--t-card-line); }
-  .section-heading h2, .title-italic { font-style: italic; }  /* judul section seragam: baris tipis + baris tebal, miring */
+  .section-heading h2 { font-weight: 700; }
+  .section-heading h2 br { display: none; }   /* judul section selalu satu baris (kecuali layar sempit membungkusnya) */
   .on-dark .section-heading h2 .rich-accent strong, .on-dark .rich-accent strong { color: var(--t-accent); }
   .on-dark .tab-btn { background: var(--t-card-fill); border-color: var(--t-card-line); color: var(--t-on-dark); }
   .on-dark .tab-btn[aria-selected="true"] { background: var(--t-accent); border-color: var(--t-accent); color: var(--t-on-accent); }
@@ -336,11 +365,9 @@
   @media (min-width: 768px) { .step-arrow { display: flex; } }
 
   /* Sub-judul di dalam section (mis. Pendaftaran / Race pack collection) */
-  .join-group { margin-bottom: 20px; font: italic 700 clamp(20px, 2.4vw, 26px)/1.2 var(--t-font-heading); }
-  .join-group::before { content: ""; display: inline-block; width: 28px; height: 4px; margin-right: 12px; vertical-align: middle; background: var(--t-accent); }
+  .join-group { margin-bottom: 20px; font: 700 clamp(20px, 2.2vw, 24px)/1.25 var(--t-font-heading); }
 
   /* Garis pemisah antar blok dalam satu section (mis. Hadiah | Race pack) */
-  .block-divider { height: 1px; margin: 72px 0 56px; background: var(--t-card-line); }
 
   /* ---- Kartu hadiah: foto produk (PNG/WebP transparan) di atas, jumlah + nama di bawah ---- */
   .prize-card { display: flex; flex-direction: column; overflow: hidden; }
@@ -364,7 +391,7 @@
   .on-dark .num { color: var(--t-accent); }
 
   /* Nilai besar di kartu info */
-  .stat { font: italic 800 clamp(22px, 2.6vw, 30px)/1.15 var(--t-font-heading); color: var(--t-primary); }
+  .stat { font: italic 800 clamp(18px, 1.9vw, 25px)/1.15 var(--t-font-heading); color: var(--t-primary); }
   .on-dark .stat { color: var(--t-accent); }
 
   /* Pembungkus video 16:9 */

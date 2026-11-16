@@ -2,6 +2,8 @@ import type { ICON_NAMES } from './icon-names.mjs';
 
 export interface Img {
   url: string;
+  /** URL khusus untuk og:image (mis. versi JPG kecil); bila kosong dipakai url biasa */
+  ogUrl?: string;
   alt?: string | null;
   width?: number | null;
   height?: number | null;
@@ -25,7 +27,9 @@ export interface SiteSettings {
   heroHeadline: RichText;
   heroSubheadline: string;
   heroImage: Img | null;
-  logo: Img | null;
+  heroKv: Img | null;      // KV lengkap (sudah berisi judul); bila ada, hero memakai layout KV
+  logo: Img | null;        // versi untuk latar gelap (di atas hero, footer)
+  logoOnLight: Img | null; // versi untuk latar terang (header putih); kosong = logo dipakai dengan CSS filter
   primaryColor: string | null; // hex, override tema
   accentColor: string | null;
   registrationUrl: string | null;

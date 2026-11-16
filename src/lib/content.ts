@@ -54,7 +54,7 @@ export const getSiteData = () =>
     }>(`{
       siteSetting {
         eventName bannerTitle tagline metaDescription categories eventDate location
-        heroEyebrow heroHeadline heroSubheadline heroImage { ${IMG} } logo { ${IMG} }
+        heroEyebrow heroHeadline heroSubheadline heroImage { ${IMG} } heroKv { ${IMG} } logo { ${IMG} } logoOnLight { ${IMG} }
         primaryColor { hex } accentColor { hex }
         registrationUrl registrationLabel
         galleryTitle galleryText
