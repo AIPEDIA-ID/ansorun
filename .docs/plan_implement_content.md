@@ -458,3 +458,18 @@ Berbeda:
 - Model hadiah di CMS sekarang punya `quantity`, `title`, `description`, `image`.
 - **Kontak** dari proposal hal. 27: tiga narahubung (nama dan nomor, tombol WhatsApp berupa link `wa.me` dengan awalan 62) dan situs www.ansorun.com. Tampil di FAQ & Contact (Home) dan di kartu Kontak panitia (halaman Racepack) lewat komponen `ContactList.astro`. Di CMS: model "Section 07: Kontak" (website, email, catatan) dan "Section 07: Narahubung" (daftar nama dan nomor).
 - [ ] Konfirmasi ke klien: nomor di hal. 27 boleh tampil publik (kemungkinan nomor pribadi) dan merek hadiah boleh ditampilkan. Foto hadiah berasal dari proposal, periksa hak pakainya.
+
+## 19. Ekstrak ulang dari PDF (About, Race Info + Rute, Hadiah & Racepack, halaman Racepack)
+
+Copy diganti teks apa adanya dari proposal; tema/CSS tidak diubah. Copy yang dikoreksi karena tidak ada di PDF: "ribuan", "sebagian besar", "komunitas lintas agama", "Doorprize", "Hadiah Utama & Doorprize" (kini "Hadiah Utama"), label "Unit", badge "Grand Prize", badge "Kategori Resmi", "Mulai dari Rp150.000", "Perlengkapan resmi lomba yang siap menemani langkah kebaikanmu", "Exclusive Runner Gear", "Alur pengambilan paket", emoji di tab. Judul "Event Highlights", "How to Join", "Race Information", "Prizes & Racepack" kini dari data (sesuai content_structure.md).
+
+- [ ] Nama event: PDF "ANSOR RUN 2027 Road to Ramadhan" vs KV "ANSORUN Run to Ramadan"
+- [ ] Jam flag off: hal. 5 "06.00" vs rundown hal. 8 "05.30 (10K) / 06.00 (5K)"
+- [ ] Hasil pendaftaran: hal. 2 "seluruh", hal. 4 "sebagian", hal. 5 "100%"
+- [ ] Venue: hal. 6 Hutan Kota GBK, hal. 7 Parkir Timur GBK, peta rute Pintu 7
+- [ ] Penampil bertanda TBC (Ndarboy Genk, MALIQ & D'Essentials) tampil seperti di PDF
+- [ ] Daftar racepack: hal. 10 hanya 6 item; medali, nomor dada (hal. 22) dan tas serut (assets_bank) belum ada deskripsi
+- [ ] FAQ: PDF tidak punya FAQ; pertanyaan di fallback buatan kami
+- [ ] Belum dikoreksi (di luar fokus): section FAQ/Kontak/CTA tambahan di index.astro, judul "TENTANG"/copy Race Info lain, copy tab Racepack di Home
+- [ ] Halaman Racepack: urutan baru = headline + 3 langkah, tanggal/jam/lokasi, dokumen + diwakilkan, kontak. Section "isi paket" dibuang (sudah ada di Home)
+- [x] Tema dikembalikan ke versi datar (ec74a9b): tanpa gradient/blur/bayangan besar, font klien (Neospeed, Golf, Osaca). Home dibangun dari versi data-driven + copy PDF; Prizes & Racepack satu section. ContactList ditulis ulang sebagai satu kartu daftar (nama, nomor, tombol WhatsApp per baris).

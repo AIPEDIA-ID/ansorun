@@ -93,13 +93,21 @@ export const footerLinks: FooterLink[] = [
 export const about: AboutPage = {
   metaDescription: site.metaDescription,
   sectionTitle: 'ABOUT\n**ANSORUN**',
-  // Dari proposal hal. 2, 3, 4. CATATAN: diringkas/dirapikan dari teks proposal, minta persetujuan klien.
-  body: `**ANSORUN Run to Ramadan 2027** adalah ajang lari **5K** dan **10K** yang menyambut bulan suci **Ramadan 1448 H** dengan semangat sehat, bergerak, dan berbagi. Digelar pada **31 Januari 2027** di GBK Senayan, Jakarta.
+  // Teks apa adanya dari proposal hal. 2 (body) dan hal. 4 (konsep sosial). CATATAN: PDF menulis "ANSOR RUN 2027 Road to Ramadhan", KV menulis "ANSORUN Run to Ramadan"; nama resmi menunggu konfirmasi klien
+  body: `ANSOR RUN 2027 “Road to Ramadhan” adalah ajang lari 5K dan 10K yang menyambut bulan suci Ramadhan 1448 H dengan semangat sehat, bergerak, dan berbagi.
 
-Setiap kilometer yang ditempuh pelari menjadi jalan kebaikan yang nyata.`,
-  mission: `**Misi sosial:** hasil pendaftaran peserta dikonversi menjadi paket takjil buka puasa. Paket takjil disalurkan langsung oleh GP Ansor bersama organisasi lintas agama dan perwakilan pelari kepada **anak yatim piatu**, **lansia di panti jompo**, dan **masyarakat kurang mampu**.
+Bukan sekadar lomba lari: seluruh hasil pendaftaran peserta dikonversi menjadi paket takjil buka puasa untuk anak yatim piatu, lansia di panti jompo, dan masyarakat kurang mampu.
 
-Kegiatan ini terbuka untuk semua kalangan lintas agama, sebagai sarana kolaborasi toleransi untuk jalan berbagi.`,
+Setiap kilometer yang ditempuh pelari menjadi jalan kebaikan yang nyata, dan setiap brand yang terlibat ikut menjadi bagian dari gerakan tersebut.
+
+Dan acara ini juga menjadi salah satu sarana kolaborasi toleransi antar umat beragama, tidak hanya Masyarakat muslim saja yang memeriahkan acara ini namun lintas semua agama juga akan berpartisipasi dalam mengikuti acara ini`,
+  mission: `**Konsep sosial: dari garis start menjadi takjil buka puasa**
+
+1. **Pendaftaran:** Rp150.000 per peserta untuk kategori 5K atau Rp.200.000 untuk 10K
+2. **Konversi takjil:** sebagian hasil pendaftaran dibelanjakan menjadi paket takjil buka puasa
+3. **Berbagi dari pelari:** Disalurkan langsung oleh GP Ansor Bersama Organisasi lintas Agama Bersama perwakilan pelari
+
+**Penerima manfaat:** Panti Asuhan Anak Yatim Piatu, Panti Jompo, Masyarakat Kurang Mampu`,
   faqTitle: 'FAQ &\n**Contact**',
 };
 
@@ -111,39 +119,37 @@ export const raceCategories: RaceCategory[] = [
   {
     name: '5K',
     detail: '**Rp150.000**\n\nKategori umum. Sudah termasuk racepack lengkap.',
-    routeDetail: '**Start / Finish:** Pintu 7 GBK (Jl. APEC)\n\n**Rute:** Pintu 7 GBK, Jl. Jenderal Sudirman, akses Kuningan (loop / putar balik), kembali melewati Jl. Jenderal Sudirman, Pintu 7 GBK.\n\n**Jarak:** ± 5 kilometer',
+    routeDetail: '**Start / Finish:** Pintu 7 GBK (Jalan APEC)\n\n**Rute:** Pintu 7 GBK – Jl. Jenderal Sudirman – Akses Kuningan (Loop / Putar Balik) – Kembali melewati Jl. Jenderal Sudirman – Pintu 7 GBK\n\n**Jarak:** ± 5 Kilometer',
     routeMapImage: brand('rute-5k.webp', 'Peta rute lari 5K ANSORUN 2027', 1671, 941),
   },
   {
     name: '10K',
     detail: '**Rp200.000**\n\nKategori umum. Sudah termasuk racepack lengkap.',
-    routeDetail: '**Start / Finish:** Pintu 7 GBK (Jl. APEC)\n\n**Rute:** Pintu 7 GBK, Jl. Jenderal Sudirman, Semanggi, Dukuh Atas, Jl. MH Thamrin, Bundaran HI (putar balik 1), kembali via Jl. Jenderal Sudirman, Bundaran Senayan / Patung Pemuda Membangun (putar balik 2), kembali ke Pintu 7 GBK.\n\n**Jarak:** ± 10 kilometer',
+    routeDetail: '**Start / Finish:** Pintu 7 GBK (Jalan APEC)\n\n**Rute:** Pintu 7 GBK – Jl. Jenderal Sudirman – Semanggi – Dukuh Atas – Jl. MH Thamrin – Bundaran HI (Putar Balik 1) – Kembali via Jl. Jenderal Sudirman – Bundaran Senayan / Patung Pemuda Membangun (Putar Balik 2) – Kembali ke Pintu 7 GBK\n\n**Jarak:** ± 10 Kilometer',
     routeMapImage: brand('rute-10k.webp', 'Peta rute lari 10K ANSORUN 2027', 1672, 941),
   },
 ];
 
 export const raceInfo: RaceInfo = {
   scheduleDate: 'Minggu, 31 Januari 2027',
-  // Rundown tentatif (proposal hal. 8). CATATAN: nama penampil bertanda TBC sengaja tidak ditulis; podcast ikut ditulis karena ada di rundown.
-  scheduleDetail: `*Rundown tentatif, dapat berubah.*
-
-| Waktu (WIB) | Acara |
+  // Rundown tentatif, apa adanya dari proposal hal. 8
+  scheduleDetail: `| Waktu | Acara |
 |---|---|
-| 04.30 | Open gate dan registrasi ulang |
+| 04.30 | Open gate & registrasi ulang |
 | 05.00 | Pemanasan bersama |
 | 05.30 | Flag off 10K |
 | 06.00 | Flag off 5K |
-| 07.30 | Finish, recovery dan bazar |
-| 08.30 | Penampilan hiburan |
-| 09.15 | Seremoni dan pelepasan takjil simbolis |
-| 10.15 | Podcast |
-| 10.30 | Penampilan hiburan |
-| 11.30 | Grand prize dan acara selesai |`,
-  locationName: 'GBK Senayan, Jakarta',
-  locationAddress: 'Start dan finish: Pintu 7 GBK (Jl. APEC)', // CATATAN: titik venue (Hutan Kota GBK / Parkir Timur GBK, proposal hal. 6-7) menunggu konfirmasi klien
+| 07.30 | Finish, recovery & bazar |
+| 08.30 | Penampilan Ndarboy Genk ( TBC ) |
+| 09.15 | Seremoni & pelepasan takjil simbolis |
+| 10.15 | Podcast CLASH OG RELIGION |
+| 10.30 | Penampilan MALIQ & D'Essentials ( TBC ) |
+| 11.30 | Grand Prize & Acara selesai |`,
+  locationName: 'Parkir Timur GBK / Hutan Kota GBK', // proposal hal. 5. CATATAN: hal. 6 menulis Hutan Kota GBK, hal. 7 Parkir Timur GBK, peta rute memakai Pintu 7. Menunggu konfirmasi klien
+  locationAddress: 'Senayan, Jakarta',
   locationMapUrl: 'https://www.google.com/maps/search/?api=1&query=Pintu+7+GBK+Senayan+Jakarta', // CATATAN: link pencarian Google Maps buatan kami, bukan dari klien
   locationMapImage: null,
-  routeDetail: '*Peta berupa ilustrasi konsep. Jalur final menunggu validasi GPS dan perizinan.*',
+  routeDetail: '*Ilustrasi konsep – perlu validasi GPS dan perizinan.*', // tertulis di gambar peta hal. 11 dan 12
   routeMapUrl: null,
 };
 
@@ -158,17 +164,17 @@ export const prizes: Prize[] = [
 ];
 
 // Perlengkapan: 4 item pertama = desain di assets_bank (Alt 1); sisanya dari daftar racepack proposal hal. 10 (tanpa gambar).
-// CATATAN: daftar final belum pasti (proposal tidak menyebut medali, BIB, tas serut; desain tidak menyebut roti dst.).
+// CATATAN: hal. 10 hanya mencantumkan 6 item (tanpa medali, nomor dada, tas serut; ketiganya ada sebagai desain di hal. 22 dan assets_bank). Daftar final menunggu klien.
 export const racepackItems: RacepackItem[] = [
-  { title: 'Jersey', description: 'Jersey resmi ANSORUN 2027.', icon: 'shirt', caption: null, image: brand('jersey.webp', 'Jersey ANSORUN 2027 tampak depan dan belakang', 1400, 809) },
-  { title: 'Finisher Medal', description: ph('deskripsi'), icon: 'medal', caption: null, image: brand('medali.webp', 'Medali ANSORUN 2027', 1200, 684) },
-  { title: 'BIB', description: ph('deskripsi'), icon: 'bib', caption: null, image: brand('bib.webp', 'Nomor dada ANSORUN 2027', 1200, 857) },
+  { title: 'Kaos Lari', description: 'Jersey resmi ANSOR RUN 2027', icon: 'shirt', caption: null, image: brand('jersey.webp', 'Jersey ANSORUN 2027 tampak depan dan belakang', 1400, 809) },
+  { title: 'Medali', description: ph('deskripsi'), icon: 'medal', caption: null, image: brand('medali.webp', 'Medali ANSORUN 2027', 1200, 684) },
+  { title: 'Nomor Dada', description: ph('deskripsi'), icon: 'bib', caption: null, image: brand('bib.webp', 'Nomor dada ANSORUN 2027', 1200, 857) },
   { title: 'Tas Serut', description: ph('deskripsi'), icon: 'bag', caption: null, image: brand('tas.webp', 'Tas serut ANSORUN 2027', 1000, 771) },
-  { title: 'Air Minum', description: 'Hidrasi sebelum dan sesudah lari.', icon: 'star', caption: null, image: null },
-  { title: 'Roti', description: 'Asupan energi untuk peserta.', icon: 'star', caption: null, image: null },
-  { title: 'Multivitamin', description: 'Menjaga daya tahan tubuh.', icon: 'star', caption: null, image: null },
-  { title: 'Kartu E-Money', description: 'Edisi khusus ANSORUN 2027 (masih TBC).', icon: 'star', caption: null, image: null },
-  { title: 'Kalender Puasa', description: 'Jadwal imsakiyah Ramadan 1448 H.', icon: 'star', caption: null, image: null },
+  { title: 'Air Minum', description: 'Hidrasi sebelum dan sesudah lari', icon: 'star', caption: null, image: null },
+  { title: 'Roti', description: 'Asupan energi untuk peserta', icon: 'star', caption: null, image: null },
+  { title: 'Multivitamin', description: 'Menjaga daya tahan tubuh', icon: 'star', caption: null, image: null },
+  { title: 'Kartu E-Money', description: 'Edisi khusus ANSOR RUN 2027 ( TBC )', icon: 'star', caption: null, image: null },
+  { title: 'Kalender Puasa', description: 'Jadwal imsakiyah Ramadhan 1448 H', icon: 'star', caption: null, image: null },
 ];
 
 /* ---- HOME 06: HOW TO JOIN (pendaftaran dan race pack collection) ---- */
@@ -207,7 +213,7 @@ export const home: HomePage = {
   videoId: 'jNQXAC9IVRw', // TODO(data): ID dummy, ganti dengan ID video YouTube promo yang asli
   raceTitle: 'Race **Information**',
   routeTitle: 'Rute **Lari**',
-  prizesTitle: '**Prizes**',
+  prizesTitle: 'Prizes & **Racepack**',
   racepackTitle: '**Racepack**',
   joinTitle: 'How to **Join**',
 };

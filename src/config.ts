@@ -42,6 +42,9 @@ export const ui = {
   menuClose: 'Tutup menu',
   zoomMap: 'Perbesar peta',
   racepackItemsLabel: 'Perlengkapan peserta',
+  // Label dari heading slide proposal (hal. 13 dan 10)
+  prizesSub: 'Hadiah Utama',
+  racepackSub: 'Racepack Peserta',
   stepsNoticeTitle: 'Penting',
   comingSoon: 'Segera Hadir',
   backToTop: 'Kembali ke atas',
@@ -56,7 +59,7 @@ export const ui = {
  *      tag = Osaca Medium Italic (tagline, eyebrow) | display = Golf Italic (judul besar, angka; hanya ukuran besar)
  */
 export const fonts = {
-  href: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;0,900;1,500;1,700&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap',
+  href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap',
   faces: [
     { family: 'Neospeed', file: 'neospeed.woff2', style: 'normal' },
     { family: 'Neospeed', file: 'neospeed-oblique.woff2', style: 'italic' },
@@ -65,10 +68,10 @@ export const fonts = {
     { family: 'Osaca', file: 'osaca-medium-italic.woff2', style: 'normal' },
     { family: 'Osaca', file: 'osaca-medium-italic.woff2', style: 'italic' },
   ],
-  heading: '"Montserrat", "Helvetica Neue", Arial, sans-serif',
+  heading: '"Neospeed", "Montserrat", "Helvetica Neue", Arial, sans-serif',
   body: '"Open Sans", "Helvetica Neue", Arial, sans-serif',
-  tag: '"Montserrat", "Open Sans", Arial, sans-serif',
-  display: '"Golf", "Montserrat", Arial, sans-serif',
+  tag: '"Osaca", "Open Sans", Arial, sans-serif',
+  display: '"Golf", "Neospeed", Arial, sans-serif',
 };
 
 /** @font-face untuk font klien. Rentang weight 100–900 agar browser tidak membuat faux-bold. */

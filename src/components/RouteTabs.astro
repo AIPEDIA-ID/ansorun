@@ -5,8 +5,8 @@ import { md } from '../lib/text';
 import { ui } from '../config';
 import type { RaceCategory } from '../lib/types';
 
-interface Props { items: RaceCategory[]; registrationUrl?: string }
-const { items, registrationUrl } = Astro.props;
+interface Props { items: RaceCategory[] }
+const { items } = Astro.props;
 const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 
@@ -16,7 +16,7 @@ const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     {
       items.map((c, i) => (
         <button type="button" role="tab" class="tab-btn" data-key={key(c.name)} id={`route-tab-${i}`} aria-controls={`route-panel-${i}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
-          Kategori {c.name}
+          {c.name}
         </button>
       ))
     }
@@ -24,7 +24,7 @@ const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
   {
     items.map((c, i) => (
-      <div role="tabpanel" class="tab-panel grid items-start gap-6 lg:grid-cols-[1.6fr_1fr]" id={`route-panel-${i}`} aria-labelledby={`route-tab-${i}`} hidden={i !== 0}>
+      <div role="tabpanel" class="tab-panel grid items-start gap-6 lg:grid-cols-[1.8fr_1fr]" id={`route-panel-${i}`} aria-labelledby={`route-tab-${i}`} hidden={i !== 0}>
         {c.routeMapImage ? (
           <button type="button" class="route-map" data-full={img(c.routeMapImage.url, 2400)} data-alt={c.routeMapImage.alt ?? `Peta rute ${c.name}`} aria-label={`${ui.zoomMap}: ${c.name}`}>
             <img src={img(c.routeMapImage.url, 1400)} alt={c.routeMapImage.alt ?? `Peta rute ${c.name}`} width={c.routeMapImage.width ?? 1400} height={c.routeMapImage.height ?? 788} class="block w-full" loading="eager" decoding="async" />
@@ -33,29 +33,9 @@ const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
         ) : (
           <div class="card grid min-h-[240px] place-items-center p-8 text-center tbd">{ui.tbd}</div>
         )}
-        <div class="card p-6 flex flex-col justify-between">
-          <div>
-            <div class="flex items-baseline justify-between border-b border-line/40 pb-3">
-              <h3 class="font-heading text-3xl sm:text-4xl font-extrabold text-accent">{c.name}</h3>
-              <span class="rounded-[4px] bg-accent/15 px-2.5 py-1 font-heading text-xs font-bold text-accent border border-accent/30">Kategori Resmi</span>
-            </div>
-            {c.detail && (
-              <div class="mt-4 rounded-[4px] bg-alt/60 p-4 border border-line/50">
-                <div class="entry text-sm text-dark-ink" set:html={md(c.detail)} />
-              </div>
-            )}
-            {c.routeDetail && (
-              <div class="mt-4">
-                <h4 class="font-heading text-xs font-bold uppercase tracking-wider text-accent mb-2">Informasi Lintasan</h4>
-                <div class="entry text-sm text-dark-ink" set:html={md(c.routeDetail)} />
-              </div>
-            )}
-          </div>
-          {registrationUrl && (
-            <div class="mt-6 pt-4 border-t border-line/40">
-              <a class="btn btn-sm w-full" href={registrationUrl}>Daftar Kategori {c.name}</a>
-            </div>
-          )}
+        <div class="card p-6">
+          <h3 class="font-display text-4xl text-primary">{c.name}</h3>
+          <div class="entry mt-3 text-sm" set:html={md(c.routeDetail)} />
         </div>
       </div>
     ))

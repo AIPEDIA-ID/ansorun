@@ -4,16 +4,14 @@ import PageBanner from '../components/PageBanner.astro';
 import Steps from '../components/Steps.astro';
 import Icon from '../components/Icon.astro';
 import ContactList from '../components/ContactList.astro';
-import RacepackViewer from '../components/RacepackViewer.astro';
-import { getRacepack, getContact, getHome } from '../lib/content';
+import { getRacepack, getContact } from '../lib/content';
 import { md, rich } from '../lib/text';
 import { ui } from '../config';
 
 const { page, steps } = await getRacepack();
-const { items } = await getHome();
 const contact = await getContact();
 
-// Kartu informasi: tanggal, jam, lokasi, dokumen, kontak
+// Kartu informasi pengambilan: tanggal, jam, lokasi
 const info = [
   { icon: 'calendar', title: 'Tanggal pengambilan', text: page.date },
   { icon: 'clock', title: 'Jam operasional', text: page.hours },
@@ -24,13 +22,19 @@ const info = [
 <Base title="Racepack" description={page.metaDescription}>
   <PageBanner crumb="Racepack" title={page.bannerTitle} tagline="" image={page.heroImage?.url} />
 
-  <!-- Info pengambilan -->
-  <section class="section" id="info">
+  <!-- 1. Headline + tiga langkah visual -->
+  <section class="section" id="langkah">
     <div class="container-x">
-      <div class="section-heading">
+      <div class="section-heading !mb-10">
         <h2 class="rich rich-accent" set:html={rich(page.title)} />
       </div>
+      <Steps steps={steps} dark />
+    </div>
+  </section>
 
+  <!-- 2. Kapan dan di mana: tanggal, jam, lokasi pengambilan -->
+  <section class="section" id="info">
+    <div class="container-x">
       <div class="grid gap-4 md:grid-cols-3">
         {
           info.map((c) => (
@@ -44,8 +48,13 @@ const info = [
           ))
         }
       </div>
+    </div>
+  </section>
 
-      <div class="mt-4 grid gap-4 md:grid-cols-2">
+  <!-- 3. Yang perlu disiapkan: dokumen dan pengambilan diwakilkan -->
+  <section class="section" id="persiapan">
+    <div class="container-x">
+      <div class="grid gap-4 md:grid-cols-2">
         <div class="info-card">
           <span class="step-icon"><Icon name="id" size={22} /></span>
           <div>
@@ -53,56 +62,29 @@ const info = [
             <div class="entry mt-1 text-sm" set:html={md(page.documents)} />
           </div>
         </div>
-        <div class="info-card">
-          <span class="step-icon"><Icon name="phone" size={22} /></span>
+        <div class="info-card" id="perwakilan">
+          <span class="step-icon"><Icon name="file" size={22} /></span>
           <div>
-            <h3>Kontak panitia</h3>
-            <div class="mt-2"><ContactList contact={contact} compact /></div>
+            <h3>Pengambilan diwakilkan</h3>
+            <div class="entry mt-1 text-sm" set:html={md(page.proxyNote)} />
+            {
+              page.proxyFileUrl && (
+                <p class="mt-4"><a class="btn btn-blue btn-sm" href={page.proxyFileUrl} download><Icon name="download" size={16} /> {page.proxyFileLabel}</a></p>
+              )
+            }
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Tiga langkah visual -->
-  <section class="section" id="langkah">
-    <div class="container-x">
+  <!-- 4. Informasi kontak panitia (proposal hal. 27) -->
+  <section class="section" id="kontak">
+    <div class="container-x max-w-4xl">
       <div class="section-heading !mb-8">
-        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
-          ALUR <strong>PENGAMBILAN PAKET</strong>
-        </h2>
+        <h2 class="rich rich-accent">KONTAK <strong>PANITIA</strong></h2>
       </div>
-      <Steps steps={steps} dark />
-    </div>
-  </section>
-
-  <!-- Isi Paket Lomba: Jersey, Medali, BIB, Tas Serut -->
-  <section class="section" id="isi">
-    <div class="container-x">
-      <div class="section-heading">
-        <p class="eyebrow">Perlengkapan Peserta</p>
-        <h2 class="rich rich-accent">EXCLUSIVE <strong>RUNNER GEAR</strong></h2>
-        <p>Paket perlengkapan resmi yang diterima setiap peserta yang terdaftar.</p>
-      </div>
-      <RacepackViewer venue={ui.racepackItemsLabel} schedule="Perlengkapan resmi lomba yang siap menemani langkah kebaikanmu." items={items} />
-    </div>
-  </section>
-
-  <!-- Pengambilan diwakilkan -->
-  <section class="section" id="perwakilan">
-    <div class="container-x max-w-3xl">
-      <div class="card flex gap-5 p-7">
-        <span class="step-icon flex-none"><Icon name="file" size={26} /></span>
-        <div>
-          <h3 class="text-lg">Pengambilan diwakilkan</h3>
-          <div class="entry mt-2 text-sm" set:html={md(page.proxyNote)} />
-          {
-            page.proxyFileUrl && (
-              <p class="mt-4"><a class="btn btn-blue" href={page.proxyFileUrl} download><Icon name="download" size={16} /> {page.proxyFileLabel}</a></p>
-            )
-          }
-        </div>
-      </div>
+      <ContactList contact={contact} />
     </div>
   </section>
 </Base>

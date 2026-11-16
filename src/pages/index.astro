@@ -28,34 +28,31 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <section class="hero-poster on-dark">
     {
       site.heroImage && (
-        <div class="hero-poster-media">
-          <img
-            src={img(site.heroImage.url, 2400)}
-            alt={site.heroImage.alt ?? site.eventName}
-            width={site.heroImage.width ?? 2400}
-            height={site.heroImage.height ?? 1351}
-            fetchpriority="high"
-            decoding="async"
-          />
-          <div class="hero-fade-bottom" aria-hidden="true" />
-        </div>
+        <img
+          src={img(site.heroImage.url, 2400)}
+          alt={site.heroImage.alt ?? site.eventName}
+          width={site.heroImage.width ?? 2400}
+          height={site.heroImage.height ?? 1351}
+          fetchpriority="high"
+          decoding="async"
+        />
       )
     }
-    <div class="container-x flex flex-col items-center text-center gap-1.5 sm:gap-2 py-2 sm:py-3 flex-none">
-      <h1 class="hero-eyebrow text-accent !text-sm sm:!text-base md:!text-lg font-bold">{site.heroHeadline}</h1>
-      <p class="font-heading text-xs sm:text-sm font-bold text-white/90">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
-      {site.registrationUrl && <div class="mt-1"><a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a></div>}
+    <div class="container-x flex flex-wrap items-center justify-between gap-x-10 gap-y-5 py-8">
+      <div>
+        <h1 class="hero-eyebrow">{site.heroHeadline}</h1>
+        <p class="mt-1 font-heading text-sm font-bold">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
+      </div>
+      {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
     </div>
-    <div class="flex-none">
-      <Countdown target={site.eventDate} embedded />
-    </div>
+    <Countdown target={site.eventDate} embedded />
     {
       groups.size > 0 && (
-        <div class="container-x flex flex-wrap items-center justify-center gap-x-12 gap-y-4 pb-4 text-center flex-none">
+        <div class="container-x flex flex-wrap items-end gap-x-10 gap-y-4 pb-8">
           {[...groups].map(([role, list]) => (
             <div>
-              <div class="mb-1 text-[10px] font-semibold uppercase tracking-[.2em] text-white/60">{role}</div>
-              <div class="flex items-center justify-center gap-4">
+              <div class="mb-1.5 text-[10px] font-semibold uppercase tracking-[.2em] text-white/60">{role}</div>
+              <div class="flex items-center gap-4">
                 {list.map((s) => {
                   const inner = s.logo
                     ? <img src={img(s.logo.url, 240)} alt={s.name} class="h-8 w-auto" loading="lazy" />
@@ -68,48 +65,28 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         </div>
       )
     }
-    <div class="stripe-band flex-none" aria-hidden="true"></div>
+    <div class="stripe-band" aria-hidden="true"></div>
   </section>
 
-  <!-- 02. ABOUT ANSORUN: tentang event dan konsep sosial dari PDF -->
-  <section class="section section-about" id="tentang">
-    <div class="container-x">
-      <div class="section-heading !mb-10">
-        <h1 class="rich rich-accent text-3xl sm:text-4xl lg:text-5xl font-extrabold uppercase tracking-wide">
-          TENTANG <strong>EVENT</strong>
-        </h1>
+  <!-- 02. ABOUT ANSORUN: tentang event dan misi sosial -->
+  <section class="section bg-alt" id="tentang">
+    <div class="container-x grid gap-12 md:grid-cols-[1fr_1.5fr]">
+      <div>
+        <h2 class="rich rich-accent font-display text-[clamp(34px,5vw,56px)] font-normal leading-[1.05] text-primary" set:html={rich(about.sectionTitle)} />
+        <div class="mt-6 h-[3px] w-16 bg-primary"></div>
       </div>
-
-      <!-- 3 Kartu Konsep Sosial dari Proposal PDF -->
-      <div class="grid gap-5 md:grid-cols-3">
-        <div class="concept-card">
-          <span class="concept-num">01</span>
-          <h3>Pendaftaran</h3>
-          <p>Kategori 5K (Rp150.000) dan 10K (Rp200.000). Sudah termasuk paket racepack resmi lengkap.</p>
-        </div>
-
-        <div class="concept-card">
-          <span class="concept-num">02</span>
-          <h3>Konversi Takjil</h3>
-          <p>Sebagian besar hasil pendaftaran dibelanjakan menjadi ribuan paket takjil buka puasa.</p>
-        </div>
-
-        <div class="concept-card">
-          <span class="concept-num">03</span>
-          <h3>Berbagi dari Pelari</h3>
-          <p>Disalurkan langsung oleh GP Ansor bersama komunitas lintas agama kepada panti asuhan yatim piatu, panti jompo, dan warga prasejahtera.</p>
-        </div>
+      <div class="entry">
+        <div set:html={md(about.body)} />
+        {about.mission && <div set:html={md(about.mission)} />}
       </div>
     </div>
   </section>
 
   <!-- 03. EVENT HIGHLIGHTS: video promo -->
-  <section class="section" id="video">
+  <section class="section bg-dark-section on-dark" id="video">
     <div class="container-x">
-      <div class="section-heading !mb-8">
-        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
-          VIDEO <strong>HIGHLIGHTS</strong>
-        </h2>
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(home.videoTitle)} />
       </div>
       <div class="mx-auto max-w-4xl">
         <VideoEmbed youtubeId={home.videoId} />
@@ -117,138 +94,79 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 04. RACE INFORMATION & RUTE: Kategori, Lokasi, Jadwal dan Peta Lintasan Terintegrasi -->
+  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi, rute (empat blok bertumpuk, tanpa tab) -->
   <section class="section" id="race">
-    <div id="rute" class="scroll-mt-24"></div>
     <div class="container-x">
-      <div class="section-heading !mb-8">
-        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
-          INFORMASI LOMBA <strong>& RUTE</strong>
-        </h2>
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
       </div>
 
-      <!-- Bar Ringkas Informasi Teknis (3 Kolom) -->
-      <div class="grid gap-4 sm:grid-cols-3 mb-8">
-        <!-- Tanggal & Waktu -->
-        <div class="card p-5 flex items-center gap-4">
-          <div class="step-icon flex-none !w-12 !h-12 !rounded-full">
-            <Icon name="calendar" size={22} />
-          </div>
-          <div>
-            <p class="font-heading text-xs font-bold uppercase tracking-wider text-accent">Jadwal Lomba</p>
-            <h3 class="text-sm sm:text-base font-bold text-white mt-0.5">{raceInfo.scheduleDate}</h3>
-            <p class="text-xs text-white/70">05.30 – 11.30 WIB</p>
-          </div>
-        </div>
-
-        <!-- Lokasi Central -->
-        <div class="card p-5 flex items-center gap-4">
-          <div class="step-icon flex-none !w-12 !h-12 !rounded-full">
-            <Icon name="pin" size={22} />
-          </div>
-          <div class="min-w-0 flex-1">
-            <p class="font-heading text-xs font-bold uppercase tracking-wider text-accent">Lokasi Acara</p>
-            <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">{raceInfo.locationName}</h3>
-            {raceInfo.locationMapUrl ? (
-              <a href={raceInfo.locationMapUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs text-highlight hover:text-accent font-semibold mt-0.5">
-                <span>Lihat di Google Maps</span> ↗
-              </a>
-            ) : (
-              <p class="text-xs text-white/70">Gelora Bung Karno</p>
-            )}
+      <div class="grid gap-6 lg:grid-cols-2">
+        <!-- Kategori -->
+        <div class="card p-7" id="kategori">
+          <p class="eyebrow">Kategori</p>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            {
+              categories.map((c) => (
+                <div class="rounded-[4px] bg-alt p-5">
+                  <p class="font-display text-4xl text-primary">{c.name}</p>
+                  <div class="entry mt-2 text-sm" set:html={md(c.detail)} />
+                </div>
+              ))
+            }
           </div>
         </div>
 
-        <!-- Kategori Pilihan -->
-        <div class="card p-5 flex items-center gap-4">
-          <div class="step-icon flex-none !w-12 !h-12 !rounded-full">
-            <Icon name="route" size={22} />
-          </div>
-          <div>
-            <p class="font-heading text-xs font-bold uppercase tracking-wider text-accent">Kategori Lomba</p>
-            <h3 class="text-sm sm:text-base font-bold text-white mt-0.5">5K & 10K</h3>
-            <p class="text-xs text-white/70">Mulai dari Rp150.000</p>
-          </div>
+        <!-- Lokasi -->
+        <div class="card p-7" id="lokasi">
+          <p class="eyebrow">Lokasi</p>
+          <h3 class="mt-4 text-xl">{raceInfo.locationName}</h3>
+          {raceInfo.locationAddress && <p class="mt-2 text-sm">{raceInfo.locationAddress}</p>}
+          {raceInfo.locationMapImage && <img src={img(raceInfo.locationMapImage.url, 900)} alt={raceInfo.locationMapImage.alt ?? 'Peta lokasi'} class="mt-4 w-full rounded-[4px]" loading="lazy" />}
+          {raceInfo.locationMapUrl && <p class="mt-5"><a class="btn btn-blue" href={raceInfo.locationMapUrl} rel="noopener" target="_blank"><Icon name="pin" size={16} /> {ui.openMap}</a></p>}
+        </div>
+
+        <!-- Jadwal -->
+        <div class="card p-7 lg:col-span-2" id="jadwal">
+          <p class="eyebrow">Jadwal</p>
+          <h3 class="mt-4 text-xl">{raceInfo.scheduleDate}</h3>
+          <div class="entry mt-3 text-sm" set:html={md(raceInfo.scheduleDetail)} />
         </div>
       </div>
-
-      <!-- Tab Kategori + Peta Rute Terintegrasi -->
-      <RouteTabs items={categories} registrationUrl={site.registrationUrl} />
-
-      <!-- Rundown & Jadwal Lipat (Compact) -->
-      {raceInfo.scheduleDetail && (
-        <details class="card p-5 group cursor-pointer mt-6" id="rundown">
-          <summary class="flex items-center justify-between font-heading font-bold text-sm sm:text-base text-white list-none">
-            <span class="flex items-center gap-3">
-              <span class="step-icon !w-8 !h-8 !rounded-full text-accent"><Icon name="clock" size={16} /></span>
-              <span>Rundown & Jadwal Hari-H (Tentatif)</span>
-            </span>
-            <span class="text-accent text-xs font-heading uppercase tracking-wider group-open:hidden">+ Buka Rundown</span>
-            <span class="text-accent text-xs font-heading uppercase tracking-wider hidden group-open:inline">– Tutup Rundown</span>
-          </summary>
-          <div class="entry mt-4 text-sm text-dark-ink border-t border-line/40 pt-4 overflow-x-auto" set:html={md(raceInfo.scheduleDetail)} />
-        </details>
-      )}
     </div>
   </section>
 
-  <!-- 05. HADIAH & RACEPACK: gabungan hadiah dan perlengkapan peserta dengan Tab Switcher -->
+  <!-- 04b. RUTE: section sendiri (dipisah dari Race Information atas permintaan) -->
+  <section class="section bg-alt" id="rute">
+    <div class="container-x">
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(home.routeTitle)} />
+        {raceInfo.routeDetail && <div class="entry mt-3" set:html={md(raceInfo.routeDetail)} />}
+      </div>
+      <RouteTabs items={categories} />
+      {raceInfo.routeMapUrl && <p class="mt-8 text-center"><a class="btn btn-blue" href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
+    </div>
+  </section>
+
+  <!-- 05. PRIZES & RACEPACK: hadiah dan perlengkapan peserta (proposal hal. 13 dan 10) -->
   <section class="section" id="hadiah">
     <div id="racepack" class="scroll-mt-24"></div>
     <div class="container-x">
-      <div class="section-heading !mb-8">
-        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
-          HADIAH <strong>& RACEPACK</strong>
-        </h2>
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(home.prizesTitle)} />
       </div>
-
-      <!-- Tab Switcher: Hadiah vs Racepack -->
-      <div data-benefit-tabs>
-        <div class="tabs-list mb-8" role="tablist" aria-label="Pilih tampilan benefit">
-          <button
-            type="button"
-            role="tab"
-            class="tab-btn"
-            id="tab-btn-hadiah"
-            aria-controls="panel-hadiah"
-            aria-selected="true"
-            tabindex="0"
-          >
-            🎁 Hadiah & Doorprize
-          </button>
-          <button
-            type="button"
-            role="tab"
-            class="tab-btn"
-            id="tab-btn-racepack"
-            aria-controls="panel-racepack"
-            aria-selected="false"
-            tabindex="-1"
-          >
-            👕 Perlengkapan Peserta (Racepack)
-          </button>
-        </div>
-
-        <!-- Panel 1: Hadiah -->
-        <div role="tabpanel" id="panel-hadiah" aria-labelledby="tab-btn-hadiah">
-          <Prizes prizes={prizes} />
-        </div>
-
-        <!-- Panel 2: Racepack -->
-        <div role="tabpanel" id="panel-racepack" aria-labelledby="tab-btn-racepack" hidden>
-          <RacepackViewer venue={ui.racepackItemsLabel} schedule="Perlengkapan resmi lomba yang siap menemani langkah kebaikanmu." items={items} />
-        </div>
-      </div>
+      <p class="eyebrow mb-4">{ui.prizesSub}</p>
+      <Prizes prizes={prizes} />
+      <p class="eyebrow mb-4 mt-14">{ui.racepackSub}</p>
+      <RacepackViewer venue={ui.racepackItemsLabel} schedule="" items={items} />
     </div>
   </section>
 
   <!-- 06. HOW TO JOIN: pendaftaran dan race pack collection -->
-  <section class="section" id="daftar">
+  <section class="section bg-alt" id="daftar">
     <div class="container-x">
-      <div class="section-heading !mb-8">
-        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
-          CARA <strong>DAFTAR</strong>
-        </h2>
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(home.joinTitle)} />
       </div>
       <Steps steps={joinSteps} />
       <p class="mt-10 flex flex-wrap justify-center gap-3">
@@ -258,13 +176,11 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 07. FAQ: pertanyaan yang sering diajukan -->
+  <!-- 07. FAQ & CONTACT: informasi tambahan dan kontak -->
   <section class="section" id="faq">
     <div class="container-x max-w-3xl">
-      <div class="section-heading !mb-8">
-        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
-          FAQ
-        </h2>
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(about.faqTitle)} />
       </div>
       {
         faqs.map((f, i) => (
@@ -274,75 +190,10 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
           </details>
         ))
       }
-    </div>
-  </section>
-
-  <!-- 08. CONTACT: informasi dan layanan narahubung -->
-  <section class="section section-about" id="kontak">
-    <div class="container-x">
-      <div class="section-heading !mb-8">
-        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
-          KONTAK <strong>RESMI</strong>
-        </h2>
-      </div>
-      <div class="mx-auto max-w-4xl">
+      <div class="mt-14" id="kontak">
+        <h3 class="mb-4 text-center text-lg">{ui.contactLabel}</h3>
         <ContactList contact={contact} />
       </div>
     </div>
   </section>
-
-  <!-- Final Call to Action Sebelum Footer -->
-  {
-    site.registrationUrl && (
-      <section class="section text-center" aria-label="Ajak Mendaftar">
-        <div class="container-x max-w-2xl">
-          <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
-            DAFTAR <strong>SEKARANG</strong>
-          </h2>
-          <p class="mt-3 text-sm sm:text-base text-dark-ink">
-            Ajang lari 5K & 10K menyambut Ramadan 1448 H di GBK Senayan. Tiap kilometer hadirkan kebaikan nyata.
-          </p>
-          <p class="mt-8 flex flex-wrap justify-center gap-4">
-            <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>
-            <a class="btn btn-outline" href="/racepack">{ui.howToJoinCta}</a>
-          </p>
-        </div>
-      </section>
-    )
-  }
-
-  <script>
-    document.querySelectorAll<HTMLElement>('[data-benefit-tabs]').forEach((root) => {
-      const tabHadiah = root.querySelector<HTMLButtonElement>('#tab-btn-hadiah');
-      const tabRacepack = root.querySelector<HTMLButtonElement>('#tab-btn-racepack');
-      const panelHadiah = root.querySelector<HTMLElement>('#panel-hadiah');
-      const panelRacepack = root.querySelector<HTMLElement>('#panel-racepack');
-
-      if (!tabHadiah || !tabRacepack || !panelHadiah || !panelRacepack) return;
-
-      const showTab = (tabName: 'hadiah' | 'racepack') => {
-        const isHadiah = tabName === 'hadiah';
-        tabHadiah.setAttribute('aria-selected', String(isHadiah));
-        tabHadiah.tabIndex = isHadiah ? 0 : -1;
-        tabRacepack.setAttribute('aria-selected', String(!isHadiah));
-        tabRacepack.tabIndex = !isHadiah ? 0 : -1;
-        panelHadiah.hidden = !isHadiah;
-        panelRacepack.hidden = isHadiah;
-      };
-
-      tabHadiah.addEventListener('click', () => showTab('hadiah'));
-      tabRacepack.addEventListener('click', () => showTab('racepack'));
-
-      const checkHash = () => {
-        if (location.hash === '#racepack') {
-          showTab('racepack');
-        } else if (location.hash === '#hadiah') {
-          showTab('hadiah');
-        }
-      };
-
-      checkHash();
-      window.addEventListener('hashchange', checkHash);
-    });
-  </script>
 </Base>
