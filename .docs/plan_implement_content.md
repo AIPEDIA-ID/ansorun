@@ -473,3 +473,5 @@ Copy diganti teks apa adanya dari proposal; tema/CSS tidak diubah. Copy yang dik
 - [ ] Belum dikoreksi (di luar fokus): section FAQ/Kontak/CTA tambahan di index.astro, judul "TENTANG"/copy Race Info lain, copy tab Racepack di Home
 - [ ] Halaman Racepack: urutan baru = headline + 3 langkah, tanggal/jam/lokasi, dokumen + diwakilkan, kontak. Section "isi paket" dibuang (sudah ada di Home)
 - [x] Tema dikembalikan ke versi datar (ec74a9b): tanpa gradient/blur/bayangan besar, font klien (Neospeed, Golf, Osaca). Home dibangun dari versi data-driven + copy PDF; Prizes & Racepack satu section. ContactList ditulis ulang sebagai satu kartu daftar (nama, nomor, tombol WhatsApp per baris).
+- [x] Restyle ala digiland (lega, tanpa kotak): padding section lebih besar, judul lebih besar, Race Information = tiga fakta besar + rundown daftar jam (dari raceInfo.scheduleDetail), Prizes tanpa kartu, Racepack = grid gambar + daftar perlengkapan (RacepackViewer tidak dipakai lagi di Home/Racepack). Class baru di theme.css: .fact-value, .fact-sub, .time-row.
+- [ ] Foto lapangan/pelari dari klien untuk latar penuh section About dan Video (belum ada; hanya KV dan render produk)

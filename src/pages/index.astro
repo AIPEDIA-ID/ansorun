@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Countdown from '../components/Countdown.astro';
-import RacepackViewer from '../components/RacepackViewer.astro';
+import Photo from '../components/Photo.astro';
 import Steps from '../components/Steps.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import Icon from '../components/Icon.astro';
@@ -17,6 +17,17 @@ const { site, sponsors } = await getSiteData();
 const { about, faqs } = await getAbout();
 const { home, categories, raceInfo, prizes, items, joinSteps } = await getHome();
 const contact = await getContact();
+
+// Race Information: fakta besar + rundown, semuanya dari data (tabel markdown di raceInfo.scheduleDetail)
+const rundown = (raceInfo.scheduleDetail ?? '')
+  .split('\n')
+  .filter((l) => l.startsWith('|'))
+  .map((l) => l.split('|').slice(1, -1).map((c) => c.trim()))
+  .filter((c) => c.length >= 2 && /^\d/.test(c[0]))
+  .map(([time, event]) => ({ time, event }));
+const price = (d: string) => d.match(/\*\*(Rp[^*]+)\*\*/)?.[1] ?? '';
+const gear = items.filter((i) => i.image);
+const supplies = items.filter((i) => !i.image);
 
 // Kelompokkan sponsor per peran, urutan mengikuti CMS (kosong = tidak ditampilkan)
 const groups = new Map<string, typeof sponsors>();
@@ -94,45 +105,40 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi, rute (empat blok bertumpuk, tanpa tab) -->
+  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi (rute di section berikutnya) -->
   <section class="section" id="race">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
       </div>
 
-      <div class="grid gap-6 lg:grid-cols-2">
-        <!-- Kategori -->
-        <div class="card p-7" id="kategori">
-          <p class="eyebrow">Kategori</p>
-          <div class="mt-4 grid gap-4 sm:grid-cols-2">
-            {
-              categories.map((c) => (
-                <div class="rounded-[4px] bg-alt p-5">
-                  <p class="font-display text-4xl text-primary">{c.name}</p>
-                  <div class="entry mt-2 text-sm" set:html={md(c.detail)} />
-                </div>
-              ))
-            }
-          </div>
+      <div class="grid gap-12 text-center md:grid-cols-3">
+        <div id="jadwal-ringkas">
+          <p class="fact-value">{raceInfo.scheduleDate}</p>
+          <p class="fact-sub">05.30 – 11.30 WIB</p>
         </div>
-
-        <!-- Lokasi -->
-        <div class="card p-7" id="lokasi">
-          <p class="eyebrow">Lokasi</p>
-          <h3 class="mt-4 text-xl">{raceInfo.locationName}</h3>
-          {raceInfo.locationAddress && <p class="mt-2 text-sm">{raceInfo.locationAddress}</p>}
-          {raceInfo.locationMapImage && <img src={img(raceInfo.locationMapImage.url, 900)} alt={raceInfo.locationMapImage.alt ?? 'Peta lokasi'} class="mt-4 w-full rounded-[4px]" loading="lazy" />}
-          {raceInfo.locationMapUrl && <p class="mt-5"><a class="btn btn-blue" href={raceInfo.locationMapUrl} rel="noopener" target="_blank"><Icon name="pin" size={16} /> {ui.openMap}</a></p>}
+        <div id="lokasi">
+          <p class="fact-value">{raceInfo.locationName}</p>
+          <p class="fact-sub">{raceInfo.locationAddress}{raceInfo.locationMapUrl && <> · <a href={raceInfo.locationMapUrl} rel="noopener" target="_blank">{ui.openMap}</a></>}</p>
         </div>
-
-        <!-- Jadwal -->
-        <div class="card p-7 lg:col-span-2" id="jadwal">
-          <p class="eyebrow">Jadwal</p>
-          <h3 class="mt-4 text-xl">{raceInfo.scheduleDate}</h3>
-          <div class="entry mt-3 text-sm" set:html={md(raceInfo.scheduleDetail)} />
+        <div id="kategori">
+          <p class="fact-value">{categories.map((c) => c.name).join(' & ')}</p>
+          <p class="fact-sub">{categories.map((c) => `${c.name} ${price(c.detail)}`).join(' · ')}</p>
         </div>
       </div>
+
+      {
+        rundown.length > 0 && (
+          <div id="jadwal" class="mt-24">
+            <h3 class="mb-8 text-center text-2xl">Rundown Race Day (Tentatif)</h3>
+            <ol class="mx-auto grid max-w-4xl gap-x-16 md:grid-flow-col md:grid-cols-2 md:grid-rows-5">
+              {rundown.map((r) => (
+                <li class="time-row"><span class="t">{r.time}</span><span>{r.event}</span></li>
+              ))}
+            </ol>
+          </div>
+        )
+      }
     </div>
   </section>
 
@@ -155,10 +161,34 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.prizesTitle)} />
       </div>
-      <p class="eyebrow mb-4">{ui.prizesSub}</p>
+
+      <h3 class="mb-10 text-center text-2xl">{ui.prizesSub}</h3>
       <Prizes prizes={prizes} />
-      <p class="eyebrow mb-4 mt-14">{ui.racepackSub}</p>
-      <RacepackViewer venue={ui.racepackItemsLabel} schedule="" items={items} />
+
+      <h3 class="mb-10 mt-28 text-center text-2xl">{ui.racepackSub}</h3>
+      <div class="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          gear.map((g) => (
+            <div>
+              <Photo image={g.image} alt={g.title} width={700} ratio="4/3" fit="contain" />
+              <h4 class="mt-5 text-lg">{g.title}</h4>
+              <p class="mt-1 text-sm">{g.description}</p>
+            </div>
+          ))
+        }
+      </div>
+      {
+        supplies.length > 0 && (
+          <ul class="mt-16 grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
+            {supplies.map((it) => (
+              <li class="border-t border-line py-4">
+                <p class="font-heading font-bold text-ink">{it.title}</p>
+                <p class="text-sm">{it.description}</p>
+              </li>
+            ))}
+          </ul>
+        )
+      }
     </div>
   </section>
 
