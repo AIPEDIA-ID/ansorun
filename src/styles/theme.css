@@ -25,28 +25,28 @@
   --t-accent: #dfff40;          /* lime aksen titling & tombol utama */
   --t-highlight: #bce930;       /* highlight teks & badge di bg gelap */
 
-  /* Latar halaman & kartu: LEBIH TERANG (lighter) mengikuti slide PDF proposal */
-  --t-paper: #24505d;           /* latar section */
-  --t-surface: #193e4a;         /* kartu jernih dan tegas */
+  /* Latar halaman & kartu: kontras tinggi & tegas */
+  --t-paper: #0f424f;           /* latar section */
+  --t-surface: #0f2c35;         /* kartu jernih dan tegas */
   --t-on-accent: #01373d;       /* teks di atas LIME */
   --t-on-dark: #ffffff;         /* teks putih tegas */
-  --t-alt: #1f4753;             /* sub-panel kartu */
+  --t-alt: #0a222a;             /* sub-panel kartu */
   --t-ink: #ffffff;             /* teks utama */
   --t-ink-soft: #eaf6f8;        /* copy sekunder terang dan sangat jelas dibaca */
-  --t-line: #3e7482;            /* garis batas kartu tegas */
-  --t-dark: #204753;            /* teal */
-  --t-darker: #14333c;          /* footer */
+  --t-line: #2d6373;            /* garis batas kartu tegas */
+  --t-dark: #0f3c47;            /* teal */
+  --t-darker: #06151a;          /* footer */
   --t-dark-ink: #eaf6f8;        /* copy teks isi jernih dan terbaca jelas */
 
-  /* Gradien atmosferik dinamis LEBIH TERANG mengikuti slide PDF proposal */
-  --t-grad-top: #2e6473;        /* teal segar atas lebih terang */
-  --t-grad-mid: #265563;        /* teal atmosferik tengah */
-  --t-grad-glow: #397566;       /* pendaran moss/zaitun khas proposal */
-  --t-grad-dark: #1e4753;       /* dasar teal yang tetap terang */
-  --t-card-fill: #173843;       /* kartu kontras tegas di atas latar */
-  --t-card-line: #3e7482;       /* garis kartu tampak jelas */
-  --t-card-hl-fill: #224d43;    /* kartu highlight zaitun */
-  --t-card-hl-line: #4e8a75;    /* garis highlight */
+  /* Gradien atmosferik dinamis KENCENG & BERKARAKTER: pendaran kontras & hidup */
+  --t-grad-top: #177a8e;        /* teal segar bercahaya di area atas */
+  --t-grad-mid: #0f424f;        /* teal atmosferik tengah */
+  --t-grad-glow: #14a886;       /* pendaran emerald/moss sporty yang kenceng & menyala */
+  --t-grad-dark: #081a20;       /* dasar teal midnight pekat untuk kontras maksimal */
+  --t-card-fill: #0f2c35;       /* kartu kontras tegas di atas latar */
+  --t-card-line: #2d6373;       /* garis kartu tampak jelas */
+  --t-card-hl-fill: #164236;    /* kartu highlight zaitun */
+  --t-card-hl-line: #3b8a6f;    /* garis highlight */
 
   --t-radius: 6px;
   --t-container: 1140px;
@@ -61,10 +61,10 @@
   --t-tint: color-mix(in srgb, var(--t-primary) 14%, transparent);
   --t-dark-card: var(--t-card-fill);
   --t-gradient:
-    radial-gradient(90% 65% at 50% 0%, color-mix(in srgb, var(--t-grad-top) 90%, transparent), transparent 100%),
-    radial-gradient(80% 55% at 85% 55%, color-mix(in srgb, var(--t-grad-glow) 75%, transparent), transparent 100%),
-    radial-gradient(70% 50% at 15% 35%, color-mix(in srgb, var(--t-grad-mid) 75%, transparent), transparent 100%),
-    linear-gradient(180deg, var(--t-grad-top) 0%, var(--t-grad-mid) 40%, var(--t-grad-dark) 100%);
+    radial-gradient(85% 60% at 50% 0%, color-mix(in srgb, var(--t-grad-top) 85%, var(--t-accent)) 0%, color-mix(in srgb, var(--t-grad-top) 75%, transparent) 40%, transparent 100%),
+    radial-gradient(75% 60% at 85% 38%, color-mix(in srgb, var(--t-grad-glow) 75%, transparent), transparent 100%),
+    radial-gradient(55% 45% at 10% 68%, color-mix(in srgb, var(--t-highlight) 20%, transparent), transparent 100%),
+    linear-gradient(175deg, var(--t-grad-top) 0%, var(--t-grad-mid) 35%, var(--t-grad-dark) 100%);
 }
 
 /* Expose token ke Tailwind: bg-primary, text-ink, font-heading, dst. */
@@ -137,7 +137,7 @@
 
   /* Judul section tengah */
   .section-heading { text-align: center; max-width: 720px; margin: 0 auto 44px; }
-  .section-heading h2 { font-size: clamp(28px, 4vw, 42px); margin-top: 10px; color: var(--t-on-dark); }
+  .section-heading h1, .section-heading h2 { font-size: clamp(28px, 4vw, 42px); margin-top: 10px; color: var(--t-on-dark); }
   .section-heading p { margin-top: 12px; color: var(--t-dark-ink); }
   .on-dark .section-heading p { color: var(--t-dark-ink); }
 
@@ -233,7 +233,7 @@
   .hero-poster-media img { display: block; width: 100%; height: auto; }
   .hero-fade-bottom {
     position: absolute; inset-inline: 0; bottom: 0; height: 35%; pointer-events: none;
-    background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--t-grad-dark) 55%, transparent) 50%, var(--t-grad-dark) 100%);
+    background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--t-grad-top) 55%, transparent) 50%, var(--t-grad-top) 100%);
   }
   .hero-poster .stripe-band { margin-top: 0; margin-bottom: 0; }
 
