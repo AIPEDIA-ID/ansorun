@@ -7,7 +7,7 @@ interface Props { steps: Step[]; dark?: boolean }
 const { steps, dark = false } = Astro.props;
 ---
 
-<ol class:list={['grid gap-6', steps.length === 2 ? 'mx-auto max-w-3xl md:grid-cols-2' : 'md:grid-cols-3', dark && 'on-dark']}>
+<ol class:list={['grid gap-6', steps.length === 2 ? 'mx-auto max-w-3xl md:grid-cols-2' : steps.length === 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3', dark && 'on-dark']}>
   {
     steps.map((s, i) => (
       <li class:list={['relative p-7', dark ? 'card-dark' : 'card']}>

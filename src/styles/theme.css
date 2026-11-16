@@ -77,7 +77,7 @@
 
 /* ---------- 2. SKIN ---------- */
 @layer base {
-  html { font-size: 15px; scroll-behavior: smooth; scroll-padding-top: calc(var(--t-header-h) + 16px); }
+  html { font-size: 17px; scroll-behavior: smooth; scroll-padding-top: calc(var(--t-header-h) + 16px); }
   body { font-family: var(--t-font-body); color: var(--t-ink); background: var(--t-paper); line-height: 1.75; }
   a { color: var(--t-primary); transition: color .2s; }
   a:hover { color: var(--t-primary-dark); }
@@ -86,11 +86,26 @@
 
 @layer components {
   .container-x { width: 100%; max-width: var(--t-container); margin-inline: auto; padding-inline: 20px; }
-  .section { padding-block: clamp(80px, 11vw, 136px); }
+  .section { padding-block: clamp(52px, 6.5vw, 84px); }
   .on-dark { color: var(--t-on-dark); }
   .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: var(--t-on-dark); }
   .on-dark a:not(.btn) { color: var(--t-on-dark); }
   .bg-dark-section { background: var(--t-dark); }
+  /* Latar section terang: gradient lembut berbasis token (atas permintaan, menggantikan tekstur) */
+  .bg-pattern {
+    background-color: var(--t-alt);
+    background-image:
+      radial-gradient(60% 90% at 100% 0%, color-mix(in srgb, var(--t-accent) 26%, transparent), transparent 70%),
+      radial-gradient(55% 80% at 0% 100%, color-mix(in srgb, var(--t-primary) 16%, transparent), transparent 70%);
+  }
+  .bg-fade { background-image: linear-gradient(180deg, var(--t-paper), color-mix(in srgb, var(--t-primary) 9%, var(--t-paper))); }
+  /* Ubin langkah bernomor (About) */
+  .flow-tile { position: relative; padding: 22px 22px 22px 24px; background: var(--t-surface); border: 1px solid var(--t-line); border-top: 4px solid var(--t-primary); border-radius: var(--t-radius); }
+  .flow-tile .n { font: 400 40px/1 var(--t-font-display); color: var(--t-primary); }
+  /* Latar foto penuh: satu-satunya gradient/overlay yang diizinkan (gelap di atas foto) */
+  .photo-bg { position: relative; background-size: cover; background-position: center; background-color: var(--t-dark); }
+  .photo-bg::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 94%, transparent); }
+  .photo-bg > * { position: relative; }
 
   /* Teks dengan penekanan: **tebal** dari CMS */
   .rich strong { font-weight: 800; }
@@ -102,9 +117,14 @@
   .on-dark .eyebrow { color: var(--t-highlight); }
 
   /* Judul section tengah */
-  .section-heading { text-align: center; max-width: 720px; margin: 0 auto clamp(48px, 7vw, 72px); }
-  .section-heading h2 { font-size: clamp(34px, 5.2vw, 60px); line-height: 1.05; margin-top: 10px; }
+  .section-heading { text-align: center; max-width: 720px; margin: 0 auto clamp(28px, 4vw, 40px); }
+  .section-heading h2 { font-size: clamp(30px, 4.2vw, 46px); line-height: 1.05; margin-top: 10px; }
   .section-heading p { margin-top: 14px; color: var(--t-ink-soft); }
+  /* Garis aksen pendek di bawah judul section */
+  .section-heading h2::after { content: ""; display: block; width: 56px; height: 4px; margin: 14px auto 0; background: var(--t-primary); }
+  .on-dark .section-heading h2::after { background: var(--t-accent); }
+  .photo-frame-wide { aspect-ratio: 16 / 9; object-fit: cover; object-position: center bottom; }
+  .photo-frame { display: block; width: 100%; height: auto; border-radius: var(--t-radius); }
   .on-dark .section-heading p { color: var(--t-dark-ink); }
 
   /* ---- Header: transparan di atas hero, solid saat scroll ---- */
@@ -282,7 +302,7 @@
   /* Fakta besar tanpa kotak (Race Information) dan daftar jam */
   .fact-value { font: 800 clamp(24px, 3vw, 34px)/1.15 var(--t-font-heading); color: var(--t-primary); }
   .fact-sub { margin-top: 8px; font-size: 14px; color: var(--t-ink-soft); }
-  .time-row { display: flex; align-items: baseline; gap: 20px; padding-block: 14px; border-bottom: 1px solid var(--t-line); }
+  .time-row { display: flex; align-items: baseline; gap: 20px; padding-block: 9px; border-bottom: 1px solid var(--t-line); }
   .time-row .t { flex: none; width: 92px; font: 400 24px/1 var(--t-font-display); color: var(--t-primary); }
   .tbd { color: var(--t-ink-soft); font-style: italic; }
 

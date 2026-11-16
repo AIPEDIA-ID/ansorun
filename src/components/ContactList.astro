@@ -6,7 +6,7 @@ interface Props { contact: ContactInfo }
 const { contact } = Astro.props;
 ---
 
-<div class="card mx-auto max-w-2xl p-2">
+<div class="card p-2">
   {
     contact.people.length > 0 && (
       <ul class="divide-y divide-line">

@@ -12,6 +12,7 @@ import { getSiteData, getAbout, getHome, getContact, formatDate } from '../lib/c
 import { img } from '../lib/datocms';
 import { md, rich } from '../lib/text';
 import { ui } from '../config';
+import { venuePhotos, racepackPhoto, eventBackdrop, aboutPhoto } from '../lib/fallback';
 
 const { site, sponsors } = await getSiteData();
 const { about, faqs } = await getAbout();
@@ -25,6 +26,16 @@ const rundown = (raceInfo.scheduleDetail ?? '')
   .map((l) => l.split('|').slice(1, -1).map((c) => c.trim()))
   .filter((c) => c.length >= 2 && /^\d/.test(c[0]))
   .map(([time, event]) => ({ time, event }));
+// About: langkah konsep sosial dan penerima manfaat diurai dari about.mission (markdown dari proposal hal. 4)
+const mLines = (about.mission ?? '').split('\n').map((l) => l.trim()).filter(Boolean);
+const flowTitle = mLines.find((l) => /^\*\*[^*]+\*\*$/.test(l))?.replace(/\*\*/g, '') ?? '';
+const flow = mLines
+  .map((l) => l.match(/^\d+\.\s+\*\*(.+?)\*\*\s*(.+)$/))
+  .filter((m): m is RegExpMatchArray => !!m)
+  .map((m) => ({ title: m[1].replace(/:$/, ''), text: m[2] }));
+const benefLine = mLines.find((l) => /^\*\*Penerima/i.test(l));
+const benefLabel = benefLine?.match(/^\*\*(.+?)\*\*/)?.[1].replace(/:$/, '') ?? '';
+const beneficiaries = benefLine ? benefLine.replace(/^\*\*.+?\*\*\s*/, '').split(',').map((x) => x.trim()).filter(Boolean) : [];
 const price = (d: string) => d.match(/\*\*(Rp[^*]+)\*\*/)?.[1] ?? '';
 const gear = items.filter((i) => i.image);
 const supplies = items.filter((i) => !i.image);
@@ -80,21 +91,46 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 02. ABOUT ANSORUN: tentang event dan misi sosial -->
-  <section class="section bg-alt" id="tentang">
-    <div class="container-x grid gap-12 md:grid-cols-[1fr_1.5fr]">
-      <div>
-        <h2 class="rich rich-accent font-display text-[clamp(34px,5vw,56px)] font-normal leading-[1.05] text-primary" set:html={rich(about.sectionTitle)} />
-        <div class="mt-6 h-[3px] w-16 bg-primary"></div>
+  <section class="section bg-pattern" id="tentang">
+    <div class="container-x">
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(about.sectionTitle)} />
       </div>
-      <div class="entry">
-        <div set:html={md(about.body)} />
-        {about.mission && <div set:html={md(about.mission)} />}
+
+      <div class="grid items-center gap-8 lg:grid-cols-[1fr_1.25fr]">
+        <div class="entry [&>p:first-child]:text-lg [&>p:first-child]:text-ink" set:html={md(about.body)} />
+        <img src={aboutPhoto.url} alt={aboutPhoto.alt ?? ''} width={aboutPhoto.width ?? 1500} height={aboutPhoto.height ?? 642} class="photo-frame" loading="lazy" decoding="async" />
       </div>
+
+      {
+        flow.length > 0 ? (
+          <div class="mt-12">
+            {flowTitle && <h3 class="mb-5 text-center text-xl">{flowTitle}</h3>}
+            <ol class="grid gap-4 md:grid-cols-3">
+              {flow.map((f, i) => (
+                <li class="flow-tile">
+                  <span class="n">{String(i + 1).padStart(2, '0')}</span>
+                  <h4 class="mt-2 text-base">{f.title}</h4>
+                  <p class="mt-1 text-sm">{f.text}</p>
+                </li>
+              ))}
+            </ol>
+            {beneficiaries.length > 0 && (
+              <p class="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm">
+                <strong class="font-heading text-ink">{benefLabel}</strong>
+                {beneficiaries.map((b) => <span class="rounded-full border border-line bg-paper px-4 py-1.5 font-semibold text-primary-dark">{b}</span>)}
+              </p>
+            )}
+          </div>
+        ) : (
+          about.mission && <div class="entry mt-8" set:html={md(about.mission)} />
+        )
+      }
     </div>
   </section>
 
   <!-- 03. EVENT HIGHLIGHTS: video promo -->
-  <section class="section bg-dark-section on-dark" id="video">
+  <section class="section photo-bg on-dark" id="video" style={`background-image:url(${eventBackdrop.url})`}>
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.videoTitle)} />
@@ -104,15 +140,16 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
       </div>
     </div>
   </section>
+  <div class="stripe-band" aria-hidden="true"></div>
 
   <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi (rute di section berikutnya) -->
-  <section class="section" id="race">
+  <section class="section bg-fade" id="race">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
       </div>
 
-      <div class="grid gap-12 text-center md:grid-cols-3">
+      <div class="grid gap-8 text-center md:grid-cols-3">
         <div id="jadwal-ringkas">
           <p class="fact-value">{raceInfo.scheduleDate}</p>
           <p class="fact-sub">05.30 – 11.30 WIB</p>
@@ -127,23 +164,28 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         </div>
       </div>
 
-      {
-        rundown.length > 0 && (
-          <div id="jadwal" class="mt-24">
-            <h3 class="mb-8 text-center text-2xl">Rundown Race Day (Tentatif)</h3>
-            <ol class="mx-auto grid max-w-4xl gap-x-16 md:grid-flow-col md:grid-cols-2 md:grid-rows-5">
-              {rundown.map((r) => (
-                <li class="time-row"><span class="t">{r.time}</span><span>{r.event}</span></li>
-              ))}
-            </ol>
-          </div>
-        )
-      }
+      <div class="mt-10 grid items-start gap-8 lg:grid-cols-2">
+        {
+          rundown.length > 0 && (
+            <div id="jadwal">
+              <h3 class="mb-3 text-xl">Rundown Race Day (Tentatif)</h3>
+              <ol>
+                {rundown.map((r) => (
+                  <li class="time-row"><span class="t">{r.time}</span><span>{r.event}</span></li>
+                ))}
+              </ol>
+            </div>
+          )
+        }
+        <div class="grid gap-3">
+          {venuePhotos.map((v) => <img src={v.url} alt={v.alt ?? ''} width={v.width ?? 1400} height={v.height ?? 800} class="photo-frame photo-frame-wide" loading="lazy" decoding="async" />)}
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- 04b. RUTE: section sendiri (dipisah dari Race Information atas permintaan) -->
-  <section class="section bg-alt" id="rute">
+  <section class="section bg-pattern" id="rute">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.routeTitle)} />
@@ -155,35 +197,37 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 05. PRIZES & RACEPACK: hadiah dan perlengkapan peserta (proposal hal. 13 dan 10) -->
-  <section class="section" id="hadiah">
-    <div id="racepack" class="scroll-mt-24"></div>
+  <section class="section bg-fade" id="hadiah">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.prizesTitle)} />
       </div>
 
-      <h3 class="mb-10 text-center text-2xl">{ui.prizesSub}</h3>
+      <h3 class="mb-6 text-center text-xl">{ui.prizesSub}</h3>
       <Prizes prizes={prizes} />
 
-      <h3 class="mb-10 mt-28 text-center text-2xl">{ui.racepackSub}</h3>
-      <div class="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-        {
-          gear.map((g) => (
-            <div>
-              <Photo image={g.image} alt={g.title} width={700} ratio="4/3" fit="contain" />
-              <h4 class="mt-5 text-lg">{g.title}</h4>
-              <p class="mt-1 text-sm">{g.description}</p>
-            </div>
-          ))
-        }
+      <h3 id="racepack" class="mb-6 mt-14 scroll-mt-24 text-center text-xl">{ui.racepackSub}</h3>
+      <div class="grid items-start gap-6 lg:grid-cols-[1.2fr_1fr]">
+        <img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} class="photo-frame" loading="lazy" decoding="async" />
+        <div class="grid grid-cols-2 gap-x-5 gap-y-6">
+          {
+            gear.map((g) => (
+              <div>
+                <Photo image={g.image} alt={g.title} width={500} ratio="4/3" fit="contain" />
+                <h4 class="mt-2 text-base">{g.title}</h4>
+                <p class="text-sm leading-snug">{g.description}</p>
+              </div>
+            ))
+          }
+        </div>
       </div>
       {
         supplies.length > 0 && (
-          <ul class="mt-16 grid gap-x-12 sm:grid-cols-2 lg:grid-cols-3">
+          <ul class="mt-8 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
             {supplies.map((it) => (
-              <li class="border-t border-line py-4">
+              <li class="border-t border-line py-2.5">
                 <p class="font-heading font-bold text-ink">{it.title}</p>
-                <p class="text-sm">{it.description}</p>
+                <p class="text-sm leading-snug">{it.description}</p>
               </li>
             ))}
           </ul>
@@ -193,7 +237,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 06. HOW TO JOIN: pendaftaran dan race pack collection -->
-  <section class="section bg-alt" id="daftar">
+  <section class="section bg-pattern" id="daftar">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.joinTitle)} />
@@ -207,14 +251,14 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 07. FAQ & CONTACT: informasi tambahan dan kontak -->
-  <section class="section" id="faq">
+  <section class="section bg-fade" id="faq">
     <div class="container-x max-w-3xl">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(about.faqTitle)} />
       </div>
       {
-        faqs.map((f, i) => (
-          <details class="faq" open={i === 0}>
+        faqs.map((f) => (
+          <details class="faq">
             <summary>{f.question}</summary>
             <div class="entry" set:html={md(f.answer)} />
           </details>

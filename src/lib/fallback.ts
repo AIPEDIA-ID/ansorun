@@ -13,6 +13,15 @@ const un = (id: string, alt: string) => ({ url: `https://images.unsplash.com/pho
 // Aset resmi ANSORUN (hasil olahan dari .docs/assets_bank) — file ada di public/brand/
 const brand = (file: string, alt: string, width: number, height: number): Img => ({ url: `/brand/${file}`, alt, width, height });
 
+// Foto dari proposal (hal. 6, 7, 20, 21, 23), diekstrak ke public/brand. TODO: belum ada model CMS, ganti lewat kode.
+export const venuePhotos: Img[] = [
+  brand('lokasi-hutan-kota.webp', 'Hutan Kota GBK Jakarta, 31 Januari 2027, 05.30 – 11.30 WIB', 1400, 839),
+  brand('lokasi-parkir-timur.webp', 'Parkir Timur GBK, 31 Januari 2027, 05.30 – 11.30 WIB', 1400, 765),
+];
+export const racepackPhoto: Img = brand('racepack-flatlay.webp', 'Isi racepack ANSORUN 2027: jersey, tas serut, nomor dada, air minum, roti, multivitamin, kartu e-money, kalender puasa', 1578, 997);
+export const aboutPhoto: Img = brand('about-podcast.webp', 'Hadirkan Toleransi untuk Jalan Berbagi, Ansor Podcast feat Clash of Religion', 1500, 642); // proposal hal. 3. CATATAN: foto tokoh, konfirmasi izin pakai
+export const eventBackdrop: Img = brand('gate.webp', 'Gate start dan finish ANSORUN 2027', 2000, 729);
+
 const photo = {
   sunrise: un('1552674605-db6ffd4facb5', 'Pelari saat matahari terbit'),
   silhouette: un('1594882645126-14020914d58d', 'Siluet pelari di bukit'),
@@ -108,7 +117,7 @@ Dan acara ini juga menjadi salah satu sarana kolaborasi toleransi antar umat ber
 3. **Berbagi dari pelari:** Disalurkan langsung oleh GP Ansor Bersama Organisasi lintas Agama Bersama perwakilan pelari
 
 **Penerima manfaat:** Panti Asuhan Anak Yatim Piatu, Panti Jompo, Masyarakat Kurang Mampu`,
-  faqTitle: 'FAQ &\n**Contact**',
+  faqTitle: 'FAQ & **Contact**',
 };
 
 /* ---- HOME 03: EVENT HIGHLIGHTS (video promo) -> home.videoId ---- */
@@ -180,8 +189,10 @@ export const racepackItems: RacepackItem[] = [
 /* ---- HOME 06: HOW TO JOIN (pendaftaran dan race pack collection) ---- */
 // Sumber: proposal hal. 4, 5, 19
 export const joinSteps: Step[] = [
-  { title: 'Pendaftaran', description: 'Pendaftaran online dibuka **Desember 2026**.\n\nBiaya **Rp150.000** (5K) dan **Rp200.000** (10K), sudah termasuk racepack lengkap. Link pendaftaran: segera diumumkan.', icon: 'file' }, // TODO(data): URL registrasi
-  { title: 'Race Pack Collection', description: 'Pengambilan racepack pada **Januari 2027**, menjelang race day. Tanggal, jam, dan lokasi: segera diumumkan. Lihat halaman [Racepack](/racepack).', icon: 'bag' },
+  { title: 'Pendaftaran', description: '**Des 2026**\n\nLaunching & registrasi. Pendaftaran online dibuka, kampanye digital.', icon: 'file' }, // TODO(data): URL registrasi
+  { title: 'Race Pack Collection', description: '**Jan 2027**\n\nPengambilan racepack menjelang race day. Lihat halaman [Racepack](/racepack).', icon: 'bag' },
+  { title: 'Race Day', description: '**31 Jan 2027**\n\nLari 5K/10K, konser, undian Grand Prize.', icon: 'route' }, // proposal hal. 19, ditambahkan atas permintaan (dokumen hanya menyebut 2 langkah)
+  { title: 'Berbagi Takjil', description: '**Ramadhan 1448 H**\n\nPenyaluran takjil.', icon: 'check' }, // hal. 19: "Penyaluran takjil & laporan ke sponsor", bagian sponsor sengaja tidak ditulis
 ];
 
 /* ---- HOME 07: FAQ & CONTACT (informasi tambahan dan kontak) ---- */
@@ -228,7 +239,7 @@ export const collectSteps: Step[] = [
 
 export const racepack: RacepackPage = {
   metaDescription: 'Racepack Collection ANSORUN Run to Ramadan 2027.',
-  heroImage: site.heroImage, // TODO(data): hero image khusus halaman Racepack (sementara KV)
+  heroImage: brand('racepack-model.webp', 'Peserta mengenakan jersey ANSORUN 2027', 1536, 1024), // proposal hal. 21. TODO(data): hero image resmi halaman Racepack
   bannerTitle: '**RACEPACK**\nCOLLECTION',
   title: 'GET YOUR **RACEPACK.**\nGET READY TO **RUN.**',
   date: 'Januari 2027, menjelang race day', // proposal hal. 19. TODO(data): tanggal pasti
