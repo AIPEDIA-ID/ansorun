@@ -205,48 +205,52 @@ Blok CTA Instagram dan galeri **dilepas dari Home** karena tidak ada di struktur
 | Font | **Semua dipakai** (Neospeed, Golf Italic, Osaca), mengikuti klien. Lihat bagian 4: tiap font dapat satu token peran, pemetaan final setelah dicocokkan dengan desain di Langkah 1 |
 | Data event | **Ditunda.** Pakai placeholder bertanda `TODO`, lihat bagian 8 |
 
-## 8. TODO data (ditunda, diisi nanti)
+## 8. TODO data
 
-Semua item di `src/lib/fallback.ts` ditandai `TODO(data)` dan tampil sebagai placeholder `[Konten menyusul: ...]` atau "Segera diumumkan". Dikelompokkan per section di `content_structure.md`.
+Legenda: `- [x]` terisi dari proposal (lihat bagian 14 untuk catatan asumsi), `- [ ]` masih menunggu klien. Penanda di kode: `TODO(data)` (menunggu) dan `CATATAN` (asumsi/improvisasi).
 
 **Home 01, HOME / HERO**
-- [ ] Headline hero resmi (sementara memakai tagline dari KV)
+- [ ] Headline hero resmi (sementara tagline dari KV)
 - [ ] URL registrasi asli untuk tombol CTA (isi QR di KV)
-- [ ] Jam start resmi (countdown sementara ke 31 Januari 2027 pukul 00:00 WIB)
-- [ ] Lokasi event (hero dan footer sementara "Lokasi: segera diumumkan")
+- [x] Jam start untuk countdown: 31 Januari 2027 05.30 WIB (flag off 10K). Konflik dengan hal. 5 (06.00), lihat bagian 14
+- [x] Lokasi: GBK Senayan, Jakarta
 - [ ] Konfirmasi tulisan tombol CTA
 
 **Home 02, ABOUT ANSORUN**
-- [ ] Teks tentang event
-- [ ] Teks misi sosial (termasuk penerima manfaat)
+- [x] Teks tentang event (ringkasan proposal hal. 2)
+- [x] Teks misi sosial dan penerima manfaat (proposal hal. 2 sampai 4)
 
 **Home 03, EVENT HIGHLIGHTS**
 - [ ] Video promo asli (sementara embed YouTube dummy `jNQXAC9IVRw`)
 
 **Home 04, RACE INFORMATION**
-- [ ] Kategori: detail 5K dan 10K (hanya nama kategori yang diketahui dari KV)
-- [ ] Jadwal: jam start tiap kategori (hanya tanggal 31 Januari 2027 yang diketahui)
-- [ ] Lokasi start dan finish
-- [ ] **Peta dan rute lari**: tidak ada di `assets_bank` maupun di kelima PDF (lihat bagian 9). Minta file peta/rute ke klien (gambar atau link Google Maps) dan tentukan apakah peta ada di tab Lokasi, Rute, atau keduanya
-- [ ] Keterangan rute 5K dan 10K (jarak, titik putar, water station)
+- [x] Kategori 5K dan 10K beserta biaya (Rp150.000 dan Rp200.000)
+- [x] Jadwal: rundown tentatif race day
+- [x] Lokasi: GBK Senayan, start/finish Pintu 7 GBK (Jl. APEC)
+- [x] **Peta rute 5K dan 10K** (tampil sebagai section sendiri `#rute`, bukan tab) (proposal hal. 11 dan 12, tersimpan di `public/brand/rute-5k.webp` dan `rute-10k.webp`) beserta keterangan rute dan jarak
+- [ ] Titik venue pasti (Hutan Kota GBK atau Parkir Timur GBK)
+- [ ] Validasi GPS dan perizinan rute (peta masih ilustrasi konsep)
+- [ ] Peta lokasi resmi dari klien (sementara link pencarian Google Maps buatan kami)
 
 **Home 05, PRIZES & RACEPACK**
-- [ ] Hadiah (juara per kategori, doorprize, dan sebagainya)
-- [ ] Deskripsi tiap item racepack: Jersey, Finisher Medal, BIB, Tas Serut
+- [x] Hadiah: BYD ATTO 1, 5 Polytron Fox 200, 10 Garmin Runner, 25 headset runner
+- [x] Deskripsi item: Jersey, Air Minum, Roti, Multivitamin, Kartu E-Money, Kalender Puasa
+- [ ] Deskripsi Finisher Medal, BIB, Tas Serut
 - [ ] Keputusan klien: Alt 1 atau Alt 2 untuk jersey, medali, BIB, tas (PDF memuat kedua alternatif di halaman 1 dan 2)
-- [ ] Apakah ada item racepack lain di luar empat item ini
+- [ ] Daftar racepack final (lihat bagian 14), termasuk gambar untuk item tanpa gambar
 
 **Home 06, HOW TO JOIN**
-- [ ] Langkah pendaftaran (cara, biaya, pembayaran, kuota)
-- [ ] Langkah race pack collection (ringkasan, mengarah ke halaman Racepack)
+- [x] Pendaftaran: dibuka Desember 2026, biaya, termasuk racepack
+- [x] Race pack collection: Januari 2027 (tanggal, jam, lokasi masih menunggu)
 
 **Home 07, FAQ & CONTACT**
-- [ ] Daftar FAQ (pertanyaan dan jawaban)
-- [ ] Kontak panitia (email, WhatsApp, atau link)
+- [x] FAQ awal (5 pertanyaan dari fakta proposal)
+- [ ] FAQ resmi dari klien
+- [ ] Kontak panitia: proposal hal. 27 memuat tiga nomor telepon dan www.ansorun.com, belum dipasang (butuh izin klien)
 
 **Halaman 2, RACEPACK**
-- [ ] Hero image khusus halaman Racepack (sementara memakai KV)
-- [ ] Tanggal pengambilan
+- [ ] Hero image khusus halaman Racepack (sementara KV)
+- [x] Tanggal pengambilan: "Januari 2027, menjelang race day" (tanggal pasti menunggu)
 - [ ] Jam operasional
 - [ ] Lokasi pengambilan
 - [ ] Dokumen yang harus dibawa
@@ -255,11 +259,10 @@ Semua item di `src/lib/fallback.ts` ditandai `TODO(data)` dan tampil sebagai pla
 - [ ] Deskripsi singkat tiap dari tiga langkah visual (judul sudah dari dokumen)
 
 **Umum**
-- [ ] Sponsor/mitra resmi dan logonya (bagian sponsor di hero tersembunyi sampai ada)
+- [ ] Sponsor/mitra resmi dan logonya (materi sponsor di proposal tidak dipasang)
 - [ ] Akun media sosial (footer)
 - [ ] Syarat dan ketentuan, bila diperlukan
 - [ ] Lisensi font Neospeed untuk web
-- [ ] Konfirmasi tahun 2027 (nama file KV tertulis 2026)
 - [ ] Apakah newsletter diinginkan (tidak ada di struktur klien, dilepas dari Beranda)
 
 ## 9. Soal "sudah ikutin PDF?"
@@ -283,7 +286,8 @@ Home mengikuti persis tujuh section dan hanya berisi apa yang disebut di dokumen
 | 01 Home / Hero | KV, headline (tagline), countdown (di dalam hero), satu tombol CTA |
 | 02 About Ansorun | Judul + placeholder tentang event dan misi sosial |
 | 03 Event Highlights | Judul + video (dummy) |
-| 04 Race Information | Judul + empat tab: Kategori, Jadwal, Lokasi, Rute |
+| 04 Race Information | Judul + blok Kategori, Lokasi, Jadwal (tanpa tab) |
+| 04b Rute (dipisah atas permintaan) | Section sendiri `#rute`: peta dan keterangan rute 5K dan 10K, selebar penuh |
 | 05 Prizes & Racepack | Judul + hadiah (placeholder) + empat item racepack dengan gambar |
 | 06 How to Join | Judul + dua langkah: Pendaftaran, Race Pack Collection |
 | 07 FAQ & Contact | Judul + FAQ (placeholder) + kontak |
@@ -321,3 +325,128 @@ Judul section Beranda (03 sampai 06) dan judul FAQ ada di model "Judul Section B
 | Tiga langkah visual | Judul dan deskripsi tiap langkah | `collectSteps` | Langkah (kelompok `collect`) | Judul terisi, deskripsi TODO |
 
 Catatan: skrip `npm run dato:schema` belum dijalankan ke DatoCMS. Model lama (`lari_page`, `racepack_step`, `info_tab`) sudah tidak dipakai kode dan tidak dibuat lagi oleh skrip.
+
+## 13. Hasil analisa `PROPOSAL ANSOR RUN rev 1 .pdf` (27 halaman)
+
+Ini **proposal sponsorship** (bukan konten situs). Sebagian isinya adalah sumber data resmi yang selama ini kita tandai TODO, sebagian lagi internal dan tidak boleh tampil di situs publik. Belum ada yang dipasang ke situs; menunggu keputusan.
+
+### Pemetaan ke struktur konten
+
+| Section situs | Data dari proposal | Halaman |
+|---|---|---|
+| Hero | Tanggal 31 Januari 2027, 5K dan 10K | 5 |
+| About Ansorun | Latar belakang (menyambut Ramadhan 1448 H, sehat, bergerak, berbagi), misi sosial (hasil pendaftaran jadi paket takjil), kolaborasi toleransi lintas agama, podcast ANSOR feat Clash of Religion | 2, 3 |
+| About (misi sosial) | Alur: pendaftaran, konversi jadi takjil, penyaluran oleh GP Ansor bersama organisasi lintas agama dan perwakilan pelari. Penerima: panti asuhan yatim piatu, panti jompo, masyarakat kurang mampu | 4 |
+| Race Information, Kategori | 5K Rp150.000, 10K Rp200.000, kategori umum, sudah termasuk racepack | 4, 5 |
+| Race Information, Jadwal | Rundown race day (tentatif): 04.30 open gate, 05.00 pemanasan, 05.30 flag off 10K, 06.00 flag off 5K, 07.30 finish dan bazar, 08.30 hiburan, 09.15 seremoni dan pelepasan takjil simbolis, 10.15 podcast, 10.30 hiburan, 11.30 grand prize dan selesai | 5, 8 |
+| Race Information, Lokasi | GBK Senayan Jakarta. Start/finish di peta rute: Pintu 7 GBK (Jl. APEC). Venue di halaman 6 dan 7: Hutan Kota GBK dan Parkir Timur GBK, 05.30 sampai 11.30 WIB | 5, 6, 7, 11, 12 |
+| Race Information, **Rute (peta)** | **Halaman 11 = peta rute 5K, halaman 12 = peta rute 10K.** Keduanya gambar siap pakai (ilustrasi bergaya ANSORUN) dengan keterangan rute dan jarak. Tertulis "Ilustrasi konsep, perlu validasi GPS dan perizinan" | 11, 12 |
+| Prizes | 1 Grandprize BYD ATTO 1, 5 Motor Listrik Polytron Fox 200, 10 Jam Garmin Runner, 25 Headset Runner | 13 |
+| Racepack | Kaos lari, air minum, roti, multivitamin, kartu e-money (TBC), kalender puasa. Gambar halaman 20 menambah tas serut, stiker logo, salep peregang otot. Halaman 22: medali (2 alt) dan nomor dada (2 alt) | 10, 20, 21, 22 |
+| How to Join | Timeline: Des 2026 registrasi online dibuka, Jan 2027 racepack collection, 31 Jan race day, Ramadhan 1448 H penyaluran takjil | 19 |
+| FAQ & Contact | Kontak: Dika 082118990008, Hesti 082114338181, Komet 08122720154. Situs: www.ansorun.com | 27 |
+
+Rute 5K (hal. 11): Pintu 7 GBK, Jl. Jenderal Sudirman, akses Kuningan (loop/putar balik), kembali lewat Jl. Jenderal Sudirman, Pintu 7 GBK, sekitar 5 km.
+Rute 10K (hal. 12): Pintu 7 GBK, Jl. Jenderal Sudirman, Semanggi, Dukuh Atas, Jl. MH Thamrin, Bundaran HI (putar balik 1), kembali via Jl. Jenderal Sudirman, Bundaran Senayan/Patung Pemuda Membangun (putar balik 2), Pintu 7 GBK, sekitar 10 km.
+
+### Bukan untuk situs publik (bagian sponsorship)
+
+Halaman 9 (alasan jadi sponsor), 15 sampai 17 (harga paket Rp25 juta sampai Rp2,5 miliar dan tabel benefit), 18 (publikasi), 23 sampai 26 (gate, a-board, photobooth, promo). Jangan dipasang tanpa konfirmasi klien.
+
+### Konflik dan hal yang perlu dikonfirmasi klien
+
+- [ ] Nama event: proposal menulis "ANSOR RUN 2027 Road to Ramadhan" (hal. 2) dan "Run to Ramadhan"; KV dan semua desain menulis "ANSORUN Run to Ramadan 2027". Ejaan Ramadhan vs Ramadan juga berbeda
+- [ ] Lokasi: Hutan Kota GBK (hal. 6) atau Parkir Timur GBK (hal. 7). Peta rute start/finish di Pintu 7 GBK (Jl. APEC)
+- [ ] Jam flag off: hal. 5 menulis 06.00 WIB; rundown hal. 8 menulis 10K 05.30 dan 5K 06.00; venue buka 05.30 (hal. 6, 7) padahal rundown mulai 04.30
+- [ ] "100% hasil pendaftaran jadi takjil" (hal. 5) vs "sebagian hasil pendaftaran" (hal. 4)
+- [ ] Rute masih "ilustrasi konsep, perlu validasi GPS dan perizinan": boleh dipublikasikan sebagai final?
+- [ ] Isi racepack: proposal tidak menyebut medali, nomor dada, tas serut (padahal ada di desain); gambar hal. 20 memuat stiker dan salep yang tidak ada di daftar hal. 10. Daftar final yang mana, dan nama item mengikuti daftar apa
+- [ ] Kartu e-money dan penampilan MALIQ, Ndarboy Genks bertanda TBC: boleh ditampilkan?
+- [ ] Hiburan (hal. 14) dan podcast Clash of Religion: tampil di situs? Tidak ada di struktur klien
+- [ ] Nomor telepon pribadi di hal. 27: boleh dipublikasikan di situs, atau pakai kontak resmi lain
+- [ ] Hadiah: apakah daftar hal. 13 final dan boleh disebut merek (BYD, Polytron, Garmin)
+- [ ] Biaya pendaftaran dan timeline registrasi (hal. 4, 19) final atau masih bisa berubah
+
+## 14. Catatan asumsi dan improvisasi saat memasang data proposal
+
+Dipasang dengan izin "improvisasi tipis asal ada catatan". Semua ditandai `CATATAN` di `src/lib/fallback.ts`.
+
+- **Ejaan:** proposal menulis "Ramadhan", kami memakai "Ramadan" mengikuti KV dan desain. Nama event memakai "ANSORUN Run to Ramadan 2027" (bukan "ANSOR RUN Road to Ramadhan").
+- **Jam countdown 05.30 WIB:** diambil dari flag off 10K pada rundown. Halaman 5 menulis flag off 06.00.
+- **Lokasi:** hanya "GBK Senayan, Jakarta" dan "Pintu 7 GBK (Jl. APEC)" (dari peta rute). Hutan Kota GBK dan Parkir Timur GBK (hal. 6 dan 7) sengaja tidak ditulis karena belum jelas mana venue-nya.
+- **Link peta lokasi:** link pencarian Google Maps ("Pintu 7 GBK Senayan Jakarta") dibuat oleh kami, bukan dari klien.
+- **Rundown:** ditulis "tentatif". Nama penampil (MALIQ & D'Essentials, Ndarboy Genks, keduanya TBC) tidak ditulis, diganti "Penampilan hiburan". Podcast tetap ditulis tanpa nama acara.
+- **Hasil pendaftaran:** hanya ditulis "dikonversi menjadi takjil", tanpa angka persen, karena hal. 4 ("sebagian") dan hal. 5 ("100%") berbeda.
+- **Teks About dan misi sosial:** ringkasan dan penyusunan ulang kalimat proposal (hal. 2 sampai 4), bukan salinan persis.
+- **FAQ:** lima pertanyaan dan jawaban dibuat dari fakta proposal; pertanyaannya buatan kami.
+- **Hadiah:** merek (BYD, Polytron, Garmin) ditulis seperti proposal. Perlu izin klien untuk menampilkan merek.
+- **Racepack:** 4 item desain (jersey, medali, BIB, tas) ditambah 5 item dari daftar proposal (air minum, roti, multivitamin, kartu e-money TBC, kalender puasa) tanpa gambar. Gambar racepack di hal. 20 menyebut juga stiker dan salep peregang otot, tidak dimasukkan.
+- **Peta rute:** gambar diambil langsung dari proposal, bertuliskan "ilustrasi konsep, perlu validasi GPS dan perizinan". Catatan itu ikut ditampilkan di tab Rute.
+- **Tidak dipasang:** harga dan benefit sponsor (hal. 9, 15 sampai 18), foto venue hal. 6 dan 7, panggung hiburan (hal. 14), nomor telepon pribadi (hal. 27).
+
+## 15. Revisi struktur: Rute dipisah jadi section
+
+Struktur klien menulis "Kategori, jadwal, lokasi, rute" dalam satu section (04). Atas permintaan, Rute dipisah menjadi section sendiri tepat setelah Race Information, sehingga Home menjadi 8 blok. Ini **menyimpang dari `content_structure.md`** dan perlu diberitahukan ke klien. Data tetap di model `race_info` dan `race_category`; judul section ada di field `route_title` (model Judul Section Beranda).
+
+## 16. Revisi UX: Rute berbentuk tab
+
+Section Rute memakai komponen `src/components/RouteTabs.astro`: tab pill per kategori (5K, 10K), peta besar di kiri dan keterangan rute di kanan (bertumpuk di layar kecil), klik peta untuk zoom (dialog lightbox lebar), navigasi tab dengan panah kiri/kanan, dan kategori bisa dibuka langsung lewat link seperti `/#rute-10k`. Tab dibuat otomatis dari daftar kategori di CMS, jadi kategori baru ikut muncul.
+
+## 17. Audit kesesuaian (diperiksa terhadap situs yang berjalan)
+
+Sumber banding: `content_structure.md`, `PROPOSAL ANSOR RUN rev 1 .pdf`, digiland.co.id (Beranda dan /run). Status: SESUAI, SEBAGIAN, BELUM.
+
+### A. Terhadap `content_structure.md`
+
+| Item | Status | Catatan |
+|---|---|---|
+| Home 01 Hero: KV, headline, countdown, CTA | SEBAGIAN | KV, countdown, tombol CTA ada. Headline memakai tagline (dokumen tidak memberi teks). **Tombol CTA masih `href="#"`** (URL registrasi belum ada) |
+| Home 02 About: event dan misi sosial | SESUAI | Teks dari proposal, perlu persetujuan klien |
+| Home 03 Event Highlights: video promo | SEBAGIAN | Embed jalan, tetapi memutar video dummy (bukan promo ANSORUN) |
+| Home 04 Race Information: kategori, jadwal, lokasi, rute | SESUAI, dengan satu penyimpangan | Rute dipisah menjadi section sendiri atas permintaan, jadi Home 8 blok bukan 7 |
+| Home 05 Prizes & Racepack | SESUAI | Hadiah dan 9 item perlengkapan. 3 item (medali, BIB, tas) belum punya deskripsi |
+| Home 06 How to Join: pendaftaran dan race pack collection | SESUAI | Dua langkah. Link pendaftaran belum ada |
+| Home 07 FAQ & Contact | SEBAGIAN | FAQ ada (pertanyaan buatan kami), kontak masih placeholder |
+| Racepack: hero image, title, headline | SESUAI | Hero image sementara KV |
+| Racepack: 6 konten (tanggal, jam, lokasi, dokumen, perwakilan, kontak) | SEBAGIAN | Semua slot ada. Hanya tanggal yang terisi (perkiraan "Januari 2027"); sisanya placeholder |
+| Racepack: tiga langkah visual dengan judul persis | SEBAGIAN | Judul persis, deskripsi placeholder. "Visual" masih ikon, belum foto/ilustrasi (lihat C) |
+| Template mirip digiland.co.id/run | SEBAGIAN | Lihat C |
+
+### B. Terhadap proposal
+
+Sesuai: nama dan tanggal event, 5K dan 10K, biaya (Rp150.000 dan Rp200.000), rundown, lokasi GBK dan Pintu 7, kedua peta rute dan keterangannya, hadiah, daftar racepack, misi sosial dan penerima manfaat, kolaborasi lintas agama, timeline registrasi dan racepack.
+
+Belum atau berbeda:
+- [ ] Nama: proposal "ANSOR RUN 2027 Road to Ramadhan", situs mengikuti KV "ANSORUN Run to Ramadan 2027"
+- [ ] Tagline proposal hal. 2 dan 3: "Hadirkan **Toleransi** untuk Jalan Berbagi", KV: "Hadirkan jalan berbagi"
+- [ ] Venue: Hutan Kota GBK atau Parkir Timur GBK belum diputuskan (situs hanya menulis GBK Senayan dan Pintu 7)
+- [ ] Countdown 05.30 (rundown) vs flag off 06.00 (hal. 5)
+- [ ] "100%" vs "sebagian" hasil pendaftaran (tidak ditulis angkanya)
+- [ ] Podcast CLASH OF RELIGION dan hiburan (hal. 3, 14) hanya muncul di rundown tanpa nama
+- [ ] Tahap Ramadan 1448 H (penyaluran takjil dan laporan) di timeline hal. 19 belum ditampilkan di How to Join
+- [ ] Stiker logo dan salep peregang otot (gambar racepack hal. 20) tidak dimasukkan
+- [ ] Kontak (hal. 27) dan www.ansorun.com belum ditampilkan
+- Disengaja tidak dipasang: harga dan benefit sponsor, publikasi, desain gate/a-board/photobooth
+
+### C. Terhadap digiland.co.id
+
+Sama: header transparan menjadi putih saat scroll, countdown, motif stripe, ritme section terang dan gelap, footer gelap, halaman racepack berisi banner + breadcrumb, info lokasi/jadwal, item racepack, langkah pengambilan, catatan perwakilan.
+
+Berbeda:
+- Langkah pengambilan di digiland berupa **kartu bernomor dengan foto** (5 langkah, plus kartu catatan). Kita 3 langkah dengan ikon, karena belum ada foto atau ilustrasi
+- Digiland punya **menu mobile (hamburger)**, kita hanya menurunkan nav ke baris kedua
+- Digiland punya sponsor (powered by, presented by), CTA Instagram, galeri, newsletter, dan pilihan bahasa ID/EN. Semuanya tidak ada di struktur klien sehingga tidak dibuat (sponsor ada di proposal, bisa menyusul)
+- Struktur Beranda kita mengikuti dokumen klien (7 section), bukan beranda digiland
+- Footer kita 2 kolom tautan, digiland 4
+
+### D. Perbaikan yang dilakukan saat audit
+
+- Hadiah: "10 Jam Garmin: Runner" dan "25 Headset: Runner" dibetulkan menjadi "10 Jam Garmin Runner" dan "25 Headset Runner"
+- Layar kecil (375 px): nav turun ke baris kedua sehingga menutupi bagian atas poster KV. Jarak atas hero ditambah di bawah 640 px (kemudian digantikan oleh hamburger, tinggi header kembali 76 px)
+
+### E. Usulan perbaikan berikutnya
+
+- [x] Menu hamburger untuk mobile (selesai: tombol di bawah 768 px, panel menu, tutup lewat klik tautan, Esc, klik di luar)
+- [ ] Foto atau ilustrasi untuk tiga langkah racepack (atau kartu bergaya digiland bila klien memberi foto)
+- [ ] Ganti video dummy dan isi URL registrasi sebelum publikasi
+- [ ] Tampilkan tahap penyaluran takjil (Ramadan 1448 H) bila klien setuju

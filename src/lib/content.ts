@@ -6,7 +6,7 @@ import { LOCALE, TIMEZONE } from '../config';
 import { dato } from './datocms';
 import * as fb from './fallback';
 import type {
-  AboutPage, ContactInfo, Faq, GalleryPhoto, HomePage, InfoTab, Prize, RaceCategory, RaceInfo,
+  AboutPage, ContactInfo, Faq, GalleryPhoto, HomePage, Prize, RaceCategory, RaceInfo,
   RacepackItem, RacepackPage, SiteData, SiteSettings, Step,
 } from './types';
 
@@ -82,20 +82,6 @@ export const getAbout = () =>
   });
 
 /* ---------------------------------------------------------------- home */
-const mdLink = (label: string, url: string | null) => (url ? `[${label}](${url})` : '');
-
-/** Race Information -> 4 tab: Kategori, Jadwal, Lokasi, Rute (urutan sesuai content_structure.md) */
-export function raceTabs(categories: RaceCategory[], info: RaceInfo): InfoTab[] {
-  const map = (img: RaceInfo['routeMapImage'], url: string | null, alt: string) =>
-    [img ? `![${alt}](${img.url})` : '', mdLink('Buka peta', url)].filter(Boolean).join('\n\n');
-  return [
-    { title: 'Kategori', content: categories.map((c) => `### ${c.name}\n\n${c.detail}`).join('\n\n') },
-    { title: 'Jadwal', content: [`**${info.scheduleDate}**`, info.scheduleDetail].filter(Boolean).join('\n\n') },
-    { title: 'Lokasi', content: [`**${info.locationName}**`, info.locationAddress, map(info.locationMapImage, info.locationMapUrl, 'Peta lokasi')].filter(Boolean).join('\n\n') },
-    { title: 'Rute', content: [info.routeDetail, map(info.routeMapImage, info.routeMapUrl, 'Peta rute')].filter(Boolean).join('\n\n') },
-  ];
-}
-
 export const getHome = () =>
   once('home', async () => {
     const data = await dato<{
@@ -107,12 +93,12 @@ export const getHome = () =>
       allStepItems: Step[];
       contactInfo: ContactInfo | null;
     }>(`{
-      homePage { metaDescription videoTitle videoId raceTitle prizesTitle joinTitle }
+      homePage { metaDescription videoTitle videoId raceTitle routeTitle prizesTitle joinTitle }
       raceInfo {
         scheduleDate scheduleDetail locationName locationAddress locationMapUrl locationMapImage { ${IMG} }
-        routeDetail routeMapUrl routeMapImage { ${IMG} }
+        routeDetail routeMapUrl
       }
-      allRaceCategories(orderBy: _position_ASC) { name detail }
+      allRaceCategories(orderBy: _position_ASC) { name detail routeDetail routeMapImage { ${IMG} } }
       allPrizes(orderBy: _position_ASC) { title description }
       allRacepackItems(orderBy: _position_ASC) { title description icon caption image { ${IMG} } }
       allStepItems(filter: { group: { eq: "join" } }, orderBy: _position_ASC) { title description icon }
@@ -121,7 +107,8 @@ export const getHome = () =>
     const info = { ...fb.raceInfo, ...defined(data?.raceInfo) } as RaceInfo;
     return {
       home: { ...fb.home, ...defined(data?.homePage) } as HomePage,
-      tabs: raceTabs(listOr(data?.allRaceCategories, fb.raceCategories), info),
+      categories: listOr(data?.allRaceCategories, fb.raceCategories),
+      raceInfo: info,
       prizes: listOr(data?.allPrizes, fb.prizes),
       items: listOr(data?.allRacepackItems, fb.racepackItems),
       joinSteps: listOr(data?.allStepItems, fb.joinSteps),

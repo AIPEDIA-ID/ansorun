@@ -94,7 +94,9 @@ export interface InfoTab {
 /** Section 04: Race Information (kategori, jadwal, lokasi, rute) */
 export interface RaceCategory {
   name: string; // mis. "5K"
-  detail: string; // markdown: jarak, kuota, biaya, dst.
+  detail: string; // markdown: biaya, kuota, dst.
+  routeDetail: string; // markdown: keterangan rute kategori ini
+  routeMapImage: Img | null; // gambar peta rute kategori ini
 }
 
 export interface RaceInfo {
@@ -104,9 +106,8 @@ export interface RaceInfo {
   locationAddress: string;
   locationMapUrl: string | null; // link Google Maps
   locationMapImage: Img | null;
-  routeDetail: string; // markdown: keterangan rute
+  routeDetail: string; // markdown: catatan umum rute (peta per kategori ada di RaceCategory)
   routeMapUrl: string | null;
-  routeMapImage: Img | null;
 }
 
 /** Section 05: hadiah (perlengkapan = RacepackItem) */
@@ -128,6 +129,7 @@ export interface HomePage {
   videoTitle: RichText;
   videoId: string; // ID video YouTube
   raceTitle: RichText;
+  routeTitle: RichText;
   prizesTitle: RichText;
   joinTitle: RichText;
 }

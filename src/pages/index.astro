@@ -1,10 +1,11 @@
 ---
 import Base from '../layouts/Base.astro';
 import Countdown from '../components/Countdown.astro';
-import Tabs from '../components/Tabs.astro';
 import RacepackViewer from '../components/RacepackViewer.astro';
 import Steps from '../components/Steps.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
+import Icon from '../components/Icon.astro';
+import RouteTabs from '../components/RouteTabs.astro';
 import { getSiteData, getAbout, getHome, formatDate } from '../lib/content';
 import { img } from '../lib/datocms';
 import { md, rich } from '../lib/text';
@@ -12,7 +13,7 @@ import { ui } from '../config';
 
 const { site, sponsors } = await getSiteData();
 const { about, faqs } = await getAbout();
-const { home, tabs, prizes, items, joinSteps, contact } = await getHome();
+const { home, categories, raceInfo, prizes, items, joinSteps, contact } = await getHome();
 
 // Hadiah -> markdown daftar; kontak -> baris tautan
 const prizesMd = prizes.map((p) => `- **${p.title}**${p.description ? `: ${p.description}` : ''}`).join('\n');
@@ -97,13 +98,57 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi, rute -->
+  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi, rute (empat blok bertumpuk, tanpa tab) -->
   <section class="section" id="race">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
       </div>
-      <Tabs tabs={tabs} />
+
+      <div class="grid gap-6 lg:grid-cols-2">
+        <!-- Kategori -->
+        <div class="card p-7" id="kategori">
+          <p class="eyebrow">Kategori</p>
+          <div class="mt-4 grid gap-4 sm:grid-cols-2">
+            {
+              categories.map((c) => (
+                <div class="rounded-[4px] bg-alt p-5">
+                  <p class="font-display text-4xl text-primary">{c.name}</p>
+                  <div class="entry mt-2 text-sm" set:html={md(c.detail)} />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+
+        <!-- Lokasi -->
+        <div class="card p-7" id="lokasi">
+          <p class="eyebrow">Lokasi</p>
+          <h3 class="mt-4 text-xl">{raceInfo.locationName}</h3>
+          {raceInfo.locationAddress && <p class="mt-2 text-sm">{raceInfo.locationAddress}</p>}
+          {raceInfo.locationMapImage && <img src={img(raceInfo.locationMapImage.url, 900)} alt={raceInfo.locationMapImage.alt ?? 'Peta lokasi'} class="mt-4 w-full rounded-[4px]" loading="lazy" />}
+          {raceInfo.locationMapUrl && <p class="mt-5"><a class="btn btn-blue" href={raceInfo.locationMapUrl} rel="noopener" target="_blank"><Icon name="pin" size={16} /> {ui.openMap}</a></p>}
+        </div>
+
+        <!-- Jadwal -->
+        <div class="card p-7 lg:col-span-2" id="jadwal">
+          <p class="eyebrow">Jadwal</p>
+          <h3 class="mt-4 text-xl">{raceInfo.scheduleDate}</h3>
+          <div class="entry mt-3 text-sm" set:html={md(raceInfo.scheduleDetail)} />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04b. RUTE: section sendiri (dipisah dari Race Information atas permintaan) -->
+  <section class="section bg-alt" id="rute">
+    <div class="container-x">
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(home.routeTitle)} />
+        {raceInfo.routeDetail && <div class="entry mt-3" set:html={md(raceInfo.routeDetail)} />}
+      </div>
+      <RouteTabs items={categories} />
+      {raceInfo.routeMapUrl && <p class="mt-8 text-center"><a class="btn btn-blue" href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
     </div>
   </section>
 

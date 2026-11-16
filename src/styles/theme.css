@@ -113,12 +113,12 @@
     color: var(--t-on-dark);
     transition: background-color .25s, box-shadow .25s, color .25s;
   }
-  .header.is-solid { background: var(--t-surface); color: var(--t-dark); box-shadow: 0 2px 14px rgb(0 0 0 / .12); }
+  .header.is-solid, .header.is-open { background: var(--t-surface); color: var(--t-dark); box-shadow: 0 2px 14px rgb(0 0 0 / .12); }
   .header .logo-cms { filter: brightness(0) invert(1); transition: filter .25s; }
-  .header.is-solid .logo-cms { filter: none; }
+  .header.is-solid .logo-cms, .header.is-open .logo-cms { filter: none; }
   .header .logo-on-solid { display: none; }
-  .header.is-solid .logo-on-solid { display: block; }
-  .header.is-solid .logo-on-clear { display: none; }
+  .header.is-solid .logo-on-solid, .header.is-open .logo-on-solid { display: block; }
+  .header.is-solid .logo-on-clear, .header.is-open .logo-on-clear { display: none; }
   .site-title { font: 800 20px var(--t-font-heading); letter-spacing: -.2px; text-transform: uppercase; color: inherit; }
   .site-title:hover { color: inherit; opacity: .85; }
   .nav a {
@@ -129,7 +129,20 @@
   .nav a::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 2px; height: 3px; background: var(--t-accent); transform: scaleX(0); transition: transform .2s; }
   .nav a:hover { color: inherit; }
   .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
-  .header.is-solid .nav a::after { background: var(--t-primary); }   /* lime tidak terlihat di latar putih */
+  .header.is-solid .nav a::after, .header.is-open .nav a::after { background: var(--t-primary); }   /* lime tidak terlihat di latar putih */
+
+  /* ---- Menu mobile (hamburger) ---- */
+  .nav-toggle { display: grid; place-items: center; width: 44px; height: 44px; cursor: pointer; color: inherit; background: transparent; border: 1px solid color-mix(in srgb, currentColor 40%, transparent); border-radius: var(--t-radius); }
+  .nav-toggle .i-close { display: none; }
+  .header.is-open .nav-toggle .i-open { display: none; }
+  .header.is-open .nav-toggle .i-close { display: block; }
+  @media (min-width: 768px) { .nav-toggle { display: none; } }
+  @media (max-width: 767px) {
+    .nav { display: none; position: absolute; left: 0; right: 0; top: 100%; background: var(--t-surface); color: var(--t-dark); border-top: 1px solid var(--t-line); box-shadow: 0 10px 14px rgb(0 0 0 / .12); }
+    .header.is-open .nav { display: block; }
+    .nav a { padding: 16px 20px; border-bottom: 1px solid var(--t-line); }
+    .nav a::after { left: 20px; right: auto; width: 36px; bottom: 8px; }
+  }
 
   /* ---- Stripe diagonal (motif lintasan) ---- */
   .stripe-band {
@@ -250,6 +263,13 @@
   .video-play:hover { background: color-mix(in srgb, var(--t-darker) 15%, transparent); }
   .video-play-btn { display: grid; place-items: center; width: 84px; height: 84px; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); transition: transform .2s; }
   .video-play:hover .video-play-btn { transform: scale(1.08); }
+
+  /* ---- Peta rute: klik untuk zoom ---- */
+  .route-map { position: relative; display: block; width: 100%; overflow: hidden; padding: 0; cursor: zoom-in; background: var(--t-alt); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .route-map img { transition: transform .35s; }
+  .route-map:hover img { transform: scale(1.02); }
+  .route-map-hint { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font: 700 12px var(--t-font-heading); letter-spacing: .04em; color: var(--t-on-accent); background: var(--t-accent); border-radius: 999px; }
+  dialog.lightbox-wide { max-width: min(96vw, 1500px); }
 
   /* ---- Kartu info (racepack) ---- */
   .info-card { display: flex; gap: 16px; padding: 22px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
