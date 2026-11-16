@@ -41,18 +41,20 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         </div>
       )
     }
-    <div class="container-x flex flex-col items-center text-center gap-4 py-8">
-      <h1 class="hero-eyebrow text-accent">{site.heroHeadline}</h1>
-      <p class="font-heading text-sm sm:text-base font-bold text-white/90">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
-      {site.registrationUrl && <div class="mt-2"><a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a></div>}
+    <div class="container-x flex flex-col items-center text-center gap-1.5 sm:gap-2 py-2 sm:py-3 flex-none">
+      <h1 class="hero-eyebrow text-accent !text-sm sm:!text-base md:!text-lg font-bold">{site.heroHeadline}</h1>
+      <p class="font-heading text-xs sm:text-sm font-bold text-white/90">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
+      {site.registrationUrl && <div class="mt-1"><a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a></div>}
     </div>
-    <Countdown target={site.eventDate} embedded />
+    <div class="flex-none">
+      <Countdown target={site.eventDate} embedded />
+    </div>
     {
       groups.size > 0 && (
-        <div class="container-x flex flex-wrap items-center justify-center gap-x-12 gap-y-6 pb-8 text-center">
+        <div class="container-x flex flex-wrap items-center justify-center gap-x-12 gap-y-4 pb-4 text-center flex-none">
           {[...groups].map(([role, list]) => (
             <div>
-              <div class="mb-1.5 text-[10px] font-semibold uppercase tracking-[.2em] text-white/60">{role}</div>
+              <div class="mb-1 text-[10px] font-semibold uppercase tracking-[.2em] text-white/60">{role}</div>
               <div class="flex items-center justify-center gap-4">
                 {list.map((s) => {
                   const inner = s.logo
@@ -66,7 +68,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         </div>
       )
     }
-    <div class="stripe-band" aria-hidden="true"></div>
+    <div class="stripe-band flex-none" aria-hidden="true"></div>
   </section>
 
   <!-- 02. ABOUT ANSORUN: tentang event dan konsep sosial dari PDF -->
@@ -104,9 +106,10 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 03. EVENT HIGHLIGHTS: video promo -->
   <section class="section" id="video">
     <div class="container-x">
-      <div class="section-heading">
-        <p class="eyebrow">Highlight Event</p>
-        <h2 class="rich rich-accent" set:html={rich(home.videoTitle)} />
+      <div class="section-heading !mb-8">
+        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
+          VIDEO <strong>HIGHLIGHTS</strong>
+        </h2>
       </div>
       <div class="mx-auto max-w-4xl">
         <VideoEmbed youtubeId={home.videoId} />
@@ -114,90 +117,138 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi, rute -->
+  <!-- 04. RACE INFORMATION & RUTE: Kategori, Lokasi, Jadwal dan Peta Lintasan Terintegrasi -->
   <section class="section" id="race">
+    <div id="rute" class="scroll-mt-24"></div>
     <div class="container-x">
-      <div class="section-heading">
-        <p class="eyebrow">Informasi Lomba</p>
-        <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
+      <div class="section-heading !mb-8">
+        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
+          INFORMASI LOMBA <strong>& RUTE</strong>
+        </h2>
       </div>
 
-      <div class="grid gap-6 lg:grid-cols-2">
-        <!-- Kategori -->
-        <div class="card p-7" id="kategori">
-          <p class="eyebrow">Kategori</p>
-          <div class="mt-4 grid gap-4 sm:grid-cols-2">
-            {
-              categories.map((c) => (
-                <div class="rounded-[4px] bg-alt/50 p-5 border border-line">
-                  <p class="font-display text-4xl text-accent">{c.name}</p>
-                  <div class="entry mt-2 text-sm text-dark-ink" set:html={md(c.detail)} />
-                </div>
-              ))
-            }
+      <!-- Bar Ringkas Informasi Teknis (3 Kolom) -->
+      <div class="grid gap-4 sm:grid-cols-3 mb-8">
+        <!-- Tanggal & Waktu -->
+        <div class="card p-5 flex items-center gap-4">
+          <div class="step-icon flex-none !w-12 !h-12 !rounded-full">
+            <Icon name="calendar" size={22} />
+          </div>
+          <div>
+            <p class="font-heading text-xs font-bold uppercase tracking-wider text-accent">Jadwal Lomba</p>
+            <h3 class="text-sm sm:text-base font-bold text-white mt-0.5">{raceInfo.scheduleDate}</h3>
+            <p class="text-xs text-white/70">05.30 – 11.30 WIB</p>
           </div>
         </div>
 
-        <!-- Lokasi -->
-        <div class="card p-7" id="lokasi">
-          <p class="eyebrow">Lokasi</p>
-          <h3 class="mt-4 text-xl text-white">{raceInfo.locationName}</h3>
-          {raceInfo.locationAddress && <p class="mt-2 text-sm text-dark-ink">{raceInfo.locationAddress}</p>}
-          {raceInfo.locationMapImage && <img src={img(raceInfo.locationMapImage.url, 900)} alt={raceInfo.locationMapImage.alt ?? 'Peta lokasi'} class="mt-4 w-full rounded-[4px]" loading="lazy" />}
-          {raceInfo.locationMapUrl && <p class="mt-5"><a class="btn btn-blue" href={raceInfo.locationMapUrl} rel="noopener" target="_blank"><Icon name="pin" size={16} /> {ui.openMap}</a></p>}
+        <!-- Lokasi Central -->
+        <div class="card p-5 flex items-center gap-4">
+          <div class="step-icon flex-none !w-12 !h-12 !rounded-full">
+            <Icon name="pin" size={22} />
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="font-heading text-xs font-bold uppercase tracking-wider text-accent">Lokasi Acara</p>
+            <h3 class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">{raceInfo.locationName}</h3>
+            {raceInfo.locationMapUrl ? (
+              <a href={raceInfo.locationMapUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs text-highlight hover:text-accent font-semibold mt-0.5">
+                <span>Lihat di Google Maps</span> ↗
+              </a>
+            ) : (
+              <p class="text-xs text-white/70">Gelora Bung Karno</p>
+            )}
+          </div>
         </div>
 
-        <!-- Jadwal -->
-        <div class="card p-7 lg:col-span-2" id="jadwal">
-          <p class="eyebrow">Jadwal</p>
-          <h3 class="mt-4 text-xl text-white">{raceInfo.scheduleDate}</h3>
-          <div class="entry mt-3 text-sm overflow-x-auto text-dark-ink" set:html={md(raceInfo.scheduleDetail)} />
+        <!-- Kategori Pilihan -->
+        <div class="card p-5 flex items-center gap-4">
+          <div class="step-icon flex-none !w-12 !h-12 !rounded-full">
+            <Icon name="route" size={22} />
+          </div>
+          <div>
+            <p class="font-heading text-xs font-bold uppercase tracking-wider text-accent">Kategori Lomba</p>
+            <h3 class="text-sm sm:text-base font-bold text-white mt-0.5">5K & 10K</h3>
+            <p class="text-xs text-white/70">Mulai dari Rp150.000</p>
+          </div>
         </div>
       </div>
+
+      <!-- Tab Kategori + Peta Rute Terintegrasi -->
+      <RouteTabs items={categories} registrationUrl={site.registrationUrl} />
+
+      <!-- Rundown & Jadwal Lipat (Compact) -->
+      {raceInfo.scheduleDetail && (
+        <details class="card p-5 group cursor-pointer mt-6" id="rundown">
+          <summary class="flex items-center justify-between font-heading font-bold text-sm sm:text-base text-white list-none">
+            <span class="flex items-center gap-3">
+              <span class="step-icon !w-8 !h-8 !rounded-full text-accent"><Icon name="clock" size={16} /></span>
+              <span>Rundown & Jadwal Hari-H (Tentatif)</span>
+            </span>
+            <span class="text-accent text-xs font-heading uppercase tracking-wider group-open:hidden">+ Buka Rundown</span>
+            <span class="text-accent text-xs font-heading uppercase tracking-wider hidden group-open:inline">– Tutup Rundown</span>
+          </summary>
+          <div class="entry mt-4 text-sm text-dark-ink border-t border-line/40 pt-4 overflow-x-auto" set:html={md(raceInfo.scheduleDetail)} />
+        </details>
+      )}
     </div>
   </section>
 
-  <!-- 04b. RUTE: section rute dengan tab interaktif & peta zoomable -->
-  <section class="section" id="rute">
-    <div class="container-x">
-      <div class="section-heading">
-        <p class="eyebrow">Peta Lintasan</p>
-        <h2 class="rich rich-accent" set:html={rich(home.routeTitle)} />
-        {raceInfo.routeDetail && <div class="entry mt-3 text-dark-ink" set:html={md(raceInfo.routeDetail)} />}
-      </div>
-      <RouteTabs items={categories} />
-      {raceInfo.routeMapUrl && <p class="mt-8 text-center"><a class="btn btn-blue" href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
-    </div>
-  </section>
-
-  <!-- 05a. PRIZES: hadiah -->
+  <!-- 05. HADIAH & RACEPACK: gabungan hadiah dan perlengkapan peserta dengan Tab Switcher -->
   <section class="section" id="hadiah">
+    <div id="racepack" class="scroll-mt-24"></div>
     <div class="container-x">
-      <div class="section-heading">
-        <p class="eyebrow">Hadiah & Doorprize</p>
-        <h2 class="rich rich-accent" set:html={rich(home.prizesTitle)} />
+      <div class="section-heading !mb-8">
+        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
+          HADIAH <strong>& RACEPACK</strong>
+        </h2>
       </div>
-      <Prizes prizes={prizes} />
-    </div>
-  </section>
 
-  <!-- 05b. RACEPACK: perlengkapan peserta -->
-  <section class="section" id="racepack">
-    <div class="container-x">
-      <div class="section-heading">
-        <p class="eyebrow">Perlengkapan Peserta</p>
-        <h2 class="rich rich-accent" set:html={rich(home.racepackTitle)} />
+      <!-- Tab Switcher: Hadiah vs Racepack -->
+      <div data-benefit-tabs>
+        <div class="tabs-list mb-8" role="tablist" aria-label="Pilih tampilan benefit">
+          <button
+            type="button"
+            role="tab"
+            class="tab-btn"
+            id="tab-btn-hadiah"
+            aria-controls="panel-hadiah"
+            aria-selected="true"
+            tabindex="0"
+          >
+            🎁 Hadiah & Doorprize
+          </button>
+          <button
+            type="button"
+            role="tab"
+            class="tab-btn"
+            id="tab-btn-racepack"
+            aria-controls="panel-racepack"
+            aria-selected="false"
+            tabindex="-1"
+          >
+            👕 Perlengkapan Peserta (Racepack)
+          </button>
+        </div>
+
+        <!-- Panel 1: Hadiah -->
+        <div role="tabpanel" id="panel-hadiah" aria-labelledby="tab-btn-hadiah">
+          <Prizes prizes={prizes} />
+        </div>
+
+        <!-- Panel 2: Racepack -->
+        <div role="tabpanel" id="panel-racepack" aria-labelledby="tab-btn-racepack" hidden>
+          <RacepackViewer venue={ui.racepackItemsLabel} schedule="Perlengkapan resmi lomba yang siap menemani langkah kebaikanmu." items={items} />
+        </div>
       </div>
-      <RacepackViewer venue={ui.racepackItemsLabel} schedule="Perlengkapan resmi lomba yang siap menemani langkah kebaikanmu." items={items} />
     </div>
   </section>
 
   <!-- 06. HOW TO JOIN: pendaftaran dan race pack collection -->
   <section class="section" id="daftar">
     <div class="container-x">
-      <div class="section-heading">
-        <p class="eyebrow">Alur Kepesertaan</p>
-        <h2 class="rich rich-accent" set:html={rich(home.joinTitle)} />
+      <div class="section-heading !mb-8">
+        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
+          CARA <strong>DAFTAR</strong>
+        </h2>
       </div>
       <Steps steps={joinSteps} />
       <p class="mt-10 flex flex-wrap justify-center gap-3">
@@ -210,10 +261,10 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 07. FAQ: pertanyaan yang sering diajukan -->
   <section class="section" id="faq">
     <div class="container-x max-w-3xl">
-      <div class="section-heading">
-        <p class="eyebrow">Ada Pertanyaan?</p>
-        <h2 class="rich rich-accent">FREQUENTLY ASKED <strong>QUESTIONS</strong></h2>
-        <p class="mt-2 text-sm sm:text-base text-dark-ink">Pertanyaan umum seputar pendaftaran, kategori lomba, dan teknis race day.</p>
+      <div class="section-heading !mb-8">
+        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
+          FAQ
+        </h2>
       </div>
       {
         faqs.map((f, i) => (
@@ -229,10 +280,10 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 08. CONTACT: informasi dan layanan narahubung -->
   <section class="section section-about" id="kontak">
     <div class="container-x">
-      <div class="section-heading">
-        <p class="eyebrow">Narahubung Resmi</p>
-        <h2 class="rich rich-accent">LAYANAN <strong>INFORMASI & KONTAK</strong></h2>
-        <p class="mt-2 text-sm sm:text-base text-dark-ink">Hubungi panitia resmi untuk informasi pendaftaran, rute, sponsorship, atau kemitraan.</p>
+      <div class="section-heading !mb-8">
+        <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
+          KONTAK <strong>RESMI</strong>
+        </h2>
       </div>
       <div class="mx-auto max-w-4xl">
         <ContactList contact={contact} />
@@ -245,8 +296,9 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     site.registrationUrl && (
       <section class="section text-center" aria-label="Ajak Mendaftar">
         <div class="container-x max-w-2xl">
-          <p class="eyebrow">Siap Melangkah & Berbagi?</p>
-          <h2 class="rich rich-accent mt-2 text-3xl sm:text-4xl">DAFTAR <strong>SEKARANG</strong></h2>
+          <h2 class="rich rich-accent text-3xl sm:text-4xl font-extrabold uppercase tracking-wide">
+            DAFTAR <strong>SEKARANG</strong>
+          </h2>
           <p class="mt-3 text-sm sm:text-base text-dark-ink">
             Ajang lari 5K & 10K menyambut Ramadan 1448 H di GBK Senayan. Tiap kilometer hadirkan kebaikan nyata.
           </p>
@@ -258,4 +310,39 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
       </section>
     )
   }
+
+  <script>
+    document.querySelectorAll<HTMLElement>('[data-benefit-tabs]').forEach((root) => {
+      const tabHadiah = root.querySelector<HTMLButtonElement>('#tab-btn-hadiah');
+      const tabRacepack = root.querySelector<HTMLButtonElement>('#tab-btn-racepack');
+      const panelHadiah = root.querySelector<HTMLElement>('#panel-hadiah');
+      const panelRacepack = root.querySelector<HTMLElement>('#panel-racepack');
+
+      if (!tabHadiah || !tabRacepack || !panelHadiah || !panelRacepack) return;
+
+      const showTab = (tabName: 'hadiah' | 'racepack') => {
+        const isHadiah = tabName === 'hadiah';
+        tabHadiah.setAttribute('aria-selected', String(isHadiah));
+        tabHadiah.tabIndex = isHadiah ? 0 : -1;
+        tabRacepack.setAttribute('aria-selected', String(!isHadiah));
+        tabRacepack.tabIndex = !isHadiah ? 0 : -1;
+        panelHadiah.hidden = !isHadiah;
+        panelRacepack.hidden = isHadiah;
+      };
+
+      tabHadiah.addEventListener('click', () => showTab('hadiah'));
+      tabRacepack.addEventListener('click', () => showTab('racepack'));
+
+      const checkHash = () => {
+        if (location.hash === '#racepack') {
+          showTab('racepack');
+        } else if (location.hash === '#hadiah') {
+          showTab('hadiah');
+        }
+      };
+
+      checkHash();
+      window.addEventListener('hashchange', checkHash);
+    });
+  </script>
 </Base>
