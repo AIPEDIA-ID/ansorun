@@ -2,8 +2,8 @@
 import { ui } from '../config';
 import { rich } from '../lib/text';
 
-interface Props { target: string; title: string; text: string }
-const { target, title, text } = Astro.props;
+interface Props { target: string; title?: string; text?: string; embedded?: boolean }
+const { target, title = '', text = '', embedded = false } = Astro.props;
 const units = [
   ['days', ui.units.days],
   ['hours', ui.units.hours],
@@ -12,12 +12,16 @@ const units = [
 ] as const;
 ---
 
-<section class="section" data-countdown={target}>
+<section class:list={[embedded ? 'pb-14 pt-2' : 'section']} data-countdown={target}>
   <div class="container-x">
-    <div class="mb-14 max-w-3xl">
-      <h2 class="rich text-[clamp(28px,4.5vw,46px)] font-semibold text-primary" set:html={rich(title)} />
-      <p class="mt-3 text-ink-soft">{text}</p>
-    </div>
+    {
+      (title || text) && (
+        <div class="mb-14 max-w-3xl">
+          {title && <h2 class="rich text-[clamp(28px,4.5vw,46px)] font-semibold text-primary" set:html={rich(title)} />}
+          {text && <p class="mt-3 text-ink-soft">{text}</p>}
+        </div>
+      )
+    }
     <div class="grid grid-cols-4 gap-2 text-center sm:gap-6" data-countdown-grid>
       {
         units.map(([key, label]) => (
@@ -28,7 +32,7 @@ const units = [
         ))
       }
     </div>
-    <p class="hidden text-center font-heading text-xl font-bold text-primary" data-countdown-done>{ui.countdownDone}</p>
+    <p class:list={["hidden text-center font-heading text-xl font-bold", embedded ? "text-white" : "text-primary"]} data-countdown-done>{ui.countdownDone}</p>
   </div>
 </section>
 

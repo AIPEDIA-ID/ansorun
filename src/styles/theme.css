@@ -17,23 +17,25 @@
 
 /* ---------- 1. TOKENS ---------- */
 :root {
-  /* Font: diatur di src/config.ts (fonts) — satu tempat untuk link & nama font. */
+  /* Font: diatur di src/config.ts (fonts) — satu tempat untuk link, @font-face & peran font:
+     --t-font-heading (Neospeed), --t-font-body (Open Sans), --t-font-tag (Osaca), --t-font-display (Golf). */
 
-  --t-primary: #2563d6;     /* banner, tombol sekunder, angka countdown */
-  --t-accent: #ef3340;      /* tombol utama, stripe, nomor */
-  --t-highlight: #ff6670;   /* breadcrumb aktif, label kecil di bg gelap */
+  /* Palet ANSORUN 2027 (diambil dari KV, jersey, BIB, medali): teal + hijau + lime neon */
+  --t-primary: #027757;     /* hijau jersey: banner, tombol sekunder, angka countdown */
+  --t-accent: #dfff40;      /* lime titling: tombol utama, stripe, nomor */
+  --t-highlight: #bce930;   /* breadcrumb aktif, label kecil di bg gelap */
 
   --t-paper: #ffffff;       /* latar halaman */
   --t-surface: #ffffff;     /* kartu, input, header solid, lightbox */
-  --t-on-accent: #ffffff;   /* teks di atas warna aksen (tombol, nomor, ikon) */
+  --t-on-accent: #01373d;   /* teks di atas LIME harus gelap (tombol, nomor, ikon) */
   --t-on-dark: #ffffff;     /* teks/garis di atas foto & section gelap */
-  --t-alt: #f3f5f8;
-  --t-ink: #38414d;
-  --t-ink-soft: #6f7a87;
-  --t-line: #e1e5ea;
-  --t-dark: #071a4a;        /* section gelap */
-  --t-darker: #040f30;      /* footer */
-  --t-dark-ink: #9aa7ba;
+  --t-alt: #f0f6f4;
+  --t-ink: #1f3a3d;
+  --t-ink-soft: #587074;
+  --t-line: #dce6e4;
+  --t-dark: #01373d;        /* teal gelap: section gelap */
+  --t-darker: #012a2f;      /* footer */
+  --t-dark-ink: #9fc0bd;
 
   --t-radius: 4px;
   --t-container: 1140px;
@@ -52,6 +54,8 @@
 /* Expose token ke Tailwind: bg-primary, text-ink, font-heading, dst. */
 @theme inline {
   --font-heading: var(--t-font-heading);
+  --font-tag: var(--t-font-tag);
+  --font-display: var(--t-font-display);
   --color-white: var(--t-on-dark);
   --color-on-accent: var(--t-on-accent);
   --font-sans: var(--t-font-body);
@@ -94,7 +98,7 @@
   .on-dark .rich-accent strong { color: var(--t-accent); }
 
   /* Label kecil di atas judul */
-  .eyebrow { font: 700 12px var(--t-font-heading); letter-spacing: .22em; text-transform: uppercase; color: var(--t-primary); }
+  .eyebrow { font: italic 500 13px var(--t-font-tag); letter-spacing: .18em; text-transform: uppercase; color: var(--t-primary); }
   .on-dark .eyebrow { color: var(--t-highlight); }
 
   /* Judul section tengah */
@@ -110,8 +114,11 @@
     transition: background-color .25s, box-shadow .25s, color .25s;
   }
   .header.is-solid { background: var(--t-surface); color: var(--t-dark); box-shadow: 0 2px 14px rgb(0 0 0 / .12); }
-  .header .logo-img { filter: brightness(0) invert(1); transition: filter .25s; }
-  .header.is-solid .logo-img { filter: none; }
+  .header .logo-cms { filter: brightness(0) invert(1); transition: filter .25s; }
+  .header.is-solid .logo-cms { filter: none; }
+  .header .logo-on-solid { display: none; }
+  .header.is-solid .logo-on-solid { display: block; }
+  .header.is-solid .logo-on-clear { display: none; }
   .site-title { font: 800 20px var(--t-font-heading); letter-spacing: -.2px; text-transform: uppercase; color: inherit; }
   .site-title:hover { color: inherit; opacity: .85; }
   .nav a {
@@ -122,6 +129,7 @@
   .nav a::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 2px; height: 3px; background: var(--t-accent); transform: scaleX(0); transition: transform .2s; }
   .nav a:hover { color: inherit; }
   .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
+  .header.is-solid .nav a::after { background: var(--t-primary); }   /* lime tidak terlihat di latar putih */
 
   /* ---- Stripe diagonal (motif lintasan) ---- */
   .stripe-band {
@@ -152,8 +160,13 @@
   }
   .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--t-darker) 75%, transparent), color-mix(in srgb, var(--t-darker) 15%, transparent) 70%); }
   .hero > * { position: relative; }
-  .hero h1 { color: var(--t-on-dark); font-weight: 300; font-size: clamp(40px, 7.4vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
-  .hero-eyebrow { font: 500 clamp(15px, 2vw, 22px) var(--t-font-heading); letter-spacing: .04em; text-transform: uppercase; }
+  .hero h1 { color: var(--t-on-dark); font-family: var(--t-font-display); font-weight: 400; font-size: clamp(40px, 7.4vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
+  .hero-eyebrow { font: italic 500 clamp(15px, 2vw, 22px) var(--t-font-tag); letter-spacing: .04em; }
+
+  /* ---- Hero poster: KV utuh di bawah header, lalu band CTA ---- */
+  .hero-poster { position: relative; overflow: hidden; color: var(--t-on-dark); background: var(--t-dark); padding-top: var(--t-header-h); }
+  .hero-poster > img { display: block; width: 100%; height: auto; }
+  .hero-poster .stripe-band { margin-top: 0; }
 
   /* ---- Banner halaman dalam ---- */
   .page-banner {
@@ -162,14 +175,19 @@
     background-color: var(--t-banner);
     background-size: cover; background-position: center;
   }
-  .page-banner h1 { color: var(--t-on-dark); font-weight: 300; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -.02em; }
+  .page-banner h1 { color: var(--t-on-dark); font-family: var(--t-font-display); font-weight: 400; font-size: clamp(36px, 6vw, 64px); line-height: 1.02; letter-spacing: -.02em; }
+  .page-banner-img { background-position: center 78%; }
+  .page-banner-img::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 78%, transparent); }
+  .page-banner-img > * { position: relative; }
   .breadcrumb { font: 600 13px var(--t-font-heading); }
   .breadcrumb a { color: var(--t-on-dark); }
   .breadcrumb a:hover { color: var(--t-highlight); }
   .breadcrumb .current { color: var(--t-highlight); }
 
   /* ---- Countdown ---- */
-  .count-num { font: italic 800 clamp(56px, 11vw, 132px)/1 var(--t-font-heading); color: var(--t-primary); font-variant-numeric: tabular-nums; }
+  .count-num { font: italic 400 clamp(52px, 10vw, 120px)/1 var(--t-font-display); color: var(--t-primary); font-variant-numeric: tabular-nums; }
+  .on-dark .count-num { color: var(--t-accent); }
+  .on-dark .count-label { color: var(--t-dark-ink); }
   .count-label { font: 600 13px var(--t-font-heading); letter-spacing: .3em; text-transform: uppercase; color: var(--t-ink-soft); margin-top: 8px; }
 
   /* ---- Tombol solid datar ---- */
@@ -183,8 +201,8 @@
   }
   .btn:hover { color: var(--t-on-accent); background: var(--t-accent-dark); border-color: var(--t-accent-dark); }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
-  .btn-blue { background: var(--t-primary); border-color: var(--t-primary); }
-  .btn-blue:hover { background: var(--t-primary-dark); border-color: var(--t-primary-dark); }
+  .btn-blue { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
+  .btn-blue:hover { background: var(--t-primary-dark); border-color: var(--t-primary-dark); color: var(--t-on-dark); }
   .btn-outline { background: transparent; border-color: var(--t-on-dark); color: var(--t-on-dark); }
   .btn-outline:hover { background: var(--t-surface); border-color: var(--t-on-dark); color: var(--t-dark); }
 
@@ -202,7 +220,7 @@
   .entry a { text-decoration: underline; }
   .entry ul { list-style: disc; padding-left: 22px; }
   .entry ol { list-style: decimal; padding-left: 22px; }
-  .entry blockquote { font-style: italic; border-left: 4px solid var(--t-accent); padding-left: 18px; }
+  .entry blockquote { font-style: italic; border-left: 4px solid var(--t-primary); padding-left: 18px; }
   .entry img { max-width: 100%; border-radius: var(--t-radius); }
   .entry table { border-collapse: collapse; width: 100%; }
   .entry th, .entry td { border: 1px solid var(--t-line); padding: 8px 12px; text-align: left; }
@@ -219,6 +237,25 @@
   .tab-btn:hover { border-color: var(--t-primary); color: var(--t-primary); }
   .tab-btn[aria-selected="true"] { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
   .tab-panel { margin-top: 28px; }
+
+  /* ---- Langkah bernomor (How to Join, Racepack) ---- */
+  .step-num { position: absolute; top: 14px; right: 20px; font: italic 400 56px/1 var(--t-font-display); color: color-mix(in srgb, var(--t-primary) 14%, transparent); }
+  .on-dark .step-num { color: color-mix(in srgb, var(--t-accent) 22%, transparent); }
+  .step-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--t-radius); background: var(--t-primary); color: var(--t-on-dark); }
+  .on-dark .step-icon { background: var(--t-accent); color: var(--t-on-accent); }
+
+  /* ---- Video embed ---- */
+  .video-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--t-radius); background: var(--t-darker); }
+  .video-play { position: absolute; inset: 0; display: grid; place-items: center; cursor: pointer; background: color-mix(in srgb, var(--t-darker) 35%, transparent); transition: background .2s; }
+  .video-play:hover { background: color-mix(in srgb, var(--t-darker) 15%, transparent); }
+  .video-play-btn { display: grid; place-items: center; width: 84px; height: 84px; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); transition: transform .2s; }
+  .video-play:hover .video-play-btn { transform: scale(1.08); }
+
+  /* ---- Kartu info (racepack) ---- */
+  .info-card { display: flex; gap: 16px; padding: 22px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .info-card .step-icon { flex: none; width: 44px; height: 44px; }
+  .info-card h3 { font-size: 15px; }
+  .tbd { color: var(--t-ink-soft); font-style: italic; }
 
   /* ---- Pemilih item race pack ---- */
   .rp-item {
@@ -238,7 +275,7 @@
     padding: 18px 56px 18px 22px; font: 700 15px var(--t-font-heading); color: var(--t-dark);
   }
   details.faq > summary::-webkit-details-marker { display: none; }
-  details.faq > summary::after { content: "+"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: 400; color: var(--t-accent); }
+  details.faq > summary::after { content: "+"; position: absolute; right: 22px; top: 50%; transform: translateY(-50%); font-size: 24px; font-weight: 400; color: var(--t-primary); }
   details.faq[open] > summary { color: var(--t-primary); }
   details.faq[open] > summary::after { content: "–"; }
   details.faq > .entry { padding: 0 22px 20px; }

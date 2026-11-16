@@ -11,8 +11,9 @@ interface Props {
   class?: string;
   eager?: boolean;
   dark?: boolean; // placeholder untuk latar gelap
+  fit?: 'cover' | 'contain'; // contain = tampilkan utuh (mockup produk)
 }
-const { image, alt = '', width = 800, ratio = '4/3', label = '', class: cls = '', eager = false, dark = false } = Astro.props;
+const { image, alt = '', width = 800, ratio = '4/3', label = '', class: cls = '', eager = false, dark = false, fit = 'cover' } = Astro.props;
 const [rw, rh] = ratio.split('/').map(Number);
 // Dimensi selalu diisi (dari CMS, atau dari rasio) agar layout tidak bergeser saat gambar dimuat
 const w = image?.width ?? width;
@@ -28,7 +29,7 @@ const h = image?.height ?? Math.round(width * (rh / rw));
       height={h}
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
-      class:list={['block w-full object-cover', cls]}
+      class:list={['block w-full', fit === 'contain' ? 'object-contain' : 'object-cover', cls]}
       style={`aspect-ratio:${ratio}`}
     />
   ) : (

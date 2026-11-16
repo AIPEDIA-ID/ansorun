@@ -1,8 +1,8 @@
-# Event Lari — Astro + DatoCMS + Tailwind
+# ANSORUN Run to Ramadan 2027 — Astro + DatoCMS + Tailwind
 
 🇮🇩 Bahasa Indonesia · 🇬🇧 [English](README.en.md)
 
-Situs event lari statis. **Struktur halaman** mengikuti digiland.co.id (header transparan di atas hero, countdown, CTA Instagram, galeri, newsletter, footer gelap; halaman Tentang/FAQ, Lari/Race Pack, Galeri). **Skin**-nya sengaja beda: gaya tema WordPress ~2018, warna solid dan datar, Montserrat + Open Sans, tanpa gradient/glass.
+Situs event lari statis. **Struktur halaman** mengikuti digiland.co.id (header transparan di atas hero, countdown, CTA Instagram, galeri, newsletter, footer gelap; Beranda 7 section: Hero, About, Event Highlights, Race Information, Prizes & Racepack, How to Join, FAQ & Contact; halaman `/racepack`; `/galeri` tetap ada tapi tidak di nav). **Skin**-nya: gaya tema WordPress ~2018, warna solid dan datar, palet teal + hijau + lime dari desain ANSORUN, font klien (Neospeed, Golf Italic, Osaca) + Open Sans untuk paragraf, tanpa gradient/glass. Rencana lengkap: `.docs/plan_implement_content.md`.
 
 ## Menjalankan
 
@@ -20,7 +20,7 @@ Tanpa token, situs tetap jalan memakai konten contoh di `src/lib/fallback.ts`.
 DATOCMS_CMA_TOKEN=... npm run dato:schema
 ```
 
-Membuat 10 model (Site Settings, Sponsor, Footer Link, Halaman Tentang, FAQ, Halaman Lari, Isi Race Pack, Langkah Race Pack, Tab Informasi Event, Foto Galeri). Idempotent: model yang sudah ada dilewati. **Coba dulu di sandbox environment.** Script ini belum dijalankan terhadap project Dato sungguhan.
+Membuat model (Site Settings, Sponsor, Footer Link, Halaman Tentang, FAQ, Halaman Beranda, Halaman Racepack, Isi Race Pack, Langkah, Tab Race Information, Foto Galeri). Idempotent: model yang sudah ada dilewati. **Coba dulu di sandbox environment.** Script ini belum dijalankan terhadap project Dato sungguhan.
 
 Agar konten tampil setelah diedit: buat webhook Dato → build hook Netlify/Vercel/Cloudflare.
 
@@ -57,7 +57,7 @@ Foto contoh dari Unsplash (di `src/lib/fallback.ts`) muncul bila field gambar Da
 ## Isi contoh yang perlu diganti sebelum rilis
 
 - **Foto:** foto contoh Unsplash (di `src/lib/fallback.ts`) muncul bila field gambar di Dato kosong. Ganti dengan foto asli.
-- **Logo sponsor:** brand fiktif di `public/dummy/` (Velocita, Aquanova, Kopi Lari) hanyalah placeholder. Hapus folder itu dan buang `dummyLogo` dari `src/lib/fallback.ts` setelah sponsor asli terisi.
+- **Sponsor:** belum ada sponsor resmi, bagian sponsor di hero tersembunyi sampai `sponsors` di `src/lib/fallback.ts` (atau DatoCMS) terisi. Folder `public/dummy/` boleh dihapus.
 
 ## Struktur
 
@@ -67,7 +67,7 @@ src/config.ts          menu, locale, teks UI
 src/lib/               datocms client, query + merge fallback, teks (rich/md), tipe
 src/components/        Countdown, Gallery, Newsletter, Tabs, RacepackViewer, PageBanner, Icon, Photo
 src/layouts/Base.astro header sticky/transparan + footer
-src/pages/             index, tentang, lari, galeri
+src/pages/             index (7 section), racepack, galeri (tanpa nav); /tentang dan /lari di-redirect
 scripts/               datocms-schema.mjs
 ```
 

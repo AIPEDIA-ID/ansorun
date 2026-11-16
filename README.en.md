@@ -1,8 +1,8 @@
-# Event Lari — Astro + DatoCMS + Tailwind
+# ANSORUN Run to Ramadan 2027 — Astro + DatoCMS + Tailwind
 
 🇮🇩 [Bahasa Indonesia](README.md) · 🇬🇧 English
 
-A static running-event website. The **page structure** follows digiland.co.id (transparent header over the hero, countdown, Instagram CTA, gallery, newsletter, dark footer; About/FAQ, Run/Race Pack and Gallery pages). The **skin** is deliberately different: a flat ~2018 WordPress-theme look with solid colours, Montserrat + Open Sans, and no gradients or glassmorphism.
+A static running-event website. The **page structure** follows digiland.co.id (transparent header over the hero, countdown, Instagram CTA, gallery, newsletter, dark footer; a 7-section Home, a `/racepack` page; `/galeri` still exists but is not in the nav). The **skin**: a flat ~2018 WordPress-theme look with solid colours, a teal + green + lime palette from the ANSORUN designs, the client fonts (Neospeed, Golf Italic, Osaca) plus Open Sans for paragraphs, and no gradients or glassmorphism. Full plan: `.docs/plan_implement_content.md`.
 
 ## Running locally
 
@@ -57,7 +57,7 @@ npm run check   # fails on any raw colour outside the tokens, then runs the buil
 ## Sample content to replace before launch
 
 - **Photos:** sample photos from Unsplash (in `src/lib/fallback.ts`) appear whenever an image field in Dato is empty. Replace them with real photos.
-- **Sponsor logos:** the fictional brands in `public/dummy/` (Velocita, Aquanova, Kopi Lari) are placeholders. Delete the folder and remove `dummyLogo` from `src/lib/fallback.ts` when real sponsors are in place.
+- **Sponsors:** no official sponsors yet; the hero sponsor row stays hidden until `sponsors` in `src/lib/fallback.ts` (or DatoCMS) is filled. `public/dummy/` can be deleted.
 
 ## Structure
 
@@ -67,7 +67,7 @@ src/config.ts          menu, locale, fonts, UI text
 src/lib/               DatoCMS client, queries + fallback merge, text helpers (rich/md), types
 src/components/        Countdown, Gallery, Newsletter, Tabs, RacepackViewer, PageBanner, Icon, Photo
 src/layouts/Base.astro sticky/transparent header + footer
-src/pages/             index, tentang, lari, galeri
+src/pages/             index (7 sections), racepack, galeri (not in nav); /tentang and /lari redirect
 scripts/               datocms-schema.mjs, check.mjs
 ```
 

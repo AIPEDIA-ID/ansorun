@@ -56,15 +56,13 @@ export interface FooterLink {
   url: string;
 }
 
+/** Section 02: About Ansorun (tentang event dan misi sosial) + judul FAQ */
 export interface AboutPage {
   metaDescription: string;
   sectionTitle: RichText;
-  eyebrow: string;
-  quote: string;
-  body: string; // markdown
-  faqEyebrow: string;
+  body: string; // markdown: tentang event
+  mission: string; // markdown: misi sosial
   faqTitle: RichText;
-  faqText: string;
 }
 
 export interface Faq {
@@ -82,9 +80,10 @@ export interface RacepackItem {
   image: Img | null;
 }
 
-export interface RacepackStep {
-  description: string;
-  image: Img | null;
+export interface Step {
+  title: string;
+  description: string; // markdown
+  icon: string | null; // nama ikon di components/Icon.astro
 }
 
 export interface InfoTab {
@@ -92,23 +91,61 @@ export interface InfoTab {
   content: string; // markdown
 }
 
-export interface LariPage {
+/** Section 04: Race Information (kategori, jadwal, lokasi, rute) */
+export interface RaceCategory {
+  name: string; // mis. "5K"
+  detail: string; // markdown: jarak, kuota, biaya, dst.
+}
+
+export interface RaceInfo {
+  scheduleDate: string; // tanggal event
+  scheduleDetail: string; // markdown: jam start tiap kategori
+  locationName: string;
+  locationAddress: string;
+  locationMapUrl: string | null; // link Google Maps
+  locationMapImage: Img | null;
+  routeDetail: string; // markdown: keterangan rute
+  routeMapUrl: string | null;
+  routeMapImage: Img | null;
+}
+
+/** Section 05: hadiah (perlengkapan = RacepackItem) */
+export interface Prize {
+  title: string;
+  description: string;
+}
+
+/** Section 07: kontak */
+export interface ContactInfo {
+  email: string;
+  whatsapp: string; // nomor internasional tanpa +, mis. 62812xxxx
+  note: string; // markdown
+}
+
+/** Judul tiap section Beranda + video. Isi section lain: AboutPage, RaceInfo, Prize, RacepackItem, Step, Faq, ContactInfo. */
+export interface HomePage {
   metaDescription: string;
-  racepackTitle: RichText;
-  racepackIntro: string;
-  racepackVenue: string;
-  racepackSchedule: string; // markdown
-  stepsTitle: string;
-  stepsText: string;
-  proxyNote: string; // markdown
+  videoTitle: RichText;
+  videoId: string; // ID video YouTube
+  raceTitle: RichText;
+  prizesTitle: RichText;
+  joinTitle: RichText;
+}
+
+/** Halaman 2: Racepack */
+export interface RacepackPage {
+  metaDescription: string;
+  heroImage: Img | null;
+  bannerTitle: RichText; // "Racepack Collection"
+  title: RichText; // "GET YOUR RACEPACK. GET READY TO RUN."
+  date: string; // tanggal pengambilan
+  hours: string; // jam operasional
+  venue: string; // lokasi pengambilan
+  documents: string; // markdown: dokumen yang harus dibawa
+  proxyNote: string; // markdown: mekanisme diwakilkan
   proxyFileUrl: string | null;
   proxyFileLabel: string;
-  communityTitle: RichText;
-  communityText: string;
-  communityImage: Img | null;
-  communityUrl: string | null;
-  infoTitle: RichText;
-  infoText: string;
+  contact: string; // markdown: kontak panitia
 }
 
 export interface GalleryPhoto {

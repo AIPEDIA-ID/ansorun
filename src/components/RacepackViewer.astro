@@ -33,12 +33,12 @@ const { venue, schedule, items } = Astro.props;
       items.map((it, i) => (
         <div role="tabpanel" id={`rp-panel-${i}`} aria-labelledby={`rp-tab-${i}`} hidden={i !== 0} class="relative h-full min-h-[320px] overflow-hidden rounded-[4px] bg-darker">
           {it.image ? (
-            <Photo image={it.image} alt={it.title} width={900} ratio="1/1" class="h-full" />
+            <Photo image={it.image} alt={it.title} width={900} ratio="1/1" fit="contain" class="h-full bg-white p-4" />
           ) : (
             <div class="flex h-full min-h-[320px] items-center justify-center font-heading text-sm font-extrabold uppercase tracking-[.25em] text-white/70" style="background:var(--t-dark)">{ui.comingSoon}</div>
           )}
           {it.caption && (
-            <span class="absolute bottom-4 left-4 rounded-full bg-accent px-4 py-1.5 text-xs font-bold text-white">{it.caption}</span>
+            <span class="absolute bottom-4 left-4 rounded-full bg-accent px-4 py-1.5 text-xs font-bold text-on-accent">{it.caption}</span>
           )}
         </div>
       ))

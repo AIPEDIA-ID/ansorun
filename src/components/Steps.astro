@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import { md } from '../lib/text';
+
+export interface Step { title: string; description: string; icon?: string }
+interface Props { steps: Step[]; dark?: boolean }
+const { steps, dark = false } = Astro.props;
+---
+
+<ol class:list={['grid gap-6', steps.length === 2 ? 'mx-auto max-w-3xl md:grid-cols-2' : 'md:grid-cols-3', dark && 'on-dark']}>
+  {
+    steps.map((s, i) => (
+      <li class:list={['relative p-7', dark ? 'card-dark' : 'card']}>
+        <span class="step-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+        <span class="step-icon"><Icon name={s.icon ?? 'star'} size={26} /></span>
+        <h3 class="mt-5 text-lg">{s.title}</h3>
+        <div class="entry mt-2 text-sm" set:html={md(s.description)} />
+      </li>
+    ))
+  }
+</ol>

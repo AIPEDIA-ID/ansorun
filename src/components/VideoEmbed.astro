@@ -1,0 +1,29 @@
+---
+import { ui } from '../config';
+import Icon from './Icon.astro';
+
+interface Props { youtubeId: string; poster?: string; title?: string }
+const { youtubeId, poster = '/brand/kv.webp', title = ui.videoTitle } = Astro.props;
+---
+
+<!-- Klik untuk memuat iframe (tanpa autoplay saat load, tidak ada request YouTube sebelum diklik) -->
+<div class="video-frame" data-video={youtubeId} data-title={title}>
+  <img src={poster} alt="" width="1600" height="900" loading="lazy" decoding="async" class="h-full w-full object-cover" />
+  <button type="button" class="video-play" aria-label={`${ui.watchVideo}: ${title}`}>
+    <span class="video-play-btn"><Icon name="play" size={32} /></span>
+  </button>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-video]').forEach((box) => {
+    box.querySelector('button')?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.video}?autoplay=1&rel=0`;
+      f.title = box.dataset.title ?? '';
+      f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      f.className = 'absolute inset-0 h-full w-full';
+      box.replaceChildren(f);
+    }, { once: true });
+  });
+</script>

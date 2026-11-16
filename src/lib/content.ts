@@ -6,8 +6,8 @@ import { LOCALE, TIMEZONE } from '../config';
 import { dato } from './datocms';
 import * as fb from './fallback';
 import type {
-  AboutPage, Faq, GalleryPhoto, InfoTab, LariPage, RacepackItem,
-  RacepackStep, SiteData, SiteSettings,
+  AboutPage, ContactInfo, Faq, GalleryPhoto, HomePage, InfoTab, Prize, RaceCategory, RaceInfo,
+  RacepackItem, RacepackPage, SiteData, SiteSettings, Step,
 } from './types';
 
 /** Buang null / string kosong supaya tidak menimpa fallback */
@@ -72,7 +72,7 @@ export const getSiteData = () =>
 export const getAbout = () =>
   once('about', async () => {
     const data = await dato<{ aboutPage: AboutPage | null; allFaqs: Faq[] }>(`{
-      aboutPage { metaDescription sectionTitle eyebrow quote body faqEyebrow faqTitle faqText }
+      aboutPage { metaDescription sectionTitle body mission faqTitle }
       allFaqs(orderBy: _position_ASC) { question answer }
     }`);
     return {
@@ -81,34 +81,70 @@ export const getAbout = () =>
     };
   });
 
-/* ---------------------------------------------------------------- lari */
-type LariRaw = Omit<LariPage, 'proxyFileUrl'> & { proxyFile: { url: string } | null };
+/* ---------------------------------------------------------------- home */
+const mdLink = (label: string, url: string | null) => (url ? `[${label}](${url})` : '');
 
-export const getLari = () =>
-  once('lari', async () => {
+/** Race Information -> 4 tab: Kategori, Jadwal, Lokasi, Rute (urutan sesuai content_structure.md) */
+export function raceTabs(categories: RaceCategory[], info: RaceInfo): InfoTab[] {
+  const map = (img: RaceInfo['routeMapImage'], url: string | null, alt: string) =>
+    [img ? `![${alt}](${img.url})` : '', mdLink('Buka peta', url)].filter(Boolean).join('\n\n');
+  return [
+    { title: 'Kategori', content: categories.map((c) => `### ${c.name}\n\n${c.detail}`).join('\n\n') },
+    { title: 'Jadwal', content: [`**${info.scheduleDate}**`, info.scheduleDetail].filter(Boolean).join('\n\n') },
+    { title: 'Lokasi', content: [`**${info.locationName}**`, info.locationAddress, map(info.locationMapImage, info.locationMapUrl, 'Peta lokasi')].filter(Boolean).join('\n\n') },
+    { title: 'Rute', content: [info.routeDetail, map(info.routeMapImage, info.routeMapUrl, 'Peta rute')].filter(Boolean).join('\n\n') },
+  ];
+}
+
+export const getHome = () =>
+  once('home', async () => {
     const data = await dato<{
-      lariPage: LariRaw | null;
+      homePage: HomePage | null;
+      raceInfo: RaceInfo | null;
+      allRaceCategories: RaceCategory[];
+      allPrizes: Prize[];
       allRacepackItems: RacepackItem[];
-      allRacepackSteps: RacepackStep[];
-      allInfoTabs: InfoTab[];
+      allStepItems: Step[];
+      contactInfo: ContactInfo | null;
     }>(`{
-      lariPage {
-        metaDescription racepackTitle racepackIntro racepackVenue racepackSchedule
-        stepsTitle stepsText proxyNote proxyFile { url } proxyFileLabel
-        communityTitle communityText communityImage { ${IMG} } communityUrl
-        infoTitle infoText
+      homePage { metaDescription videoTitle videoId raceTitle prizesTitle joinTitle }
+      raceInfo {
+        scheduleDate scheduleDetail locationName locationAddress locationMapUrl locationMapImage { ${IMG} }
+        routeDetail routeMapUrl routeMapImage { ${IMG} }
       }
+      allRaceCategories(orderBy: _position_ASC) { name detail }
+      allPrizes(orderBy: _position_ASC) { title description }
       allRacepackItems(orderBy: _position_ASC) { title description icon caption image { ${IMG} } }
-      allRacepackSteps(orderBy: _position_ASC) { description image { ${IMG} } }
-      allInfoTabs(orderBy: _position_ASC) { title content }
+      allStepItems(filter: { group: { eq: "join" } }, orderBy: _position_ASC) { title description icon }
+      contactInfo { email whatsapp note }
     }`);
-    const raw = data?.lariPage;
-    const { proxyFile, ...rest } = raw ?? ({} as Partial<LariRaw>);
+    const info = { ...fb.raceInfo, ...defined(data?.raceInfo) } as RaceInfo;
     return {
-      lari: { ...fb.lari, ...defined(rest), proxyFileUrl: proxyFile?.url ?? null } as LariPage,
+      home: { ...fb.home, ...defined(data?.homePage) } as HomePage,
+      tabs: raceTabs(listOr(data?.allRaceCategories, fb.raceCategories), info),
+      prizes: listOr(data?.allPrizes, fb.prizes),
       items: listOr(data?.allRacepackItems, fb.racepackItems),
-      steps: listOr(data?.allRacepackSteps, fb.racepackSteps),
-      tabs: listOr(data?.allInfoTabs, fb.infoTabs),
+      joinSteps: listOr(data?.allStepItems, fb.joinSteps),
+      contact: { ...fb.contact, ...defined(data?.contactInfo) } as ContactInfo,
+    };
+  });
+
+/* ----------------------------------------------------------- racepack */
+type RacepackRaw = Omit<RacepackPage, 'proxyFileUrl'> & { proxyFile: { url: string } | null };
+
+export const getRacepack = () =>
+  once('racepack', async () => {
+    const data = await dato<{ racepackPage: RacepackRaw | null; allStepItems: Step[] }>(`{
+      racepackPage {
+        metaDescription heroImage { ${IMG} } bannerTitle title date hours venue documents contact
+        proxyNote proxyFile { url } proxyFileLabel
+      }
+      allStepItems(filter: { group: { eq: "collect" } }, orderBy: _position_ASC) { title description icon }
+    }`);
+    const { proxyFile, ...rest } = data?.racepackPage ?? ({} as Partial<RacepackRaw>);
+    return {
+      page: { ...fb.racepack, ...defined(rest), proxyFileUrl: proxyFile?.url ?? null } as RacepackPage,
+      steps: listOr(data?.allStepItems, fb.collectSteps),
     };
   });
 

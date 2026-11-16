@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import Steps from '../components/Steps.astro';
+import Icon from '../components/Icon.astro';
+import { getRacepack } from '../lib/content';
+import { md, rich } from '../lib/text';
+import { ui } from '../config';
+
+const { page, steps } = await getRacepack();
+
+// Kartu informasi: tanggal, jam, lokasi, dokumen, kontak
+const info = [
+  { icon: 'calendar', title: 'Tanggal pengambilan', text: page.date },
+  { icon: 'clock', title: 'Jam operasional', text: page.hours },
+  { icon: 'pin', title: 'Lokasi pengambilan', text: page.venue },
+];
+---
+
+<Base title="Racepack" description={page.metaDescription}>
+  <PageBanner crumb="Racepack" title={page.bannerTitle} tagline="" image={page.heroImage?.url} />
+
+  <!-- Info pengambilan -->
+  <section class="section" id="info">
+    <div class="container-x">
+      <div class="section-heading">
+        <h2 class="rich rich-accent" set:html={rich(page.title)} />
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        {
+          info.map((c) => (
+            <div class="info-card">
+              <span class="step-icon"><Icon name={c.icon} size={22} /></span>
+              <div>
+                <h3>{c.title}</h3>
+                <p class:list={['mt-1 text-sm', c.text === ui.tbd && 'tbd']}>{c.text}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-4 grid gap-4 md:grid-cols-2">
+        <div class="info-card">
+          <span class="step-icon"><Icon name="id" size={22} /></span>
+          <div>
+            <h3>Dokumen yang harus dibawa</h3>
+            <div class="entry mt-1 text-sm" set:html={md(page.documents)} />
+          </div>
+        </div>
+        <div class="info-card">
+          <span class="step-icon"><Icon name="phone" size={22} /></span>
+          <div>
+            <h3>Kontak panitia</h3>
+            <div class:list={['entry mt-1 text-sm', page.contact === ui.tbd && 'tbd']} set:html={md(page.contact)} />
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tiga langkah visual (section gelap) -->
+  <section class="section bg-dark-section on-dark" id="langkah">
+    <div class="container-x">
+      <Steps steps={steps} dark />
+    </div>
+  </section>
+
+  <!-- Pengambilan diwakilkan -->
+  <section class="section bg-alt" id="perwakilan">
+    <div class="container-x max-w-3xl">
+      <div class="card flex gap-5 p-7">
+        <span class="step-icon flex-none"><Icon name="file" size={26} /></span>
+        <div>
+          <h3 class="text-lg">Pengambilan diwakilkan</h3>
+          <div class="entry mt-2 text-sm" set:html={md(page.proxyNote)} />
+          {
+            page.proxyFileUrl && (
+              <p class="mt-4"><a class="btn btn-blue" href={page.proxyFileUrl} download><Icon name="download" size={16} /> {page.proxyFileLabel}</a></p>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
