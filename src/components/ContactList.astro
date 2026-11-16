@@ -6,31 +6,38 @@ interface Props { contact: ContactInfo }
 const { contact } = Astro.props;
 ---
 
-<div class="card p-2">
+<div>
   {
     contact.people.length > 0 && (
-      <ul class="divide-y divide-line">
-        {contact.people.map((p) => (
-          <li class="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3.5">
-            <span class="font-heading text-base font-bold text-ink">{p.name}</span>
-            <span class="flex items-center gap-4">
-              <a class="whitespace-nowrap text-sm" href={`tel:${p.phone.replace(/\D/g, '')}`}>{fmtPhone(p.phone)}</a>
-              <a class="btn btn-blue btn-sm" href={waLink(p.phone)} rel="noopener" target="_blank" aria-label={`WhatsApp ${p.name}`}>WhatsApp</a>
-            </span>
-          </li>
-        ))}
-      </ul>
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse bg-paper text-left text-sm">
+          <thead>
+            <tr class="bg-primary text-white">
+              <th class="px-4 py-3 font-heading font-bold">Nama</th>
+              <th class="px-4 py-3 font-heading font-bold">Telepon</th>
+              <th class="px-4 py-3 text-right font-heading font-bold">WhatsApp</th>
+            </tr>
+          </thead>
+          <tbody>
+            {contact.people.map((p) => (
+              <tr class="border-b border-line">
+                <td class="px-4 py-3 font-bold text-ink">{p.name}</td>
+                <td class="px-4 py-3 whitespace-nowrap"><a href={`tel:${p.phone.replace(/\D/g, '')}`}>{fmtPhone(p.phone)}</a></td>
+                <td class="px-4 py-3 text-right"><a class="btn btn-blue btn-sm" href={waLink(p.phone)} rel="noopener" target="_blank" aria-label={`WhatsApp ${p.name}`}>Chat</a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     )
   }
+  {contact.note && <div class="entry mt-5 text-center text-sm" set:html={md(contact.note)} />}
   {
-    (contact.website || contact.email || contact.note) && (
-      <div class="border-t border-line px-4 py-3.5 text-sm">
-        {contact.note && <div class="entry mb-2" set:html={md(contact.note)} />}
-        <p class="flex flex-wrap gap-x-6 gap-y-1">
-          {contact.website && <a href={contact.website} rel="noopener" target="_blank">{contact.website.replace(/^https?:\/\//, '')}</a>}
-          {contact.email && <a href={`mailto:${contact.email}`}>{contact.email}</a>}
-        </p>
-      </div>
+    (contact.website || contact.email) && (
+      <p class="mt-5 flex flex-wrap justify-center gap-x-8 gap-y-1 text-sm font-semibold">
+        {contact.website && <a href={contact.website} rel="noopener" target="_blank">{contact.website.replace(/^https?:\/\//, '')}</a>}
+        {contact.email && <a href={`mailto:${contact.email}`}>{contact.email}</a>}
+      </p>
     )
   }
 </div>

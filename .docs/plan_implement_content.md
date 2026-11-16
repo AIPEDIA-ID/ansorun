@@ -484,3 +484,8 @@ Copy diganti teks apa adanya dari proposal; tema/CSS tidak diubah. Copy yang dik
 - [x] Tekstur titik diganti gradient lembut (.bg-pattern radial lime/hijau, .bg-fade linear) atas permintaan; ini menyimpang dari aturan "tanpa gradient" di wp-classic-theme.
 - [x] Audit + rapikan: FAQ tidak lagi terbuka otomatis; anchor #racepack kini menunjuk subjudul "Racepack Peserta" (sebelumnya div kosong); judul FAQ satu baris; lebar kontak sejajar FAQ. Tautan anchor valid, 1 h1, semua img beralt, tanpa error konsol.
 - [ ] Komponen tidak terpakai lagi: RacepackViewer, Newsletter, Tabs (dibiarkan; hapus bila tidak dipakai di versi final)
+- [x] Poles: kartu kontak vertikal (avatar inisial, nomor, tombol WhatsApp); Event Highlights dalam container (panel bergambar gate, bukan lagi section penuh); About tanpa foto podcast (dibuang, foto tokoh bukan bagian "tentang event dan misi sosial" dan butuh izin) diganti kutipan judul hal. 2; Race Information: fakta berikon bersekat garis, foto venue dan racepack dalam bingkai matte putih.
+- [x] Tombol 3D timbul: sisi bawah tebal 5px lebih gelap per varian (--btn-edge), naik 1px saat hover, menekan saat diklik; .btn-sm didefinisikan (sebelumnya tidak ada di CSS).
+- [x] Tombol 3D dibatalkan atas permintaan; diganti tombol solid biasa: sudut membulat 10px, hover sedikit lebih gelap, menekan halus (scale .98).
+- [x] Tombol timbul gaya Duolingo: persegi membulat 12px, alas 4px lebih gelap (box-shadow, tidak mengubah layout), tertekan saat diklik; btn-sm alas 3px.
+- [x] Kontak jadi tabel sederhana tanpa ikon/avatar (Nama, Telepon, tombol Chat WhatsApp); CSS kartu kontak dibuang.

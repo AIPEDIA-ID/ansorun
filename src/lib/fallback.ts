@@ -19,7 +19,7 @@ export const venuePhotos: Img[] = [
   brand('lokasi-parkir-timur.webp', 'Parkir Timur GBK, 31 Januari 2027, 05.30 – 11.30 WIB', 1400, 765),
 ];
 export const racepackPhoto: Img = brand('racepack-flatlay.webp', 'Isi racepack ANSORUN 2027: jersey, tas serut, nomor dada, air minum, roti, multivitamin, kartu e-money, kalender puasa', 1578, 997);
-export const aboutPhoto: Img = brand('about-podcast.webp', 'Hadirkan Toleransi untuk Jalan Berbagi, Ansor Podcast feat Clash of Religion', 1500, 642); // proposal hal. 3. CATATAN: foto tokoh, konfirmasi izin pakai
+export const aboutQuote = 'Tiap Ayunan Kaki, Hadirkan Toleransi untuk Jalan Berbagi'; // judul proposal hal. 2. TODO: belum ada field CMS
 export const eventBackdrop: Img = brand('gate.webp', 'Gate start dan finish ANSORUN 2027', 2000, 729);
 
 const photo = {

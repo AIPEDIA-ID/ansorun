@@ -12,7 +12,7 @@ import { getSiteData, getAbout, getHome, getContact, formatDate } from '../lib/c
 import { img } from '../lib/datocms';
 import { md, rich } from '../lib/text';
 import { ui } from '../config';
-import { venuePhotos, racepackPhoto, eventBackdrop, aboutPhoto } from '../lib/fallback';
+import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback';
 
 const { site, sponsors } = await getSiteData();
 const { about, faqs } = await getAbout();
@@ -97,9 +97,9 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <h2 class="rich rich-accent" set:html={rich(about.sectionTitle)} />
       </div>
 
-      <div class="grid items-center gap-8 lg:grid-cols-[1fr_1.25fr]">
+      <div class="grid items-center gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-14">
+        <p class="font-display text-[clamp(26px,3.4vw,40px)] leading-[1.15] text-primary-dark">“{aboutQuote}”</p>
         <div class="entry [&>p:first-child]:text-lg [&>p:first-child]:text-ink" set:html={md(about.body)} />
-        <img src={aboutPhoto.url} alt={aboutPhoto.alt ?? ''} width={aboutPhoto.width ?? 1500} height={aboutPhoto.height ?? 642} class="photo-frame" loading="lazy" decoding="async" />
       </div>
 
       {
@@ -130,17 +130,16 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 03. EVENT HIGHLIGHTS: video promo -->
-  <section class="section photo-bg on-dark" id="video" style={`background-image:url(${eventBackdrop.url})`}>
+  <section class="section bg-fade" id="video">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.videoTitle)} />
       </div>
-      <div class="mx-auto max-w-4xl">
+      <div class="photo-bg on-dark mx-auto max-w-5xl overflow-hidden rounded-[6px] p-4 md:p-10" style={`background-image:url(${eventBackdrop.url})`}>
         <VideoEmbed youtubeId={home.videoId} />
       </div>
     </div>
   </section>
-  <div class="stripe-band" aria-hidden="true"></div>
 
   <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi (rute di section berikutnya) -->
   <section class="section bg-fade" id="race">
@@ -149,16 +148,19 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
       </div>
 
-      <div class="grid gap-8 text-center md:grid-cols-3">
-        <div id="jadwal-ringkas">
+      <div class="grid gap-8 md:grid-cols-3 md:gap-0">
+        <div class="fact" id="jadwal-ringkas">
+          <span class="step-icon mx-auto mb-4"><Icon name="calendar" size={24} /></span>
           <p class="fact-value">{raceInfo.scheduleDate}</p>
           <p class="fact-sub">05.30 – 11.30 WIB</p>
         </div>
-        <div id="lokasi">
+        <div class="fact" id="lokasi">
+          <span class="step-icon mx-auto mb-4"><Icon name="pin" size={24} /></span>
           <p class="fact-value">{raceInfo.locationName}</p>
           <p class="fact-sub">{raceInfo.locationAddress}{raceInfo.locationMapUrl && <> · <a href={raceInfo.locationMapUrl} rel="noopener" target="_blank">{ui.openMap}</a></>}</p>
         </div>
-        <div id="kategori">
+        <div class="fact" id="kategori">
+          <span class="step-icon mx-auto mb-4"><Icon name="route" size={24} /></span>
           <p class="fact-value">{categories.map((c) => c.name).join(' & ')}</p>
           <p class="fact-sub">{categories.map((c) => `${c.name} ${price(c.detail)}`).join(' · ')}</p>
         </div>
@@ -178,7 +180,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
           )
         }
         <div class="grid gap-3">
-          {venuePhotos.map((v) => <img src={v.url} alt={v.alt ?? ''} width={v.width ?? 1400} height={v.height ?? 800} class="photo-frame photo-frame-wide" loading="lazy" decoding="async" />)}
+          {venuePhotos.map((v) => <div class="photo-matte"><img src={v.url} alt={v.alt ?? ''} width={v.width ?? 1400} height={v.height ?? 800} class="photo-frame-wide" loading="lazy" decoding="async" /></div>)}
         </div>
       </div>
     </div>
@@ -208,7 +210,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
 
       <h3 id="racepack" class="mb-6 mt-14 scroll-mt-24 text-center text-xl">{ui.racepackSub}</h3>
       <div class="grid items-start gap-6 lg:grid-cols-[1.2fr_1fr]">
-        <img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} class="photo-frame" loading="lazy" decoding="async" />
+        <div class="photo-matte"><img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} loading="lazy" decoding="async" /></div>
         <div class="grid grid-cols-2 gap-x-5 gap-y-6">
           {
             gear.map((g) => (

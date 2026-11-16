@@ -104,7 +104,7 @@
   .flow-tile .n { font: 400 40px/1 var(--t-font-display); color: var(--t-primary); }
   /* Latar foto penuh: satu-satunya gradient/overlay yang diizinkan (gelap di atas foto) */
   .photo-bg { position: relative; background-size: cover; background-position: center; background-color: var(--t-dark); }
-  .photo-bg::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 94%, transparent); }
+  .photo-bg::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 86%, transparent); }
   .photo-bg > * { position: relative; }
 
   /* Teks dengan penekanan: **tebal** dari CMS */
@@ -224,20 +224,26 @@
   .count-label { font: 600 13px var(--t-font-heading); letter-spacing: .3em; text-transform: uppercase; color: var(--t-ink-soft); margin-top: 8px; }
 
   /* ---- Tombol solid datar ---- */
+  /* Tombol timbul gaya Duolingo: persegi membulat, warna solid, "alas" 4px lebih gelap yang tertekan saat diklik */
   .btn {
-    display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
-    padding: 13px 30px;
-    font: 700 13px var(--t-font-heading); letter-spacing: .06em; text-transform: uppercase;
+    --btn-edge: color-mix(in srgb, var(--t-accent) 58%, black);
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
+    padding: 12px 26px;
+    font: 700 13px var(--t-font-heading); letter-spacing: .05em; text-transform: uppercase;
     color: var(--t-on-accent); background: var(--t-accent);
-    border: 2px solid var(--t-accent); border-radius: 999px;
-    transition: background .2s, border-color .2s, color .2s;
+    border: 2px solid var(--t-accent); border-radius: 12px;
+    box-shadow: 0 4px 0 var(--btn-edge);
+    transition: filter .15s, transform .08s, box-shadow .08s;
   }
-  .btn:hover { color: var(--t-on-accent); background: var(--t-accent-dark); border-color: var(--t-accent-dark); }
+  .btn:hover { color: var(--t-on-accent); filter: brightness(1.06); }
+  .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--btn-edge); }
+  .btn-sm { padding: 8px 18px; font-size: 12px; border-radius: 10px; box-shadow: 0 3px 0 var(--btn-edge); }
+  .btn-sm:active { transform: translateY(3px); }
   .btn:disabled { opacity: .5; cursor: not-allowed; }
-  .btn-blue { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
-  .btn-blue:hover { background: var(--t-primary-dark); border-color: var(--t-primary-dark); color: var(--t-on-dark); }
-  .btn-outline { background: transparent; border-color: var(--t-on-dark); color: var(--t-on-dark); }
-  .btn-outline:hover { background: var(--t-surface); border-color: var(--t-on-dark); color: var(--t-dark); }
+  .btn-blue { --btn-edge: color-mix(in srgb, var(--t-primary) 52%, black); background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
+  .btn-blue:hover { color: var(--t-on-dark); }
+  .btn-outline { --btn-edge: color-mix(in srgb, var(--t-on-dark) 40%, transparent); background: transparent; border-color: var(--t-on-dark); color: var(--t-on-dark); }
+  .btn-outline:hover { color: var(--t-on-dark); }
 
   /* ---- Kartu ---- */
   .card { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
@@ -304,6 +310,12 @@
   .fact-sub { margin-top: 8px; font-size: 14px; color: var(--t-ink-soft); }
   .time-row { display: flex; align-items: baseline; gap: 20px; padding-block: 9px; border-bottom: 1px solid var(--t-line); }
   .time-row .t { flex: none; width: 92px; font: 400 24px/1 var(--t-font-display); color: var(--t-primary); }
+  /* Fakta Race Information: tiga kolom bersekat garis */
+  .fact { padding: 8px 24px; text-align: center; }
+  @media (min-width: 768px) { .fact + .fact { border-left: 1px solid var(--t-line); } }
+  /* Foto berbingkai (matte putih + garis tipis) */
+  .photo-matte { padding: 8px; background: var(--t-paper); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
+  .photo-matte img { display: block; width: 100%; border-radius: 2px; }
   .tbd { color: var(--t-ink-soft); font-style: italic; }
 
   /* ---- Pemilih item race pack ---- */
