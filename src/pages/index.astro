@@ -94,7 +94,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi, rute (empat blok bertumpuk, tanpa tab) -->
+  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi, rute -->
   <section class="section" id="race">
     <div class="container-x">
       <div class="section-heading">
@@ -130,13 +130,13 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <div class="card p-7 lg:col-span-2" id="jadwal">
           <p class="eyebrow">Jadwal</p>
           <h3 class="mt-4 text-xl">{raceInfo.scheduleDate}</h3>
-          <div class="entry mt-3 text-sm" set:html={md(raceInfo.scheduleDetail)} />
+          <div class="entry mt-3 text-sm overflow-x-auto" set:html={md(raceInfo.scheduleDetail)} />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 04b. RUTE: section sendiri (dipisah dari Race Information atas permintaan) -->
+  <!-- 04b. RUTE: section rute dengan tab interaktif & peta zoomable -->
   <section class="section bg-alt" id="rute">
     <div class="container-x">
       <div class="section-heading">
@@ -148,10 +148,11 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 05a. PRIZES: hadiah (dipisah dari racepack atas permintaan) -->
+  <!-- 05a. PRIZES: hadiah -->
   <section class="section" id="hadiah">
     <div class="container-x">
       <div class="section-heading">
+        <p class="eyebrow">Hadiah & Doorprize</p>
         <h2 class="rich rich-accent" set:html={rich(home.prizesTitle)} />
       </div>
       <Prizes prizes={prizes} />
@@ -162,9 +163,10 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <section class="section bg-dark-section on-dark" id="racepack">
     <div class="container-x">
       <div class="section-heading">
+        <p class="eyebrow">Perlengkapan Peserta</p>
         <h2 class="rich rich-accent" set:html={rich(home.racepackTitle)} />
       </div>
-      <RacepackViewer venue={ui.racepackItemsLabel} schedule="" items={items} />
+      <RacepackViewer venue={ui.racepackItemsLabel} schedule="Perlengkapan resmi lomba yang siap menemani langkah kebaikanmu." items={items} />
     </div>
   </section>
 
@@ -202,4 +204,23 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
       </div>
     </div>
   </section>
+
+  <!-- Final Call to Action Sebelum Footer -->
+  {
+    site.registrationUrl && (
+      <section class="section bg-dark-section on-dark py-16 text-center" aria-label="Ajak Mendaftar">
+        <div class="container-x max-w-2xl">
+          <p class="eyebrow">Siap Melangkah & Berbagi?</p>
+          <h2 class="rich rich-accent mt-2 text-3xl sm:text-4xl">DAFTAR **SEKARANG**</h2>
+          <p class="mt-3 text-sm sm:text-base text-dark-ink">
+            Ajang lari 5K & 10K menyambut Ramadan 1448 H di GBK Senayan. Tiap kilometer hadirkan kebaikan nyata.
+          </p>
+          <p class="mt-8 flex flex-wrap justify-center gap-4">
+            <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>
+            <a class="btn btn-outline" href="/racepack">{ui.howToJoinCta}</a>
+          </p>
+        </div>
+      </section>
+    )
+  }
 </Base>

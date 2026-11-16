@@ -4,11 +4,13 @@ import PageBanner from '../components/PageBanner.astro';
 import Steps from '../components/Steps.astro';
 import Icon from '../components/Icon.astro';
 import ContactList from '../components/ContactList.astro';
-import { getRacepack, getContact } from '../lib/content';
+import RacepackViewer from '../components/RacepackViewer.astro';
+import { getRacepack, getContact, getHome } from '../lib/content';
 import { md, rich } from '../lib/text';
 import { ui } from '../config';
 
 const { page, steps } = await getRacepack();
+const { items } = await getHome();
 const contact = await getContact();
 
 // Kartu informasi: tanggal, jam, lokasi, dokumen, kontak
@@ -65,7 +67,23 @@ const info = [
   <!-- Tiga langkah visual (section gelap) -->
   <section class="section bg-dark-section on-dark" id="langkah">
     <div class="container-x">
+      <div class="section-heading">
+        <p class="eyebrow">Alur Pengambilan</p>
+        <h2 class="rich rich-accent">3 LANGKAH **PENGAMBILAN PAKET**</h2>
+      </div>
       <Steps steps={steps} dark />
+    </div>
+  </section>
+
+  <!-- Isi Paket Lomba: Jersey, Medali, BIB, Tas Serut -->
+  <section class="section" id="isi">
+    <div class="container-x">
+      <div class="section-heading">
+        <p class="eyebrow">Perlengkapan Peserta</p>
+        <h2 class="rich rich-accent">EXCLUSIVE **RUNNER GEAR**</h2>
+        <p>Paket perlengkapan resmi yang diterima setiap peserta yang terdaftar.</p>
+      </div>
+      <RacepackViewer venue={ui.racepackItemsLabel} schedule="Perlengkapan resmi lomba yang siap menemani langkah kebaikanmu." items={items} />
     </div>
   </section>
 
