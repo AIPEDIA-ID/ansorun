@@ -49,24 +49,28 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <section class="hero-poster on-dark">
     {
       site.heroImage && (
-        <img
-          src={img(site.heroImage.url, 2400)}
-          alt={site.heroImage.alt ?? site.eventName}
-          width={site.heroImage.width ?? 2400}
-          height={site.heroImage.height ?? 1351}
-          fetchpriority="high"
-          decoding="async"
-        />
+        <div class="hero-poster-media">
+          <img
+            src={img(site.heroImage.url, 2400)}
+            alt={site.heroImage.alt ?? site.eventName}
+            width={site.heroImage.width ?? 2400}
+            height={site.heroImage.height ?? 1351}
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
       )
     }
-    <div class="container-x flex flex-wrap items-center justify-between gap-x-10 gap-y-5 py-8">
-      <div>
-        <h1 class="hero-eyebrow">{site.heroHeadline}</h1>
-        <p class="mt-1 font-heading text-sm font-bold">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
+    <div class="container-x flex flex-col gap-5 py-6 lg:flex-row lg:items-center lg:justify-between">
+      <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
+        <div>
+          <h1 class="hero-eyebrow">{site.heroHeadline}</h1>
+          <p class="mt-1 font-heading text-sm font-bold">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
+        </div>
+        {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
       </div>
-      {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
+      <div class="lg:w-[46%]"><Countdown target={site.eventDate} embedded /></div>
     </div>
-    <Countdown target={site.eventDate} embedded />
     {
       groups.size > 0 && (
         <div class="container-x flex flex-wrap items-end gap-x-10 gap-y-4 pb-8">
@@ -93,11 +97,11 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <section class="section bg-fade" id="tentang">
     <div class="container-x">
       <!-- Judul + kutipan di kiri, teks di kanan -->
-      <div class="grid items-start gap-8 lg:grid-cols-[1fr_1.35fr] lg:gap-16">
-        <div>
-          <h2 class="rich rich-accent text-[clamp(36px,5vw,60px)] leading-[1.02]" set:html={rich(about.sectionTitle)} />
+      <div class="grid items-stretch gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.5fr)] lg:gap-12">
+        <div class="flex flex-col">
+          <h2 class="rich rich-accent text-[clamp(36px,4.6vw,56px)] leading-[1.02]" set:html={rich(about.sectionTitle)} />
           <div class="mt-5 h-1 w-14 bg-primary"></div>
-          <p class="mt-6 font-display text-[clamp(22px,2.6vw,30px)] leading-[1.2] text-primary-dark">“{aboutQuote}”</p>
+          <p class="mt-6 font-display text-[clamp(22px,2.3vw,28px)] leading-[1.2] text-primary-dark lg:mt-auto">“{aboutQuote}”</p>
         </div>
         <div class="entry [&>p:first-child]:text-xl [&>p:first-child]:text-ink" set:html={md(about.body)} />
       </div>
@@ -105,8 +109,8 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
       <!-- Konsep sosial (proposal hal. 4) -->
       {
         flow.length > 0 ? (
-          <div class="mt-14">
-            {flowTitle && <h3 class="mb-6 text-center text-xl">{flowTitle}</h3>}
+          <div class="mt-10">
+            {flowTitle && <h3 class="mb-5 text-center text-xl">{flowTitle}</h3>}
             <ol class="grid gap-5 md:grid-cols-3">
               {flow.map((f, i) => (
                 <li class="flow-tile">
@@ -117,7 +121,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
               ))}
             </ol>
             {beneficiaries.length > 0 && (
-              <div class="mt-6 flex flex-col items-center justify-center gap-x-6 gap-y-3 rounded-[6px] border border-line bg-tint px-5 py-4 md:flex-row">
+              <div class="fade-x mt-6 flex flex-col items-center justify-center gap-x-6 gap-y-3 bg-tint px-10 py-4 md:flex-row">
                 <strong class="font-heading text-ink">{benefLabel}</strong>
                 <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-semibold text-primary-dark">
                   {beneficiaries.map((b) => <li class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-primary"></span>{b}</li>)}
@@ -145,7 +149,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi (rute di section berikutnya) -->
-  <section class="section section-tight bg-fade" id="race">
+  <section class="section bg-fade" id="race">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
@@ -169,11 +173,11 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         </div>
       </div>
 
-      <div class="mt-6 grid items-center gap-6 lg:grid-cols-2">
+      <div class="mt-10 grid items-center gap-8 lg:grid-cols-2">
         {
           rundown.length > 0 && (
             <div id="jadwal">
-              <h3 class="sub-title mb-3 text-lg">Rundown Race Day (Tentatif)</h3>
+              <h3 class="sub-title mb-5 text-xl">Rundown Race Day (Tentatif)</h3>
               <ol>
                 {rundown.map((r) => (
                   <li class="time-row"><span class="t">{r.time}</span><span>{r.event}</span></li>
@@ -182,7 +186,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
             </div>
           )
         }
-        <div class="grid gap-3">
+        <div class="grid gap-4">
           {venuePhotos.map((v) => <div class="photo-matte"><img src={v.url} alt={v.alt ?? ''} width={v.width ?? 1400} height={v.height ?? 800} class="photo-frame-wide" loading="lazy" decoding="async" /></div>)}
         </div>
       </div>
@@ -190,14 +194,14 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 04b. RUTE: section sendiri (dipisah dari Race Information atas permintaan) -->
-  <section class="section section-tight bg-pattern" id="rute">
+  <section class="section bg-pattern" id="rute">
     <div class="container-x">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.routeTitle)} />
         {raceInfo.routeDetail && <div class="entry mt-1 text-sm" set:html={md(raceInfo.routeDetail)} />}
       </div>
       <RouteTabs items={categories} />
-      {raceInfo.routeMapUrl && <p class="mt-8 text-center"><a class="btn btn-blue" href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
+      {raceInfo.routeMapUrl && <p class="mt-10 text-center"><a class="btn btn-blue" href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
     </div>
   </section>
 
@@ -208,19 +212,20 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <h2 class="rich rich-accent" set:html={rich(home.prizesTitle)} />
       </div>
 
-      <h3 class="sub-title mb-4 text-lg">{ui.prizesSub}</h3>
+      <h3 class="divider-label mb-6 text-xl">{ui.prizesSub}</h3>
       <Prizes prizes={prizes} />
 
-      <h3 id="racepack" class="sub-title mb-4 mt-8 scroll-mt-24 text-lg">{ui.racepackSub}</h3>
-      <div class="grid items-stretch gap-6 lg:grid-cols-[1.15fr_1fr]">
+      <div class="panel mt-12">
+      <h3 id="racepack" class="divider-label mb-6 scroll-mt-24 text-xl">{ui.racepackSub}</h3>
+      <div class="grid items-stretch gap-8 lg:grid-cols-[1.15fr_1fr]">
         <div class="photo-matte lg:h-full"><img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} class="lg:h-full lg:object-cover" loading="lazy" decoding="async" /></div>
-        <div class="grid grid-cols-2 gap-x-5 gap-y-3">
+        <div class="grid grid-cols-2 gap-x-5 gap-y-4">
           {
             gear.map((g, i) => (
               <div>
                 <div class="spot p-1"><Photo image={g.image} alt={g.title} width={420} ratio="16/10" fit="contain" class="silhouette p-1" /></div>
                 <p class="mt-1 flex items-baseline gap-2 font-heading font-bold leading-tight text-ink"><span class="font-display text-lg text-primary">{String(i + 1).padStart(2, '0')}</span>{g.title}</p>
-                <p class="text-[0.8rem] leading-snug">{g.description}</p>
+                <p class="text-sm leading-snug">{g.description}</p>
               </div>
             ))
           }
@@ -228,16 +233,17 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
       </div>
       {
         supplies.length > 0 && (
-          <ul class="mt-6 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-5">
+          <ul class="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-5">
             {supplies.map((it, i) => (
               <li>
                 <p class="flex items-baseline gap-2 font-heading font-bold leading-tight text-ink"><span class="font-display text-lg text-primary">{String(gear.length + i + 1).padStart(2, '0')}</span>{it.title}</p>
-                <p class="pb-2 text-[0.8rem] leading-snug">{it.description}</p>
+                <p class="pb-2 text-sm leading-snug">{it.description}</p>
               </li>
             ))}
           </ul>
         )
       }
+      </div>
     </div>
   </section>
 
@@ -247,7 +253,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(home.joinTitle)} />
       </div>
-      <ol class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <ol class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {
           joinSteps.map((st) => {
             const m = st.description.match(/^\*\*(.+?)\*\*\s*([\s\S]*)$/);
@@ -272,7 +278,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 07a. FAQ -->
-  <section class="section bg-fade" id="faq">
+  <section class="section section-flush-b bg-fade" id="faq">
     <div class="container-x max-w-3xl">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(about.faqTitle)} />
@@ -289,7 +295,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   </section>
 
   <!-- 07b. CONTACT (proposal hal. 27) -->
-  <section class="section bg-pattern" id="kontak">
+  <section class="section section-flush-t bg-pattern" id="kontak">
     <div class="container-x max-w-3xl">
       <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(ui.contactTitle)} />

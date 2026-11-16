@@ -271,6 +271,9 @@ Awalnya warna saya ambil dari PNG, bukan dari PDF. Sudah saya cek ulang **semua 
 
 ## 10. Status implementasi
 
+> Catatan sinkronisasi: bagian ini menggambarkan kondisi pada saat ditulis. Kondisi akhir ada di **bagian 21**.
+
+
 Selesai (belum di-commit): Langkah 1 sampai 7. Aset di `public/brand` dan `public/fonts` (logo memakai titling asli apa adanya, tidak dibuat ulang), token tema teal/lime, font klien, Home 7 section, `/racepack` (3 langkah visual), `/galeri` tetap ada tanpa nav, redirect `/tentang` dan `/lari`, skema DatoCMS (belum dijalankan ke Dato), `npm run check` dan build lolos. Sisa: semua item bagian 8 (data klien).
 
 ### Kebijakan konten (penting untuk scope klien)
@@ -278,6 +281,9 @@ Selesai (belum di-commit): Langkah 1 sampai 7. Aset di `public/brand` dan `publi
 Teks karangan sudah dibuang. Yang tampil hanya fakta dari materi klien (nama, tagline, 31 Januari 2027, 5K dan 10K, nama item racepack, judul section dari `content_structure.md`). Selebihnya berbentuk `[Konten menyusul: ...]` supaya jelas mana yang masih kosong. Newsletter dilepas dari Beranda karena tidak ada di struktur klien (komponennya tetap ada). Lokasi dan jam start tidak diisi (sebelumnya sempat "Jakarta" dan 06:00, itu tebakan dan sudah dihapus).
 
 ## 11. Disiplin ke `content_structure.md` (revisi)
+
+> Catatan sinkronisasi: bagian ini menggambarkan kondisi pada saat ditulis. Kondisi akhir ada di **bagian 21**.
+
 
 Home mengikuti persis tujuh section dan hanya berisi apa yang disebut di dokumen:
 
@@ -394,6 +400,9 @@ Section Rute memakai komponen `src/components/RouteTabs.astro`: tab pill per kat
 
 ## 17. Audit kesesuaian (diperiksa terhadap situs yang berjalan)
 
+> Catatan sinkronisasi: bagian ini menggambarkan kondisi pada saat ditulis. Kondisi akhir ada di **bagian 21**.
+
+
 Sumber banding: `content_structure.md`, `PROPOSAL ANSOR RUN rev 1 .pdf`, digiland.co.id (Beranda dan /run). Status: SESUAI, SEBAGIAN, BELUM.
 
 ### A. Terhadap `content_structure.md`
@@ -506,3 +515,60 @@ Copy diganti teks apa adanya dari proposal; tema/CSS tidak diubah. Copy yang dik
 - [x] Latar section terang: dua gradient yang saling menyambung (.bg-fade putih ke hijau muda dengan pendar lime kanan atas, .bg-pattern kebalikannya dengan pendar hijau kiri bawah) dipakai bergantian agar tidak ada sambungan terlihat; About memakai .bg-fade. Gambar Prizes dan Racepack diberi garis tepi hijau mengikuti siluet (.silhouette); jersey.webp dan tas.webp diolah menghapus latar putih (backup: asli di .docs/assets_bank).
 - [x] Race Information dan Rute dipadatkan (.section-tight: padding 36-56px, judul lebih kecil, ikon fakta 42px, baris rundown lebih rapat, foto venue rasio 2.1:1, kartu rute p-5); tinggi desktop 1155 menjadi 954 dan 823 menjadi 725. Gradient latar terang dipertegas (hijau muda 11 menjadi 20 persen, pendar lime 40 persen, pendar hijau 30 persen).
 - [x] DIBATALKAN atas permintaan: nav transparan baru, hero layar penuh, dan pita transisi antar section (edge). Dikembalikan ke nav semula (transparan di atas hero, putih solid setelah scroll) dan hero poster semula.
+- [x] Lanjutan versi aman: transisi halus antar section (pita gradient 72px di sisi atas dan bawah Event Highlights dan How to Join serta atas footer, token --t-edge-tint); header setelah scroll jadi kaca terang tembus pandang (bukan putih solid) dengan hover pil lembut; hero KV dibatasi tinggi 84svh hanya di layar >=1024px (mobile/tablet tetap utuh). Hero, countdown, dan struktur tidak diubah.
+- [x] Pita transisi antar section DIHAPUS (terasa keruh di batas gelap-terang). Keputusan desain: batas terang-ke-terang sudah menyatu lewat pasangan gradient .bg-fade/.bg-pattern; batas terang-gelap dibiarkan tegas. Header kaca terang dan batas tinggi hero tetap.
+- [x] Strip 'Penerima manfaat' (About): tanpa border, sisi kiri dan kanan memudar lewat mask (.fade-x).
+- [x] Kartu diseragamkan: satu aturan untuk .card, .flow-tile, .info-card, details.faq, .photo-matte (radius 14px, border 1px --t-card-border, bayangan --t-shadow + highlight dalam). Penyebab FAQ berbeda: aturan dasar details.faq di bawah file menimpa sistem kartu (radius 4px, tanpa gradient); sudah dihapus. Keputusan: bayangan sebagai penanda utama, border hanya garis tipis agar tepi tetap jelas di latar bergradien.
+- [x] Bersih-bersih akhir: komponen tak terpakai dihapus (Newsletter, RacepackViewer, Tabs); CSS tak terpakai dihapus (.tabs-list, .rp-item, .rp-icon, .field, .bg-dark-section, .contact-card, .photo-frame, .stripe-band-r); 19 string ui yang tak terpakai dihapus dari config.ts (newsletter*, gallery*, dll.). Model CMS (schema, fallback, types) TIDAK disentuh.
+- [x] Ritme dan ukuran seragam: padding section 48-72px untuk semua (.section-tight dihapus), judul section 30-44px dengan jarak 28-40px, jarak antar blok dalam section 40px (mt-10), subjudul text-xl mb-5, grid kartu gap-5, komposisi dua kolom gap-8, teks arbitrer (0.8rem, 0.95rem) diganti skala standar.
+- [x] Hero: bagian bawah KV kini memudar lewat overlay gradient (38% tinggi gambar, ke warna latar hero) sehingga tidak ada garis tajam antara gambar dan band teks; gambar dibungkus .hero-poster-media. Struktur hero lain tidak diubah.
+- [x] Prizes dan Racepack terasa terpisah tapi tetap satu section: judul section satu, tiap bagian punya label tengah dengan garis memudar (.divider-label), Racepack berada di panel bertint membulat (.panel).
+- [x] Hero desktop (>=1024px) pas satu layar: tinggi 100svh (min 600px), KV mengisi sisa tinggi dengan object-fit cover, band teks + tombol dan countdown ringkas berdampingan di bawahnya, overlay memudar tetap. Tablet dan mobile (<1024px) tetap KV utuh bertumpuk. Dicek 1280x900, 1920x1080, 1024x700, 768x1024.
+
+## 20. Evaluasi akhir (Home + /racepack)
+
+Sehat: build lolos tanpa warna mentah; 0 error konsol; 1 h1; semua gambar beralt; lang=id, meta, OG, JSON-LD ada; anchor valid; kontras 9 dari 10 sampel lolos AA; ritme section seragam (padding 72px, judul 44px, jarak 40px); kartu seragam.
+
+Temuan teknis:
+- [x] /racepack dirapikan: info dan persiapan digabung jadi satu section, latar memakai pasangan gradient Home (.bg-fade, .bg-pattern, .bg-fade), jarak 5 antar kartu, lebar kontak sejajar Home.
+- [x] `.fact-sub` digelapkan (token ink 85 persen), kontras di atas 6:1.
+- [x] logo-light.webp dan logo-dark.webp diperkecil ke 640px (187 KB menjadi 44 KB dan 111 KB menjadi 33 KB); atribut width/height di Base.astro disesuaikan.
+- [ ] Tombol "Daftar Sekarang" (header, hero, How to Join) menuju `#` sampai URL pendaftaran ada.
+- [ ] Video Event Highlights memakai ID dummy YouTube.
+
+Menunggu klien: lihat bagian 14, 17, 18 dan daftar `- [ ]` di atas (nama event, jam flag off, venue, seluruh/sebagian/100%, FAQ, penampil TBC, daftar racepack, izin foto/merek, nomor pribadi, URL registrasi, video, sponsor, sosmed, isi halaman Racepack).
+
+Penyimpangan dari content_structure.md (atas permintaan): Rute section sendiri; Prizes & Racepack satu section dengan dua bagian; FAQ dan Contact dua section; How to Join 4 langkah (dokumen: 2). Home jadi 9 blok.
+- [x] /racepack: ditambah section 'Racepack Peserta' berisi foto isi racepack (proposal hal. 20) dalam bingkai matte, di antara detail pengambilan dan kontak; gradient latar disesuaikan (fade, pattern, fade, pattern).
+
+## 21. Sinkronisasi plan dengan implementasi akhir
+
+Bagian 10, 11, dan 17 di atas menggambarkan keadaan lebih awal. Keadaan akhir (diperiksa terhadap situs yang berjalan):
+
+**Sesuai plan:** semua section dan halaman di content_structure.md ada; judul Racepack Collection, headline, dan tiga langkah persis dari dokumen; teks apa adanya dari PDF untuk About, rundown, rute, hadiah, racepack, timeline, dan kontak; font klien untuk judul; /galeri ada tanpa nav; redirect /tentang dan /lari (301); skema DatoCMS tidak dijalankan; tanpa error konsol dan tanpa warna mentah.
+
+**Menyimpang atas permintaan (perlu diberi tahu klien):**
+- Home 9 blok (dokumen 7): Rute section sendiri, FAQ dan Contact dua section, Prizes & Racepack satu section dengan dua bagian.
+- How to Join 4 langkah dari timeline hal. 19 (dokumen: 2).
+- Race Information tanpa Tabs; kategori/lokasi/jadwal sebagai fakta besar + rundown, rute di section sendiri dengan pengalih 5K/10K.
+- Komponen Newsletter, Tabs, RacepackViewer dihapus (bagian 6 dan 10 menyebutnya "tidak diubah" atau "tetap ada").
+- Body font Carlito (padanan Calibri di PDF), bukan Open Sans; judul tetap Neospeed, Golf, Osaca.
+- Gaya: gradient, header kaca terang, bayangan kartu, tombol timbul. README dan skill WP-classic menyebut "tanpa gradient/glass".
+- /racepack: ditambah foto isi racepack (hal. 20); hero memakai foto model hal. 21.
+
+**Menyimpang dari catatan di bagian 13 dan 14 (butuh konfirmasi klien):**
+- [ ] gate.webp (render gate, proposal hal. 23) dipakai sebagai latar Event Highlights, padahal hal. 23 sampai 26 ada di daftar "bukan untuk situs publik".
+- [ ] Foto venue hal. 6 dan 7 dipasang (bagian 14: sengaja tidak).
+- [ ] Rundown kini menulis nama penampil TBC (Ndarboy Genk, MALIQ & D'Essentials) dan "Podcast CLASH OG RELIGION" apa adanya (bagian 14: sengaja disamarkan).
+- [ ] Lokasi kini "Parkir Timur GBK / Hutan Kota GBK" (bagian 14: sengaja tidak ditulis).
+- [ ] Kutipan di About dikembalikan dari judul PDF hal. 2 (bagian 11: kutipan di About dibuang).
+
+**Dokumen yang basi:** README.md dan README.en.md (masih menyebut Newsletter, Tabs, RacepackViewer, Open Sans, 7 section, "tanpa gradient/glass"); bagian 10, 11, 17 plan ini.
+
+**Data masih menunggu klien:** tidak berubah, lihat bagian 8, 13, 19, dan 20.
+- [x] Logo header bergaya stiker: lebih besar (58px mobile, 78px desktop), menjulang melewati bar nav (translateY 14-20px), garis tepi tipis mengikuti siluet huruf lewat drop-shadow bertumpuk (gelap di atas hero, putih setelah scroll) plus bayangan lembut; panel menu mobile diberi padding atas agar tidak tertutup logo.
+- [x] Logo stiker dibuat lebih halus atas permintaan: garis tepi 1.5px, tinggi 52px mobile dan 64px desktop, menjulang hanya 6-8px, bayangan tipis.
+- [x] About: kolom kiri dipersempit (0.72fr banding 1.5fr), kedua kolom setinggi sama (items-stretch): judul di atas sejajar dengan paragraf pertama, kutipan menempel di bawah sejajar dengan baris terakhir (hanya >=1024px).
+- [x] Peta rute memakai bingkai matte yang sama dengan foto lain (padding 8px, border --t-card-border, radius 14px, bayangan --t-shadow, gambar radius 8px); tombol Perbesar peta digeser ke dalam bingkai.
+- [x] Nav benar-benar transparan di awal (desktop >=1024px): KV kini mulai dari tepi atas layar di bawah nav (padding-top hero 0), ditambah scrim gradient 120px agar tulisan nav terbaca; setelah scroll >40px nav tetap berubah jadi kaca terang. Mobile/tablet tidak diubah (KV tetap di bawah bar nav).
+- [x] Jarak FAQ dan Contact dirapatkan: .section-flush-b (padding bawah FAQ 16-24px) dan .section-flush-t (padding atas Contact 16-24px) menggantikan 72+72px, sehingga terbaca satu blok.

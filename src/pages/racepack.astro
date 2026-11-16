@@ -7,6 +7,7 @@ import ContactList from '../components/ContactList.astro';
 import { getRacepack, getContact } from '../lib/content';
 import { md, rich } from '../lib/text';
 import { ui } from '../config';
+import { racepackPhoto } from '../lib/fallback';
 
 const { page, steps } = await getRacepack();
 const contact = await getContact();
@@ -23,19 +24,19 @@ const info = [
   <PageBanner crumb="Racepack" title={page.bannerTitle} tagline="" image={page.heroImage?.url} />
 
   <!-- 1. Headline + tiga langkah visual -->
-  <section class="section" id="langkah">
+  <section class="section bg-fade" id="langkah">
     <div class="container-x">
-      <div class="section-heading !mb-10">
+      <div class="section-heading">
         <h2 class="rich rich-accent" set:html={rich(page.title)} />
       </div>
       <Steps steps={steps} dark />
     </div>
   </section>
 
-  <!-- 2. Kapan dan di mana: tanggal, jam, lokasi pengambilan -->
-  <section class="section" id="info">
+  <!-- 2. Detail pengambilan: tanggal, jam, lokasi, dokumen, pengambilan diwakilkan -->
+  <section class="section bg-pattern" id="info">
     <div class="container-x">
-      <div class="grid gap-4 md:grid-cols-3">
+      <div class="grid gap-5 md:grid-cols-3">
         {
           info.map((c) => (
             <div class="info-card">
@@ -48,13 +49,7 @@ const info = [
           ))
         }
       </div>
-    </div>
-  </section>
-
-  <!-- 3. Yang perlu disiapkan: dokumen dan pengambilan diwakilkan -->
-  <section class="section" id="persiapan">
-    <div class="container-x">
-      <div class="grid gap-4 md:grid-cols-2">
+      <div class="mt-5 grid gap-5 md:grid-cols-2" id="persiapan">
         <div class="info-card">
           <span class="step-icon"><Icon name="id" size={22} /></span>
           <div>
@@ -78,10 +73,18 @@ const info = [
     </div>
   </section>
 
-  <!-- 4. Informasi kontak panitia (proposal hal. 27) -->
-  <section class="section" id="kontak">
+  <!-- 3. Isi racepack (proposal hal. 20) -->
+  <section class="section bg-fade" id="isi">
     <div class="container-x max-w-4xl">
-      <div class="section-heading !mb-8">
+      <h2 class="divider-label mb-6 text-xl">{ui.racepackSub}</h2>
+      <div class="photo-matte"><img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} loading="lazy" decoding="async" /></div>
+    </div>
+  </section>
+
+  <!-- 4. Informasi kontak panitia (proposal hal. 27) -->
+  <section class="section bg-pattern" id="kontak">
+    <div class="container-x max-w-3xl">
+      <div class="section-heading">
         <h2 class="rich rich-accent">KONTAK <strong>PANITIA</strong></h2>
       </div>
       <ContactList contact={contact} />

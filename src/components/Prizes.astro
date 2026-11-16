@@ -7,14 +7,14 @@ const { prizes } = Astro.props;
 ---
 
 <!-- Satu baris: hadiah pertama (Grandprize) dua kali lebih lebar -->
-<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+<div class="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
   {
     prizes.map((p, i) => (
       <div class:list={['flex flex-col', i === 0 && 'col-span-2 sm:col-span-3 lg:col-span-2', i === prizes.length - 1 && i > 0 && 'max-sm:col-span-2']}>
         <div class="spot h-24 p-1 sm:h-28"><Photo image={p.image} alt={p.title} width={800} ratio="4/3" fit="contain" label="Foto hadiah" class="silhouette h-full" /></div>
         <div class="mt-2 flex items-center gap-3">
           <p class="font-display text-4xl leading-none text-primary">{p.quantity}</p>
-          <h3 class="text-[0.95rem] leading-tight">{p.title}</h3>
+          <h3 class="text-base leading-tight">{p.title}</h3>
         </div>
         {p.description && <p class="mt-1 text-sm">{p.description}</p>}
       </div>

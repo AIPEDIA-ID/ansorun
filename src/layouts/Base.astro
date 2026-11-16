@@ -93,8 +93,8 @@ const socials = ([
               <img src={img(site.logo.url, 400)} alt={plain(site.eventName)} class="logo-cms h-11 w-auto" />
             ) : (
               <>
-                <img src="/brand/logo-light.webp" alt={plain(site.eventName)} width="1600" height="440" class="logo-on-clear h-12 w-auto sm:h-14" />
-                <img src="/brand/logo-dark.webp" alt="" width="1600" height="440" class="logo-on-solid h-12 w-auto sm:h-14" />
+                <img src="/brand/logo-light.webp" alt={plain(site.eventName)} width="640" height="176" class="logo-on-clear w-auto" />
+                <img src="/brand/logo-dark.webp" alt="" width="640" height="176" class="logo-on-solid w-auto" />
               </>
             )
           }
@@ -116,7 +116,7 @@ const socials = ([
     <footer class="site-footer">
       <div class="container-x grid gap-12 py-16 lg:grid-cols-[1.3fr_2fr]">
         <div>
-          <img src="/brand/logo-light.webp" alt={plain(site.eventName)} width="1600" height="440" class="h-16 w-auto" loading="lazy" />
+          <img src="/brand/logo-light.webp" alt={plain(site.eventName)} width="640" height="176" class="h-16 w-auto" loading="lazy" />
           <p class="mt-3 max-w-xs">{site.tagline}</p>
           <p class="mt-1">{site.categories}</p>
           <p class="mt-3 flex items-center gap-2"><Icon name="pin" size={16} /> {site.location}</p>
