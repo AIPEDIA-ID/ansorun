@@ -1,0 +1,12 @@
+---
+import { rich } from '../lib/text';
+
+/** Judul section: teks mendukung **tebal** dan baris baru (lihat lib/text.ts). Isi slot tampil di bawah judul. */
+interface Props { title: string }
+const { title } = Astro.props;
+---
+
+<div class="section-heading">
+  <h2 class="rich rich-accent" set:html={rich(title)} />
+  <slot />
+</div>

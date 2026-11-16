@@ -33,6 +33,26 @@ Dua file di `public/brand/`: `logo-light.webp` (putih/lime, untuk header transpa
 ### Konvensi konten
 Konten contoh di `src/lib/fallback.ts` mengikuti teks PDF proposal. Yang belum ada dari klien berbentuk `[Konten menyusul: ...]` atau "Segera diumumkan". Penanda di kode: `TODO(data)` (menunggu klien) dan `CATATAN` (asumsi atau konflik antar halaman PDF). Daftar lengkap ada di bagian 8, 13, 19, 20, dan 21 plan.
 
+## Struktur CSS (`src/styles/theme.css`)
+
+File ini satu-satunya tempat tampilan diatur dan sudah diberi daftar isi di bagian atas:
+
+| Bagian | Isi |
+|---|---|
+| 1. TOKENS | Warna, bentuk (`--t-radius-card`), ritme (`--t-section-y`, `--t-flush`, `--t-head-gap`). **Hanya di sini boleh ada warna mentah.** |
+| 2. TURUNAN | Nilai yang dihitung dari token (`--t-wash`, `--t-shadow`, dst.). Jangan ditulis ulang |
+| 3. TAILWIND | Token dibuka sebagai utility (`bg-primary`, `text-ink`, `font-heading`) |
+| 4. BASE | html, body, tautan, judul |
+| 5.1 sampai 5.9 | Komponen per kelompok: layout, latar, header, hero, tombol, kartu, blok konten, dekor, footer |
+
+Aturan perawatan:
+- **Kartu**: semua permukaan terang (`.card`, `.flow-tile`, `.info-card`, `details.faq`, `.photo-matte`) memakai satu aturan di 5.6. Ubah di sana, jangan menimpa per komponen.
+- **Latar section terang** dipakai bergantian: `bg-fade`, `bg-pattern`, `bg-fade`, ... agar warna ujung bertemu.
+- **Ritme vertikal** lewat token, bukan angka di markup: padding section `--t-section-y`, jarak judul `--t-head-gap`, jarak antar blok dalam section `mt-10`, grid kartu `gap-5`, dua kolom `gap-8`.
+- Tambahkan komponen baru di kelompok yang sesuai, bukan di akhir file. Pakai token, bukan warna mentah. `npm run check` menolak warna mentah.
+
+Penguraian teks markdown (rundown, konsep sosial, harga) ada di `src/lib/parse.ts`. Judul section memakai `SectionHeading.astro`, foto berbingkai memakai `MatteImage.astro`.
+
 ## Feedback klien: ubah di mana?
 
 | Kebutuhan | File |
@@ -47,7 +67,7 @@ Konten contoh di `src/lib/fallback.ts` mengikuti teks PDF proposal. Yang belum a
 
 ## SEO
 
-Otomatis: title/description per halaman (field **SEO: deskripsi** di Dato), canonical, Open Graph + Twitter card, JSON-LD `SportsEvent` di Beranda, `sitemap-index.xml`, `robots.txt`, ukuran gambar tetap (tanpa layout shift). **Isi `SITE_URL` dengan domain asli sebelum rilis**, kalau tidak canonical, sitemap, dan robots menunjuk ke localhost.
+Otomatis: title/description per halaman (field **SEO: deskripsi** di Dato), canonical, Open Graph + Twitter card, JSON-LD `SportsEvent` di Beranda, `sitemap-index.xml`, `robots.txt`, ukuran gambar tetap (tanpa layout shift). **Isi `SITE_URL` dengan domain asli sebelum rilis**, kalau tidak canonical, sitemap, dan robots menunjuk ke localhost (`npm run check` memperingatkan bila masih kosong atau localhost). Ada halaman 404 (`src/pages/404.astro`), gaya fokus keyboard, dan dukungan `prefers-reduced-motion`.
 
 ## Pagar kualitas
 
@@ -67,10 +87,10 @@ Foto contoh dari Unsplash (di `src/lib/fallback.ts`) muncul bila field gambar Da
 ## Struktur
 
 ```
-src/styles/theme.css   tema terpusat (token + skin)
+src/styles/theme.css   tema terpusat (token + komponen, ada daftar isi di atas file)
 src/config.ts          menu, locale, teks UI
-src/lib/               datocms client, query + merge fallback, teks (rich/md), tipe
-src/components/        Countdown, Gallery, Photo, Icon, PageBanner, Prizes, RouteTabs, Steps, VideoEmbed, ContactList
+src/lib/               datocms client, query + merge fallback, teks (rich/md), parse.ts (rundown, misi, harga), tipe
+src/components/        Countdown, Gallery, Photo, MatteImage, SectionHeading, Icon, PageBanner, Prizes, RouteTabs, Steps, VideoEmbed, ContactList
 src/layouts/Base.astro header transparan lalu kaca terang + footer
 src/pages/             index (9 blok), racepack, galeri (tanpa nav); /tentang dan /lari di-redirect
 scripts/               datocms-schema.mjs

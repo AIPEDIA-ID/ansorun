@@ -3,9 +3,11 @@ import Base from '../layouts/Base.astro';
 import PageBanner from '../components/PageBanner.astro';
 import Steps from '../components/Steps.astro';
 import Icon from '../components/Icon.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import MatteImage from '../components/MatteImage.astro';
 import ContactList from '../components/ContactList.astro';
 import { getRacepack, getContact } from '../lib/content';
-import { md, rich } from '../lib/text';
+import { md } from '../lib/text';
 import { ui } from '../config';
 import { racepackPhoto } from '../lib/fallback';
 
@@ -26,9 +28,7 @@ const info = [
   <!-- 1. Headline + tiga langkah visual -->
   <section class="section bg-fade" id="langkah">
     <div class="container-x">
-      <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(page.title)} />
-      </div>
+      <SectionHeading title={page.title} />
       <Steps steps={steps} dark />
     </div>
   </section>
@@ -77,16 +77,14 @@ const info = [
   <section class="section bg-fade" id="isi">
     <div class="container-x max-w-4xl">
       <h2 class="divider-label mb-6 text-xl">{ui.racepackSub}</h2>
-      <div class="photo-matte"><img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} loading="lazy" decoding="async" /></div>
+      <MatteImage image={racepackPhoto} />
     </div>
   </section>
 
   <!-- 4. Informasi kontak panitia (proposal hal. 27) -->
   <section class="section bg-pattern" id="kontak">
     <div class="container-x max-w-3xl">
-      <div class="section-heading">
-        <h2 class="rich rich-accent">KONTAK <strong>PANITIA</strong></h2>
-      </div>
+      <SectionHeading title="KONTAK **PANITIA**" />
       <ContactList contact={contact} />
     </div>
   </section>

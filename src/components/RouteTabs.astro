@@ -30,7 +30,7 @@ const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       <div role="tabpanel" class="tab-panel grid items-start gap-6 lg:grid-cols-[1.8fr_1fr]" id={`route-panel-${i}`} aria-labelledby={`route-tab-${i}`} hidden={i !== 0}>
         {c.routeMapImage ? (
           <button type="button" class="route-map" data-full={img(c.routeMapImage.url, 2400)} data-alt={c.routeMapImage.alt ?? `Peta rute ${c.name}`} aria-label={`${ui.zoomMap}: ${c.name}`}>
-            <img src={img(c.routeMapImage.url, 1400)} alt={c.routeMapImage.alt ?? `Peta rute ${c.name}`} width={c.routeMapImage.width ?? 1400} height={c.routeMapImage.height ?? 788} class="block w-full" loading="eager" decoding="async" />
+            <img src={img(c.routeMapImage.url, 1400)} alt={c.routeMapImage.alt ?? `Peta rute ${c.name}`} width={c.routeMapImage.width ?? 1400} height={c.routeMapImage.height ?? 788} class="block w-full" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
             <span class="route-map-hint"><Icon name="zoom" size={14} /> {ui.zoomMap}</span>
           </button>
         ) : (

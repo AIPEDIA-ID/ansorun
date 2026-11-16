@@ -1,0 +1,23 @@
+---
+import type { Img } from '../lib/types';
+
+/**
+ * Foto dalam bingkai matte (lihat .photo-matte di theme.css).
+ *  - wide: dipotong ke rasio lebar (foto venue)
+ *  - fill: di layar lebar mengisi tinggi kolom induk (foto racepack di samping daftar)
+ */
+interface Props { image: Img; wide?: boolean; fill?: boolean }
+const { image, wide = false, fill = false } = Astro.props;
+---
+
+<div class:list={['photo-matte', fill && 'lg:h-full']}>
+  <img
+    src={image.url}
+    alt={image.alt ?? ''}
+    width={image.width ?? 1400}
+    height={image.height ?? 800}
+    class:list={[wide && 'photo-frame-wide', fill && 'lg:h-full lg:object-cover']}
+    loading="lazy"
+    decoding="async"
+  />
+</div>

@@ -12,7 +12,7 @@ const problems = [];
 
 // 1. theme.css: hanya blok :root pertama (TOKENS) yang boleh berisi warna mentah.
 const css = readFileSync('src/styles/theme.css', 'utf8').split('\n');
-const tokensEnd = css.findIndex((l) => l.includes('Turunan otomatis'));
+const tokensEnd = css.findIndex((l) => l.includes('== 2. TURUNAN'));
 css.forEach((line, i) => {
   if (i < tokensEnd) return;
   if (/mask|rgb\(0 0 0 \//.test(line)) return; // mask-image & bayangan hitam
@@ -35,4 +35,10 @@ if (problems.length) {
   process.exit(1);
 }
 console.log('OK: tidak ada warna mentah di luar token.');
+
+// 3. Peringatan (tidak menggagalkan): canonical, sitemap, dan robots memakai SITE_URL.
+const siteUrl = process.env.SITE_URL ?? '';
+if (!siteUrl || /localhost|127\.0\.0\.1/.test(siteUrl)) {
+  console.warn('PERINGATAN: SITE_URL belum diisi domain asli (sekarang: ' + (siteUrl || 'kosong') + '). Canonical, sitemap, dan robots akan menunjuk ke localhost. Isi sebelum rilis.');
+}
 execSync('npx astro build', { stdio: 'inherit' });

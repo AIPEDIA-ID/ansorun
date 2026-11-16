@@ -3,58 +3,85 @@
 /* =====================================================================
    THEME — satu-satunya tempat untuk mengubah tampilan situs.
 
-   Struktur halaman mengikuti digiland.co.id (header transparan di atas
-   hero, countdown, CTA Instagram, galeri, newsletter, footer gelap).
-   Skin-nya sengaja datar ala tema WordPress ~2018: warna solid, tanpa
-   gradient/glass, Montserrat + Open Sans.
+   Palet dari desain ANSORUN (teal, hijau jersey, lime). Gaya: gradient
+   lembut untuk latar, kartu bersudut 14px berbayangan tipis, tombol
+   timbul. Template referensi: digiland.co.id.
 
-   1. TOKENS : warna, font, ukuran. Ubah di sini untuk feedback klien.
-               (Warna utama/aksen juga bisa di-override dari DatoCMS
-                lewat Site Settings tanpa menyentuh kode.)
-   2. SKIN   : komponen. Hanya memakai token di atas.
-   3. Layout : utility Tailwind langsung di markup.
+   Daftar isi (cari dengan "== N."):
+     1. TOKENS      warna, ukuran, jarak. Ubah di sini untuk feedback klien
+     2. TURUNAN     nilai yang dihitung dari token (jangan ditulis ulang)
+     3. TAILWIND    token yang dibuka sebagai utility (bg-primary, dst.)
+     4. BASE        html, body, tautan, judul
+     5. KOMPONEN
+        5.1 Layout dan teks     container, section, judul, on-dark
+        5.2 Latar               gradient terang/gelap, latar foto
+        5.3 Header dan nav      transparan lalu kaca, logo stiker, hamburger
+        5.4 Hero dan banner     hero poster, banner, stripe, countdown
+        5.5 Tombol
+        5.6 Kartu               SATU sistem untuk semua permukaan
+        5.7 Blok konten         teks, fakta, rundown, langkah, timeline,
+                                pengalih 5K/10K, peta, video, FAQ
+        5.8 Dekor               siluet, sorotan, pemisah, panel, fade
+        5.9 Footer dan lightbox
+
+   Aturan: tidak ada warna mentah (hex/rgb/hsl) di luar blok TOKENS
+   (dijaga oleh `npm run check`). Font diatur di src/config.ts.
    ===================================================================== */
 
-/* ---------- 1. TOKENS ---------- */
+/* == 1. TOKENS == */
 :root {
   /* Font: diatur di src/config.ts (fonts) — satu tempat untuk link, @font-face & peran font:
-     --t-font-heading (Neospeed), --t-font-body (Open Sans), --t-font-tag (Osaca), --t-font-display (Golf). */
+     --t-font-heading (Neospeed), --t-font-body (Carlito), --t-font-tag (Osaca), --t-font-display (Golf). */
 
   /* Palet ANSORUN 2027 (diambil dari KV, jersey, BIB, medali): teal + hijau + lime neon */
-  --t-primary: #027757;     /* hijau jersey: banner, tombol sekunder, angka countdown */
+  --t-primary: #027757;     /* hijau jersey: judul beraksen, tombol sekunder, ikon */
   --t-accent: #dfff40;      /* lime titling: tombol utama, stripe, nomor */
   --t-highlight: #bce930;   /* breadcrumb aktif, label kecil di bg gelap */
 
   --t-paper: #ffffff;       /* latar halaman */
-  --t-surface: #ffffff;     /* kartu, input, header solid, lightbox */
+  --t-surface: #ffffff;     /* kartu, tabel, header kaca, lightbox */
   --t-on-accent: #01373d;   /* teks di atas LIME harus gelap (tombol, nomor, ikon) */
-  --t-on-dark: #ffffff;     /* teks/garis di atas foto & section gelap */
+  --t-on-dark: #ffffff;     /* teks/garis di atas foto dan section gelap */
   --t-alt: #f0f6f4;
-  --t-ink: #1f3a3d;
-  --t-ink-soft: #587074;
-  --t-line: #dce6e4;
+  --t-ink: #1f3a3d;         /* teks utama */
+  --t-ink-soft: #587074;    /* teks sekunder */
+  --t-line: #dce6e4;        /* garis tipis */
   --t-dark: #01373d;        /* teal gelap: section gelap */
-  --t-darker: #012a2f;      /* footer */
-  --t-dark-ink: #9fc0bd;
+  --t-darker: #012a2f;      /* footer, overlay */
+  --t-dark-ink: #9fc0bd;    /* teks sekunder di latar gelap */
 
-  --t-radius: 4px;
-  --t-radius-card: 14px;
+  /* Bentuk */
+  --t-radius: 4px;          /* elemen kecil: ikon, input */
+  --t-radius-card: 14px;    /* kartu, bingkai foto, peta */
   --t-container: 1140px;
   --t-header-h: 76px;
+
+  /* Ritme vertikal: dipakai semua section agar seragam */
+  --t-section-y: clamp(48px, 6vw, 72px);   /* padding atas-bawah section */
+  --t-flush: clamp(16px, 2vw, 24px);       /* padding rapat untuk dua section berurutan */
+  --t-head-gap: clamp(28px, 4vw, 40px);    /* jarak judul section ke isi */
 }
 
-/* Turunan otomatis */
+/* == 2. TURUNAN (dihitung dari token) == */
 :root {
   --t-primary-dark: color-mix(in srgb, var(--t-primary) 80%, black);
   --t-accent-dark: color-mix(in srgb, var(--t-accent) 82%, black);
   --t-banner: color-mix(in srgb, var(--t-primary) 42%, var(--t-dark)); /* banner halaman dalam: lebih tenang dari primary */
   --t-tint: color-mix(in srgb, var(--t-primary) 8%, white);
+  --t-dark-card: color-mix(in srgb, var(--t-dark) 86%, white);
+
+  /* Gradient latar terang: ujung bawah .bg-fade = ujung atas .bg-pattern */
+  --t-wash: color-mix(in srgb, var(--t-primary) 20%, var(--t-paper));
+  --t-glow-lime: color-mix(in srgb, var(--t-accent) 40%, transparent);
+  --t-glow-green: color-mix(in srgb, var(--t-primary) 30%, transparent);
+
+  /* Kartu */
   --t-card-border: color-mix(in srgb, var(--t-primary) 14%, var(--t-line));
   --t-shadow: 0 1px 2px color-mix(in srgb, var(--t-darker) 10%, transparent), 0 12px 26px -16px color-mix(in srgb, var(--t-darker) 40%, transparent);
-  --t-dark-card: color-mix(in srgb, var(--t-dark) 86%, white);
+  --t-shadow-hover: 0 20px 34px -18px color-mix(in srgb, var(--t-primary) 60%, transparent);
 }
 
-/* Expose token ke Tailwind: bg-primary, text-ink, font-heading, dst. */
+/* == 3. TAILWIND: bg-primary, text-ink, font-heading, dst. == */
 @theme inline {
   --font-heading: var(--t-font-heading);
   --font-tag: var(--t-font-tag);
@@ -78,116 +105,148 @@
   --color-dark-card: var(--t-dark-card);
 }
 
-/* ---------- 2. SKIN ---------- */
+/* == 4. BASE == */
 @layer base {
   html { font-size: 19px; scroll-behavior: smooth; scroll-padding-top: calc(var(--t-header-h) + 16px); }
   body { font-family: var(--t-font-body); color: var(--t-ink); background: var(--t-paper); line-height: 1.75; }
   a { color: var(--t-primary); transition: color .2s; }
   a:hover { color: var(--t-primary-dark); }
   h1, h2, h3, h4 { font-family: var(--t-font-heading); line-height: 1.2; font-weight: 700; color: var(--t-dark); }
+
+  /* Fokus keyboard: cincin jelas di semua latar (hijau di terang, lime di gelap) */
+  :focus-visible { outline: 3px solid var(--t-primary); outline-offset: 3px; border-radius: 4px; }
+  .on-dark :focus-visible, .site-footer :focus-visible, .header:not(.is-solid):not(.is-open) :focus-visible { outline-color: var(--t-accent); }
+  :focus:not(:focus-visible) { outline: none; }
+
+  /* Hormati pengaturan "kurangi gerakan": tanpa smooth scroll, transisi, dan animasi */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  }
 }
 
 @layer components {
+
+  /* == 5.1 Layout dan teks == */
   .container-x { width: 100%; max-width: var(--t-container); margin-inline: auto; padding-inline: 20px; }
-  .section { padding-block: clamp(48px, 6vw, 72px); }
-  /* Dua section terang berurutan (FAQ lalu Contact): rapatkan sambungan agar terbaca satu blok */
-  .section-flush-b { padding-bottom: clamp(16px, 2vw, 24px); }
-  .section-flush-t { padding-top: clamp(16px, 2vw, 24px); }
-  .fact .step-icon { width: 42px; height: 42px; }
+  .section { padding-block: var(--t-section-y); }
+  .section-flush-b { padding-bottom: var(--t-flush); }   /* FAQ lalu Contact terbaca satu blok */
+  .section-flush-t { padding-top: var(--t-flush); }
+
+  /* Teks di latar gelap: semua judul dan tautan ikut terang */
   .on-dark { color: var(--t-on-dark); }
   .on-dark h1, .on-dark h2, .on-dark h3, .on-dark h4 { color: var(--t-on-dark); }
   .on-dark a:not(.btn) { color: var(--t-on-dark); }
-  /* Latar section terang: gradient lembut berbasis token (atas permintaan, menggantikan tekstur) */
-  /* Latar section terang: dua gradient yang saling menyambung tanpa sambungan terlihat.
-     .bg-fade  : putih -> hijau muda (turun), pendar lime di kanan atas
-     .bg-pattern: hijau muda -> putih (naik), pendar hijau di kiri bawah
-     Urutan pakai: fade, pattern, fade, ... sehingga warna ujung selalu bertemu. */
-  .bg-fade {
-    background-color: var(--t-paper);
-    background-image:
-      radial-gradient(55% 70% at 100% 0%, color-mix(in srgb, var(--t-accent) 40%, transparent), transparent 70%),
-      linear-gradient(180deg, var(--t-paper), color-mix(in srgb, var(--t-primary) 20%, var(--t-paper)));
-  }
-  .bg-pattern {
-    background-color: var(--t-paper);
-    background-image:
-      radial-gradient(55% 70% at 0% 100%, color-mix(in srgb, var(--t-primary) 30%, transparent), transparent 70%),
-      linear-gradient(180deg, color-mix(in srgb, var(--t-primary) 20%, var(--t-paper)), var(--t-paper));
-  }
-  /* Siluet: garis tepi hijau mengikuti bentuk benda (untuk gambar berlatar transparan) */
-  .silhouette { filter: drop-shadow(2px 0 0 var(--t-primary)) drop-shadow(-2px 0 0 var(--t-primary)) drop-shadow(0 2px 0 var(--t-primary)) drop-shadow(0 -2px 0 var(--t-primary)) drop-shadow(0 10px 10px color-mix(in srgb, var(--t-darker) 22%, transparent)); }
-  /* Ubin langkah bernomor (About) */
-  .flow-tile { position: relative; padding: 22px 22px 22px 24px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
-  .flow-tile .n { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; background: var(--t-primary); color: var(--t-accent); font: 400 22px/1 var(--t-font-display); box-shadow: 0 8px 16px -8px color-mix(in srgb, var(--t-primary) 75%, transparent); }
-  /* Latar foto penuh: satu-satunya gradient/overlay yang diizinkan (gelap di atas foto) */
-  .photo-bg { position: relative; background-size: cover; background-position: center; background-color: var(--t-dark); }
-  .photo-bg::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 92%, transparent); }
-  .photo-bg > * { position: relative; }
 
-  /* Teks dengan penekanan: **tebal** dari CMS */
+  /* Penekanan: **tebal** dari CMS */
   .rich strong { font-weight: 800; }
   .rich-accent strong { color: var(--t-primary-dark); }          /* di latar terang: aksen neon tidak terbaca */
   .on-dark .rich-accent strong { color: var(--t-accent); }
 
-  /* Label kecil di atas judul */
   .eyebrow { font: italic 500 13px var(--t-font-tag); letter-spacing: .18em; text-transform: uppercase; color: var(--t-primary); }
   .on-dark .eyebrow { color: var(--t-highlight); }
 
-  /* Judul section tengah */
-  .section-heading { text-align: center; max-width: 720px; margin: 0 auto clamp(28px, 4vw, 40px); }
+  /* Judul section: tengah, garis aksen pendek di bawahnya */
+  .section-heading { text-align: center; max-width: 720px; margin: 0 auto var(--t-head-gap); }
   .section-heading h2 { font-size: clamp(30px, 4vw, 44px); line-height: 1.05; margin-top: 10px; }
-  .section-heading p { margin-top: 14px; color: var(--t-ink-soft); }
-  /* Garis aksen pendek di bawah judul section */
   .section-heading h2::after { content: ""; display: block; width: 56px; height: 4px; margin: 14px auto 0; background: var(--t-primary); }
   .on-dark .section-heading h2::after { background: var(--t-accent); }
-  .photo-frame-wide { aspect-ratio: 2.1 / 1; object-fit: cover; object-position: center bottom; }
+  .section-heading p { margin-top: 14px; color: var(--t-ink-soft); }
   .on-dark .section-heading p { color: var(--t-dark-ink); }
 
-  /* ---- Header: transparan di atas hero, solid saat scroll ---- */
+  /* == 5.2 Latar == */
+  /* Terang: dua gradient yang saling menyambung tanpa sambungan terlihat.
+     .bg-fade    putih -> hijau muda (turun), pendar lime di kanan atas
+     .bg-pattern hijau muda -> putih (naik), pendar hijau di kiri bawah
+     Pakai bergantian (fade, pattern, fade, ...) agar warna ujung selalu bertemu. */
+  .bg-fade {
+    background-color: var(--t-paper);
+    background-image:
+      radial-gradient(55% 70% at 100% 0%, var(--t-glow-lime), transparent 70%),
+      linear-gradient(180deg, var(--t-paper), var(--t-wash));
+  }
+  .bg-pattern {
+    background-color: var(--t-paper);
+    background-image:
+      radial-gradient(55% 70% at 0% 100%, var(--t-glow-green), transparent 70%),
+      linear-gradient(180deg, var(--t-wash), var(--t-paper));
+  }
+  /* Gelap: pendar lime dan hijau di atas gradient teal */
+  .bg-dark-glow {
+    background-color: var(--t-dark);
+    background-image:
+      radial-gradient(60% 90% at 100% 0%, color-mix(in srgb, var(--t-accent) 20%, transparent), transparent 70%),
+      radial-gradient(55% 80% at 0% 100%, color-mix(in srgb, var(--t-primary) 45%, transparent), transparent 70%),
+      linear-gradient(180deg, var(--t-dark), var(--t-darker));
+  }
+  /* Latar foto penuh dengan overlay gelap (konten harus berada di dalam, otomatis di atas overlay) */
+  .photo-bg { position: relative; background-size: cover; background-position: center; background-color: var(--t-dark); }
+  .photo-bg::before { content: ""; position: absolute; inset: 0; background: color-mix(in srgb, var(--t-darker) 92%, transparent); }
+  .photo-bg > * { position: relative; }
+
+  /* == 5.3 Header dan nav == */
   .header {
     position: fixed; inset-inline: 0; top: 0; z-index: 50;
     color: var(--t-on-dark);
     transition: background-color .25s, box-shadow .25s, color .25s;
   }
-  .header.is-solid, .header.is-open { background: color-mix(in srgb, var(--t-surface) 84%, transparent); -webkit-backdrop-filter: blur(12px) saturate(1.2); backdrop-filter: blur(12px) saturate(1.2); color: var(--t-dark); box-shadow: 0 1px 0 var(--t-line), 0 6px 18px -10px rgb(0 0 0 / .25); }
+  /* Setelah scroll (.is-solid) atau menu terbuka (.is-open): kaca terang */
+  .header.is-solid, .header.is-open {
+    background: color-mix(in srgb, var(--t-surface) 84%, transparent);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2); backdrop-filter: blur(12px) saturate(1.2);
+    color: var(--t-dark);
+    box-shadow: 0 1px 0 var(--t-line), 0 6px 18px -10px rgb(0 0 0 / .25);
+  }
+
+  /* Logo stiker tipis: garis tepi halus mengikuti siluet huruf, sedikit menjulang melewati bar nav.
+     Dua file: terang (di atas hero) dan gelap (setelah scroll). */
+  .site-title { position: relative; z-index: 2; display: block; transform: translateY(6px); font: 800 20px var(--t-font-heading); letter-spacing: -.2px; text-transform: uppercase; color: inherit; }
+  .site-title:hover { color: inherit; opacity: .85; }
+  .site-title img { height: 52px; width: auto; }
+  @media (min-width: 640px) { .site-title { transform: translateY(8px); } .site-title img { height: 64px; } }
   .header .logo-cms { filter: brightness(0) invert(1); transition: filter .25s; }
   .header.is-solid .logo-cms, .header.is-open .logo-cms { filter: none; }
-  .header .logo-on-solid { display: none; }
+  .header .logo-on-clear {
+    --o: color-mix(in srgb, var(--t-darker) 85%, transparent);
+    filter: drop-shadow(1.5px 0 0 var(--o)) drop-shadow(-1.5px 0 0 var(--o)) drop-shadow(0 1.5px 0 var(--o)) drop-shadow(0 -1.5px 0 var(--o)) drop-shadow(0 3px 4px rgb(0 0 0 / .25));
+  }
+  .header .logo-on-solid {
+    display: none;
+    filter: drop-shadow(1.5px 0 0 var(--t-surface)) drop-shadow(-1.5px 0 0 var(--t-surface)) drop-shadow(0 1.5px 0 var(--t-surface)) drop-shadow(0 -1.5px 0 var(--t-surface)) drop-shadow(0 3px 4px color-mix(in srgb, var(--t-darker) 20%, transparent));
+  }
   .header.is-solid .logo-on-solid, .header.is-open .logo-on-solid { display: block; }
   .header.is-solid .logo-on-clear, .header.is-open .logo-on-clear { display: none; }
-  /* Logo bergaya stiker tipis: garis tepi halus mengikuti siluet huruf, sedikit menjulang melewati bar nav */
-  .site-title { position: relative; z-index: 2; display: block; transform: translateY(6px); font: 800 20px var(--t-font-heading); letter-spacing: -.2px; text-transform: uppercase; color: inherit; }
-  .site-title img { height: 52px; width: auto; }
-  .header .logo-on-clear { filter: drop-shadow(1.5px 0 0 color-mix(in srgb, var(--t-darker) 85%, transparent)) drop-shadow(-1.5px 0 0 color-mix(in srgb, var(--t-darker) 85%, transparent)) drop-shadow(0 1.5px 0 color-mix(in srgb, var(--t-darker) 85%, transparent)) drop-shadow(0 -1.5px 0 color-mix(in srgb, var(--t-darker) 85%, transparent)) drop-shadow(0 3px 4px rgb(0 0 0 / .25)); }
-  .header .logo-on-solid { filter: drop-shadow(1.5px 0 0 var(--t-surface)) drop-shadow(-1.5px 0 0 var(--t-surface)) drop-shadow(0 1.5px 0 var(--t-surface)) drop-shadow(0 -1.5px 0 var(--t-surface)) drop-shadow(0 3px 4px color-mix(in srgb, var(--t-darker) 20%, transparent)); }
-  @media (min-width: 640px) { .site-title { transform: translateY(8px); } .site-title img { height: 64px; } }
-  .site-title:hover { color: inherit; opacity: .85; }
-  .nav a {
-    display: block; padding: 8px 16px;
-    font: 700 13px var(--t-font-heading); letter-spacing: .04em;
-    color: inherit; position: relative;
-  }
-  .nav a::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 2px; height: 3px; background: var(--t-accent); transform: scaleX(0); transition: transform .2s; }
-  .nav a { border-radius: 999px; transition: background-color .2s; }
-  .nav a:hover { color: inherit; background: color-mix(in srgb, currentColor 10%, transparent); }
-  .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
-  .header.is-solid .nav a::after, .header.is-open .nav a::after { background: var(--t-primary); }   /* lime tidak terlihat di latar putih */
 
-  /* ---- Menu mobile (hamburger) ---- */
+  .nav a {
+    position: relative; display: block; padding: 8px 16px; border-radius: 999px;
+    font: 700 13px var(--t-font-heading); letter-spacing: .04em;
+    color: inherit; transition: background-color .2s;
+  }
+  .nav a:hover { color: inherit; background: color-mix(in srgb, currentColor 10%, transparent); }
+  .nav a::after { content: ""; position: absolute; left: 16px; right: 16px; bottom: 2px; height: 3px; background: var(--t-accent); transform: scaleX(0); transition: transform .2s; }
+  .nav a:hover::after, .nav a[aria-current="page"]::after { transform: scaleX(1); }
+  .header.is-solid .nav a::after, .header.is-open .nav a::after { background: var(--t-primary); }   /* lime tidak terlihat di latar terang */
+
+  /* Menu mobile (hamburger) */
   .nav-toggle { display: grid; place-items: center; width: 44px; height: 44px; cursor: pointer; color: inherit; background: transparent; border: 1px solid color-mix(in srgb, currentColor 40%, transparent); border-radius: var(--t-radius); }
   .nav-toggle .i-close { display: none; }
   .header.is-open .nav-toggle .i-open { display: none; }
   .header.is-open .nav-toggle .i-close { display: block; }
   @media (min-width: 768px) { .nav-toggle { display: none; } }
   @media (max-width: 767px) {
-    .nav { display: none; position: absolute; left: 0; right: 0; top: 100%; background: color-mix(in srgb, var(--t-surface) 94%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: var(--t-dark); border-top: 1px solid var(--t-line); box-shadow: 0 10px 14px rgb(0 0 0 / .12); }
+    .nav {
+      display: none; position: absolute; left: 0; right: 0; top: 100%; padding-top: 12px;
+      background: color-mix(in srgb, var(--t-surface) 94%, transparent);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+      color: var(--t-dark); border-top: 1px solid var(--t-line); box-shadow: 0 10px 14px rgb(0 0 0 / .12);
+    }
     .header.is-open .nav { display: block; }
-    .nav { padding-top: 12px; }
     .nav a { padding: 16px 20px; border-bottom: 1px solid var(--t-line); border-radius: 0; }
     .nav a::after { left: 20px; right: auto; width: 36px; bottom: 8px; }
   }
 
-  /* ---- Stripe diagonal (motif lintasan) ---- */
+  /* == 5.4 Hero dan banner == */
+  /* Stripe diagonal (motif lintasan) */
   .stripe-band {
     height: 38px; pointer-events: none;
     background:
@@ -205,24 +264,15 @@
             mask-image: linear-gradient(90deg, transparent, #000 70%);
   }
 
-  /* ---- Hero ---- */
-  .hero {
-    position: relative; overflow: hidden; color: var(--t-on-dark);
-    min-height: 100svh; display: flex; flex-direction: column; justify-content: center;
-    padding-top: var(--t-header-h);
-    background-color: var(--t-primary-dark);
-    background-size: cover; background-position: 70% center;
-  }
-  .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, color-mix(in srgb, var(--t-darker) 75%, transparent), color-mix(in srgb, var(--t-darker) 15%, transparent) 70%); }
-  .hero > * { position: relative; }
-  .hero h1 { color: var(--t-on-dark); font-family: var(--t-font-display); font-weight: 400; font-size: clamp(40px, 7.4vw, 88px); line-height: 1.02; letter-spacing: -.02em; }
-  .hero-eyebrow { font: italic 500 clamp(15px, 2vw, 22px) var(--t-font-tag); letter-spacing: .04em; }
-
-  /* ---- Hero poster: KV utuh di bawah header, lalu band CTA ---- */
+  /* Hero poster. Mobile/tablet: KV utuh di bawah header, lalu band teks.
+     Desktop (>=1024px): pas satu layar, KV mengisi sisa tinggi di belakang nav transparan. */
   .hero-poster { position: relative; overflow: hidden; color: var(--t-on-dark); background: var(--t-dark); padding-top: var(--t-header-h); }
   .hero-poster-media { position: relative; }
   .hero-poster-media img { display: block; width: 100%; height: auto; }
-  /* Desktop: hero pas satu layar. KV mengisi sisa tinggi (dipotong halus), band teks dan countdown ringkas di bawahnya. */
+  .hero-poster-media::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 120px; z-index: 1; pointer-events: none; background: linear-gradient(180deg, color-mix(in srgb, var(--t-darker) 70%, transparent), transparent); }   /* scrim agar nav terbaca */
+  .hero-poster-media::after { content: ""; position: absolute; inset: auto 0 0 0; height: 38%; pointer-events: none; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--t-dark) 55%, transparent) 55%, var(--t-dark)); }   /* bawah KV memudar ke band teks */
+  .hero-poster .stripe-band { margin-top: 0; }
+  .hero-eyebrow { font: italic 500 clamp(15px, 2vw, 22px) var(--t-font-tag); letter-spacing: .04em; }
   @media (min-width: 1024px) {
     .hero-poster { height: 100svh; min-height: 600px; display: flex; flex-direction: column; padding-top: 0; }
     .hero-poster-media { flex: 1 1 0; min-height: 0; }
@@ -232,12 +282,8 @@
     .hero-poster .count-num { font-size: clamp(40px, 4.2vw, 64px); }
     .hero-poster .count-label { margin-top: 2px; font-size: 11px; }
   }
-  /* Overlay: bagian bawah KV memudar ke warna latar hero, tanpa sambungan keras */
-  .hero-poster-media::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 120px; z-index: 1; pointer-events: none; background: linear-gradient(180deg, color-mix(in srgb, var(--t-darker) 70%, transparent), transparent); }
-  .hero-poster-media::after { content: ""; position: absolute; inset: auto 0 0 0; height: 38%; pointer-events: none; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--t-dark) 55%, transparent) 55%, var(--t-dark)); }
-  .hero-poster .stripe-band { margin-top: 0; }
 
-  /* ---- Banner halaman dalam ---- */
+  /* Banner halaman dalam */
   .page-banner {
     position: relative; overflow: hidden; color: var(--t-on-dark);
     padding: calc(var(--t-header-h) + 24px) 0 64px;
@@ -253,14 +299,13 @@
   .breadcrumb a:hover { color: var(--t-highlight); }
   .breadcrumb .current { color: var(--t-highlight); }
 
-  /* ---- Countdown ---- */
+  /* Countdown */
   .count-num { font: italic 400 clamp(52px, 10vw, 120px)/1 var(--t-font-display); color: var(--t-primary); font-variant-numeric: tabular-nums; }
+  .count-label { font: 600 13px var(--t-font-heading); letter-spacing: .3em; text-transform: uppercase; color: var(--t-ink-soft); margin-top: 8px; }
   .on-dark .count-num { color: var(--t-accent); }
   .on-dark .count-label { color: var(--t-dark-ink); }
-  .count-label { font: 600 13px var(--t-font-heading); letter-spacing: .3em; text-transform: uppercase; color: var(--t-ink-soft); margin-top: 8px; }
 
-  /* ---- Tombol solid datar ---- */
-  /* Tombol timbul gaya Duolingo: persegi membulat, warna solid, "alas" 4px lebih gelap yang tertekan saat diklik */
+  /* == 5.5 Tombol: timbul gaya Duolingo — persegi membulat, "alas" lebih gelap yang tertekan saat diklik == */
   .btn {
     --btn-edge: color-mix(in srgb, var(--t-accent) 58%, black);
     display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;
@@ -273,98 +318,45 @@
   }
   .btn:hover { color: var(--t-on-accent); filter: brightness(1.06); }
   .btn:active { transform: translateY(4px); box-shadow: 0 0 0 var(--btn-edge); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn-sm { padding: 8px 18px; font-size: 12px; border-radius: 10px; box-shadow: 0 3px 0 var(--btn-edge); }
   .btn-sm:active { transform: translateY(3px); }
-  .btn:disabled { opacity: .5; cursor: not-allowed; }
   .btn-blue { --btn-edge: color-mix(in srgb, var(--t-primary) 52%, black); background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
   .btn-blue:hover { color: var(--t-on-dark); }
   .btn-outline { --btn-edge: color-mix(in srgb, var(--t-on-dark) 40%, transparent); background: transparent; border-color: var(--t-on-dark); color: var(--t-on-dark); }
   .btn-outline:hover { color: var(--t-on-dark); }
 
-  /* ---- Kartu ---- */
-  .card { background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
-  .card-dark { background: var(--t-dark-card); border: 1px solid color-mix(in srgb, var(--t-on-dark) 10%, transparent); border-radius: var(--t-radius); color: var(--t-on-dark); }
-  .thumb { display: block; overflow: hidden; border-radius: var(--t-radius); background: var(--t-alt); }
-  a.thumb img { transition: transform .35s; }
-  a.thumb:hover img { transform: scale(1.05); }
-
-  /* ---- Konten teks (markdown dari CMS) ---- */
-  .entry > * + * { margin-top: 1em; }
-  .entry h2 { font-size: 22px; margin-top: 1.6em; }
-  .entry h3 { font-size: 18px; margin-top: 1.4em; }
-  .entry a { text-decoration: underline; }
-  .entry ul { list-style: disc; padding-left: 22px; }
-  .entry ol { list-style: decimal; padding-left: 22px; }
-  .entry blockquote { font-style: italic; border-left: 4px solid var(--t-primary); padding-left: 18px; }
-  .entry img { max-width: 100%; border-radius: var(--t-radius); }
-  .entry table { border-collapse: collapse; width: 100%; }
-  .entry th, .entry td { border: 1px solid var(--t-line); padding: 8px 12px; text-align: left; }
-  .on-dark .entry { color: color-mix(in srgb, var(--t-on-dark) 85%, transparent); }
-
-  /* ---- Tab pill ---- */
-  .tab-btn {
-    padding: 9px 20px; cursor: pointer;
-    font: 700 12.5px var(--t-font-heading); letter-spacing: .04em;
-    color: var(--t-ink); background: var(--t-surface); border: 1px solid var(--t-line); border-radius: 999px;
-    transition: background .2s, color .2s, border-color .2s;
-  }
-  .tab-btn:hover { border-color: var(--t-primary); color: var(--t-primary); }
-  .tab-btn[aria-selected="true"] { background: var(--t-primary); border-color: var(--t-primary); color: var(--t-on-dark); }
-  .tab-panel { margin-top: 18px; }
-
-  /* ---- Langkah bernomor (How to Join, Racepack) ---- */
-  .step-num { position: absolute; top: 14px; right: 20px; font: italic 400 56px/1 var(--t-font-display); color: color-mix(in srgb, var(--t-primary) 14%, transparent); }
-  .on-dark .step-num { color: color-mix(in srgb, var(--t-accent) 22%, transparent); }
-  .step-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--t-radius); background: var(--t-primary); color: var(--t-on-dark); }
-  .on-dark .step-icon { background: var(--t-accent); color: var(--t-on-accent); }
-
-  /* ---- Video embed ---- */
-  .video-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--t-radius); background: var(--t-darker); }
-  .video-play { position: absolute; inset: 0; display: grid; place-items: center; cursor: pointer; background: color-mix(in srgb, var(--t-darker) 35%, transparent); transition: background .2s; }
-  .video-play:hover { background: color-mix(in srgb, var(--t-darker) 15%, transparent); }
-  .video-play-btn { display: grid; place-items: center; width: 84px; height: 84px; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); transition: transform .2s; }
-  .video-play:hover .video-play-btn { transform: scale(1.08); }
-
-  /* ---- Peta rute: klik untuk zoom ---- */
-  .route-map { position: relative; display: block; width: 100%; overflow: hidden; padding: 8px; cursor: zoom-in; background: var(--t-paper); border: 1px solid var(--t-card-border); border-radius: var(--t-radius-card); box-shadow: var(--t-shadow); }
-  .route-map img { border-radius: 8px; transition: transform .35s; }
-  .route-map:hover img { transform: scale(1.02); }
-  .route-map-hint { position: absolute; right: 20px; bottom: 20px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font: 700 12px var(--t-font-heading); letter-spacing: .04em; color: var(--t-on-accent); background: var(--t-accent); border-radius: 999px; }
-  dialog.lightbox-wide { max-width: min(96vw, 1500px); }
-
-  /* ---- Kontak ---- */
-
-  /* ---- Kartu info (racepack) ---- */
-  .info-card { display: flex; gap: 16px; padding: 22px; background: var(--t-surface); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
-  .info-card .step-icon { flex: none; width: 44px; height: 44px; }
-  .info-card h3 { font-size: 15px; }
-  /* Fakta besar tanpa kotak (Race Information) dan daftar jam */
-  .fact-value { font: 800 clamp(24px, 3vw, 34px)/1.15 var(--t-font-heading); color: var(--t-primary); }
-  .fact-sub { margin-top: 8px; font-size: 14px; color: color-mix(in srgb, var(--t-ink) 85%, var(--t-paper)); }
-  .time-row { display: flex; align-items: baseline; gap: 20px; padding-block: 6px; border-bottom: 1px solid var(--t-line); }
-  .time-row .t { flex: none; width: 92px; font: 400 24px/1 var(--t-font-display); color: var(--t-primary); }
-  /* Fakta Race Information: tiga kolom bersekat garis */
-  .fact { padding: 8px 24px; text-align: center; }
-  @media (min-width: 768px) { .fact + .fact { border-left: 1px solid var(--t-line); } }
-  /* Foto berbingkai (matte putih + garis tipis) */
-  .photo-matte { padding: 8px; background: var(--t-paper); border: 1px solid var(--t-line); border-radius: var(--t-radius); }
-  .photo-matte img { display: block; width: 100%; border-radius: 2px; }
-  /* Kedalaman: bayangan tipis, hover mengangkat, sorotan di belakang produk, zebra rundown */
-  /* Sistem kartu: sudut 14px, permukaan bergradien tipis, highlight dalam, bayangan berlapis, hover mengangkat */
+  /* == 5.6 Kartu: satu sistem untuk semua permukaan ==
+     Terang : .card, .flow-tile, .info-card, details.faq, .photo-matte
+     Gelap  : .card-dark, .tl-card
+     Motif  : stripe diagonal di pojok kanan atas + angka hantu di pojok kanan bawah */
   .card, .flow-tile, .info-card, details.faq, .photo-matte {
     border: 1px solid var(--t-card-border);
     border-radius: var(--t-radius-card);
     box-shadow: var(--t-shadow), inset 0 1px 0 var(--t-surface);
   }
-  .card, .flow-tile, .info-card, details.faq { background-color: var(--t-surface); background-image: linear-gradient(160deg, var(--t-surface) 50%, color-mix(in srgb, var(--t-primary) 7%, var(--t-surface))); }
+  .card, .flow-tile, .info-card, details.faq {
+    background-color: var(--t-surface);
+    background-image: linear-gradient(160deg, var(--t-surface) 50%, color-mix(in srgb, var(--t-primary) 7%, var(--t-surface)));
+  }
   .flow-tile, .info-card, details.faq { transition: transform .2s, box-shadow .2s, border-color .2s; }
-  .flow-tile:hover, .info-card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--t-primary) 45%, var(--t-line)); box-shadow: 0 20px 34px -18px color-mix(in srgb, var(--t-primary) 60%, transparent), inset 0 1px 0 var(--t-surface); }
-  details.faq:hover { border-color: color-mix(in srgb, var(--t-primary) 40%, var(--t-line)); }
-  details.faq[open] { border-color: color-mix(in srgb, var(--t-primary) 45%, var(--t-line)); box-shadow: 0 18px 30px -18px color-mix(in srgb, var(--t-primary) 55%, transparent), inset 0 1px 0 var(--t-surface); }
-  .card-dark, .tl-card { border-radius: var(--t-radius-card); background-image: linear-gradient(160deg, color-mix(in srgb, var(--t-on-dark) 9%, var(--t-dark-card)), var(--t-dark-card)); border-color: color-mix(in srgb, var(--t-on-dark) 16%, transparent); box-shadow: inset 0 1px 0 color-mix(in srgb, var(--t-on-dark) 14%, transparent), 0 16px 28px -18px var(--t-darker); }
-  .tl-card { transition: transform .2s; }
-  .tl-item:hover .tl-card { transform: translateY(-4px); }
-  /* Motif lintasan pada kartu: tambalan stripe diagonal di pojok kanan atas + angka hantu di pojok kanan bawah */
+  .flow-tile:hover, .info-card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--t-primary) 45%, var(--t-line)); box-shadow: var(--t-shadow-hover), inset 0 1px 0 var(--t-surface); }
+
+  .card-dark, .tl-card {
+    border: 1px solid color-mix(in srgb, var(--t-on-dark) 16%, transparent);
+    border-radius: var(--t-radius-card);
+    background-color: var(--t-dark-card);
+    background-image: linear-gradient(160deg, color-mix(in srgb, var(--t-on-dark) 9%, var(--t-dark-card)), var(--t-dark-card));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--t-on-dark) 14%, transparent), 0 16px 28px -18px var(--t-darker);
+    color: var(--t-on-dark);
+  }
+
+  /* Bingkai foto: matte putih */
+  .photo-matte { padding: 8px; background: var(--t-paper); }
+  .photo-matte img { display: block; width: 100%; border-radius: 8px; }
+  .photo-frame-wide { aspect-ratio: 2.1 / 1; object-fit: cover; object-position: center bottom; }
+
+  /* Motif lintasan pada kartu */
   ol:has(> .flow-tile), ol:has(> .tl-item) { counter-reset: step; }
   .flow-tile, .tl-item { counter-increment: step; }
   .flow-tile, .info-card, .tl-card { position: relative; overflow: hidden; }
@@ -378,53 +370,93 @@
   .flow-tile:hover::after, .info-card:hover::after, .tl-item:hover .tl-card::after { width: 150px; }
   .flow-tile::before, .tl-card::before { content: counter(step, decimal-leading-zero); position: absolute; right: 14px; bottom: -22px; font: 400 104px/1 var(--t-font-display); color: color-mix(in srgb, var(--t-primary) 9%, transparent); pointer-events: none; }
   .tl-card::before { color: color-mix(in srgb, var(--t-on-dark) 7%, transparent); }
-  .photo-matte img { border-radius: 8px; }
-  .spot { border-radius: var(--t-radius); background: radial-gradient(closest-side, color-mix(in srgb, var(--t-primary) 16%, transparent), transparent); }
-  .time-row { padding-inline: 12px; }
+
+  /* == 5.7 Blok konten == */
+  /* Teks markdown dari CMS */
+  .entry > * + * { margin-top: 1em; }
+  .entry h2 { font-size: 22px; margin-top: 1.6em; }
+  .entry h3 { font-size: 18px; margin-top: 1.4em; }
+  .entry a { text-decoration: underline; }
+  .entry ul { list-style: disc; padding-left: 22px; }
+  .entry ol { list-style: decimal; padding-left: 22px; }
+  .entry blockquote { font-style: italic; border-left: 4px solid var(--t-primary); padding-left: 18px; }
+  .entry img { max-width: 100%; border-radius: var(--t-radius); }
+  .entry table { border-collapse: collapse; width: 100%; }
+  .entry th, .entry td { border: 1px solid var(--t-line); padding: 8px 12px; text-align: left; }
+  .on-dark .entry { color: color-mix(in srgb, var(--t-on-dark) 85%, transparent); }
+  .tbd { color: var(--t-ink-soft); font-style: italic; }   /* placeholder "Segera diumumkan" */
+
+  /* Ikon dan nomor langkah */
+  .step-num { position: absolute; top: 14px; right: 20px; font: italic 400 56px/1 var(--t-font-display); color: color-mix(in srgb, var(--t-primary) 14%, transparent); }
+  .step-icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--t-radius); background: var(--t-primary); color: var(--t-on-dark); }
+  .on-dark .step-num { color: color-mix(in srgb, var(--t-accent) 22%, transparent); }
+  .on-dark .step-icon { background: var(--t-accent); color: var(--t-on-accent); }
+  .info-card { display: flex; gap: 16px; padding: 22px; }
+  .info-card .step-icon { flex: none; width: 44px; height: 44px; }
+  .info-card h3 { font-size: 15px; }
+
+  /* Race Information: tiga fakta besar bersekat garis + rundown */
+  .fact { padding: 8px 24px; text-align: center; }
+  .fact .step-icon { width: 42px; height: 42px; }
+  @media (min-width: 768px) { .fact + .fact { border-left: 1px solid var(--t-line); } }
+  .fact-value { font: 800 clamp(24px, 3vw, 34px)/1.15 var(--t-font-heading); color: var(--t-primary); }
+  .fact-sub { margin-top: 8px; font-size: 14px; color: color-mix(in srgb, var(--t-ink) 85%, var(--t-paper)); }
+  .time-row { display: flex; align-items: baseline; gap: 20px; padding: 6px 12px; border-bottom: 1px solid var(--t-line); }
   .time-row:nth-child(odd) { background: color-mix(in srgb, var(--t-primary) 6%, transparent); }
-  /* Section gelap bergradien dengan pendar lime dan hijau */
-  .bg-dark-glow {
-    background-color: var(--t-dark);
-    background-image:
-      radial-gradient(60% 90% at 100% 0%, color-mix(in srgb, var(--t-accent) 20%, transparent), transparent 70%),
-      radial-gradient(55% 80% at 0% 100%, color-mix(in srgb, var(--t-primary) 45%, transparent), transparent 70%),
-      linear-gradient(180deg, var(--t-dark), var(--t-darker));
-  }
-  /* Timeline How to Join (proposal hal. 19): tanggal lime miring, titik pada garis putus-putus, kartu */
+  .time-row .t { flex: none; width: 92px; font: 400 24px/1 var(--t-font-display); color: var(--t-primary); }
+
+  /* About: ubin langkah konsep sosial */
+  .flow-tile { padding: 22px 22px 22px 24px; }
+  .flow-tile .n { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 999px; background: var(--t-primary); color: var(--t-accent); font: 400 22px/1 var(--t-font-display); box-shadow: 0 8px 16px -8px color-mix(in srgb, var(--t-primary) 75%, transparent); }
+
+  /* How to Join: timeline (proposal hal. 19) — tanggal lime miring, titik pada garis putus-putus, kartu gelap */
   .tl-date { text-align: center; font: italic 700 16px var(--t-font-heading); color: var(--t-accent); }
   .tl-track { position: relative; height: 24px; margin: 12px 0 18px; }
   .tl-dot { position: absolute; left: 50%; top: 50%; width: 22px; height: 22px; transform: translate(-50%, -50%); border-radius: 999px; background: var(--t-dark); border: 3px solid var(--t-accent); }
+  .tl-card { padding: 20px; transition: transform .2s; }
+  .tl-card h3 { font-size: 16px; }
+  .tl-item:hover .tl-card { transform: translateY(-4px); }
   .tl-item.is-now .tl-dot { background: var(--t-accent); }
-  .tl-item.is-now .tl-card { background: color-mix(in srgb, var(--t-accent) 18%, var(--t-dark-card)); border-color: color-mix(in srgb, var(--t-accent) 45%, transparent); }
-  @media (min-width: 1024px) {
+  .tl-item.is-now .tl-card { background-color: color-mix(in srgb, var(--t-accent) 18%, var(--t-dark-card)); background-image: none; border-color: color-mix(in srgb, var(--t-accent) 45%, transparent); }
+  @media (min-width: 1024px) {   /* garis putus hanya di antara titik, tidak di ujung */
     .tl-track::before { content: ""; position: absolute; left: -12px; right: -12px; top: 50%; border-top: 2px dashed var(--t-accent); }
     .tl-item:first-child .tl-track::before { left: 50%; }
     .tl-item:last-child .tl-track::before { right: 50%; }
   }
-  .tl-card { padding: 20px; }
-  .tl-card h3 { font-size: 16px; }
-  /* Pengalih kategori (5K / 10K): kontrol segmen, aktif berwarna penuh dan timbul */
-  .seg { display: inline-flex; gap: 4px; padding: 5px; background: color-mix(in srgb, var(--t-primary) 10%, var(--t-paper)); border: 1px solid var(--t-line); border-radius: 14px; }
-  .seg .tab-btn { min-width: 96px; padding: 10px 26px; border: 0; border-radius: 10px; background: transparent; color: var(--t-primary); font: 800 16px var(--t-font-heading); cursor: pointer; transition: background .15s, color .15s; }
-  .seg .tab-btn:hover { background: var(--t-paper); color: var(--t-primary-dark); }
-  .seg .tab-btn[aria-selected="true"] { background: var(--t-primary); color: var(--t-on-dark); box-shadow: 0 3px 0 var(--t-primary-dark); }
-  /* Subjudul dengan garis bawah pendek (underscore) */
-  .sub-title { position: relative; padding-bottom: 10px; }
-  .sub-title::after { content: ""; position: absolute; left: 0; bottom: 0; width: 48px; height: 3px; background: var(--t-primary); }
-  /* Sisi kiri dan kanan memudar */
-  .fade-x { -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); }
-  /* Pemisah dalam satu section: label di tengah dengan garis memudar di kiri dan kanan, plus panel bertint */
-  .divider-label { display: flex; align-items: center; gap: 16px; justify-content: center; }
-  .divider-label::before, .divider-label::after { content: ""; flex: 1; height: 1px; max-width: 220px; }
-  .divider-label::before { background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--t-primary) 40%, var(--t-line))); }
-  .divider-label::after { background: linear-gradient(270deg, transparent, color-mix(in srgb, var(--t-primary) 40%, var(--t-line))); }
-  .panel { padding: clamp(20px, 3vw, 36px); border-radius: 22px; background: color-mix(in srgb, var(--t-primary) 9%, var(--t-paper)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--t-primary) 12%, transparent); }
-  .tbd { color: var(--t-ink-soft); font-style: italic; }
 
-  /* ---- Pemilih item race pack ---- */
+  /* Pengalih kategori 5K / 10K: kontrol segmen, aktif berwarna penuh dan timbul */
+  .seg { display: inline-flex; gap: 4px; padding: 5px; background: color-mix(in srgb, var(--t-primary) 10%, var(--t-paper)); border: 1px solid var(--t-line); border-radius: var(--t-radius-card); }
+  .tab-btn { min-width: 96px; padding: 10px 26px; border: 0; border-radius: 10px; background: transparent; color: var(--t-primary); font: 800 16px var(--t-font-heading); letter-spacing: .04em; cursor: pointer; transition: background .15s, color .15s; }
+  .tab-btn:hover { background: var(--t-paper); color: var(--t-primary-dark); }
+  .tab-btn[aria-selected="true"] { background: var(--t-primary); color: var(--t-on-dark); box-shadow: 0 3px 0 var(--t-primary-dark); }
+  .tab-panel { margin-top: 18px; }
 
-  /* ---- FAQ accordion ---- */
+  /* Peta rute: bingkai matte, klik untuk zoom */
+  .route-map { position: relative; display: block; width: 100%; overflow: hidden; padding: 8px; cursor: zoom-in; background: var(--t-paper); border: 1px solid var(--t-card-border); border-radius: var(--t-radius-card); box-shadow: var(--t-shadow); }
+  .route-map img { border-radius: 8px; transition: transform .35s; }
+  .route-map:hover img { transform: scale(1.02); }
+  .route-map-hint { position: absolute; right: 20px; bottom: 20px; display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; font: 700 12px var(--t-font-heading); letter-spacing: .04em; color: var(--t-on-accent); background: var(--t-accent); border-radius: 999px; }
+
+  /* Judul bernomor (item racepack): angka display di kiri nama */
+  .num-title { display: flex; align-items: baseline; gap: 8px; font: 700 1rem/1.2 var(--t-font-heading); color: var(--t-ink); }
+  .num-title .n { font: 400 1.1rem/1 var(--t-font-display); color: var(--t-primary); }
+
+  /* Galeri */
+  .thumb { display: block; overflow: hidden; border-radius: var(--t-radius); background: var(--t-alt); }
+  a.thumb img { transition: transform .35s; }
+  a.thumb:hover img { transform: scale(1.05); }
+
+  /* Video embed */
+  .video-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--t-radius); background: var(--t-darker); }
+  .video-play { position: absolute; inset: 0; display: grid; place-items: center; cursor: pointer; background: color-mix(in srgb, var(--t-darker) 35%, transparent); transition: background .2s; }
+  .video-play:hover { background: color-mix(in srgb, var(--t-darker) 15%, transparent); }
+  .video-play-btn { display: grid; place-items: center; width: 84px; height: 84px; border-radius: 999px; background: var(--t-accent); color: var(--t-on-accent); transition: transform .2s; }
+  .video-play:hover .video-play-btn { transform: scale(1.08); }
+
+  /* FAQ accordion (tampilan kartu ada di 5.6) */
   details.faq { margin-bottom: 12px; }
+  details.faq:hover { border-color: color-mix(in srgb, var(--t-primary) 40%, var(--t-line)); }
+  details.faq[open] { border-color: color-mix(in srgb, var(--t-primary) 45%, var(--t-line)); box-shadow: var(--t-shadow-hover), inset 0 1px 0 var(--t-surface); }
   details.faq > summary {
     cursor: pointer; list-style: none; position: relative;
     padding: 18px 56px 18px 22px; font: 700 15px var(--t-font-heading); color: var(--t-dark);
@@ -435,19 +467,35 @@
   details.faq[open] > summary::after { content: "–"; }
   details.faq > .entry { padding: 0 22px 20px; }
 
-  /* ---- Form ---- */
+  /* == 5.8 Dekor (utilitas kecil, dipakai di markup) == */
+  /* Siluet: garis tepi hijau mengikuti bentuk benda (untuk gambar berlatar transparan) */
+  .silhouette { filter: drop-shadow(2px 0 0 var(--t-primary)) drop-shadow(-2px 0 0 var(--t-primary)) drop-shadow(0 2px 0 var(--t-primary)) drop-shadow(0 -2px 0 var(--t-primary)) drop-shadow(0 10px 10px color-mix(in srgb, var(--t-darker) 22%, transparent)); }
+  /* Sorotan radial lembut di belakang foto produk */
+  .spot { border-radius: var(--t-radius); background: radial-gradient(closest-side, color-mix(in srgb, var(--t-primary) 16%, transparent), transparent); }
+  /* Sisi kiri dan kanan memudar */
+  .fade-x { -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); }
+  /* Subjudul dengan garis bawah pendek */
+  .sub-title { position: relative; padding-bottom: 10px; }
+  .sub-title::after { content: ""; position: absolute; left: 0; bottom: 0; width: 48px; height: 3px; background: var(--t-primary); }
+  /* Pemisah di dalam satu section: label di tengah, garis memudar di kiri dan kanan */
+  .divider-label { display: flex; align-items: center; justify-content: center; gap: 16px; }
+  .divider-label::before, .divider-label::after { content: ""; flex: 1; height: 1px; max-width: 220px; }
+  .divider-label::before { background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--t-primary) 40%, var(--t-line))); }
+  .divider-label::after { background: linear-gradient(270deg, transparent, color-mix(in srgb, var(--t-primary) 40%, var(--t-line))); }
+  /* Panel bertint untuk satu bagian di dalam section */
+  .panel { padding: clamp(20px, 3vw, 36px); border-radius: 22px; background: color-mix(in srgb, var(--t-primary) 9%, var(--t-paper)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--t-primary) 12%, transparent); }
 
-  /* ---- Footer ---- */
+  /* == 5.9 Footer dan lightbox == */
   .site-footer { background: var(--t-darker); color: var(--t-dark-ink); font-size: 14px; }
   .site-footer h4 { font-size: 14px; color: var(--t-on-dark); margin-bottom: 18px; }
   .site-footer a { color: var(--t-dark-ink); }
   .site-footer a:hover { color: var(--t-on-dark); }
-  .social-btn { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid color-mix(in srgb, var(--t-on-dark) 18%, transparent); border-radius: var(--t-radius); color: var(--t-on-dark); background: color-mix(in srgb, var(--t-on-dark) 4%, transparent); }
   .site-footer a.social-btn { color: var(--t-on-dark); }
+  .social-btn { display: grid; place-items: center; width: 38px; height: 38px; border: 1px solid color-mix(in srgb, var(--t-on-dark) 18%, transparent); border-radius: var(--t-radius); color: var(--t-on-dark); background: color-mix(in srgb, var(--t-on-dark) 4%, transparent); }
   .social-btn:hover { background: var(--t-accent); border-color: var(--t-accent); }
   .footer-rule { height: 4px; background: linear-gradient(90deg, var(--t-highlight), var(--t-accent) 50%, var(--t-primary)); }
 
-  /* ---- Lightbox ---- */
   dialog.lightbox { max-width: min(92vw, 960px); padding: 10px; border: 0; border-radius: var(--t-radius); background: var(--t-surface); margin: auto; }
   dialog.lightbox::backdrop { background: rgb(0 0 0 / .8); }
+  dialog.lightbox-wide { max-width: min(96vw, 1500px); }   /* peta rute: harus setelah .lightbox agar menang */
 }

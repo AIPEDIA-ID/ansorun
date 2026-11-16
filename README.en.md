@@ -33,6 +33,26 @@ Two files in `public/brand/`: `logo-light.webp` (white/lime, for the transparent
 ### Content conventions
 Sample content in `src/lib/fallback.ts` follows the proposal PDF text. Anything still missing from the client is written as `[Konten menyusul: ...]` or "Segera diumumkan". Code markers: `TODO(data)` (waiting on the client) and `CATATAN` (an assumption or a conflict between PDF pages). The full lists are in sections 8, 13, 19, 20 and 21 of the plan.
 
+## CSS structure (`src/styles/theme.css`)
+
+This file is the only place where the look is defined, and it has a table of contents at the top:
+
+| Section | Contents |
+|---|---|
+| 1. TOKENS | Colours, shapes (`--t-radius-card`), rhythm (`--t-section-y`, `--t-flush`, `--t-head-gap`). **The only place raw colours are allowed.** |
+| 2. TURUNAN (derived) | Values computed from tokens (`--t-wash`, `--t-shadow`, ...). Do not rewrite them |
+| 3. TAILWIND | Tokens exposed as utilities (`bg-primary`, `text-ink`, `font-heading`) |
+| 4. BASE | html, body, links, headings |
+| 5.1 to 5.9 | Components by group: layout, backgrounds, header, hero, buttons, cards, content blocks, decoration, footer |
+
+Maintenance rules:
+- **Cards**: every light surface (`.card`, `.flow-tile`, `.info-card`, `details.faq`, `.photo-matte`) shares one rule in 5.6. Change it there; do not override per component.
+- **Light section backgrounds** alternate: `bg-fade`, `bg-pattern`, `bg-fade`, ... so the edge colours meet.
+- **Vertical rhythm** comes from tokens, not numbers in markup: section padding `--t-section-y`, heading gap `--t-head-gap`, gap between blocks inside a section `mt-10`, card grids `gap-5`, two-column layouts `gap-8`.
+- Add new components to the matching group, not at the end of the file. Use tokens, not raw colours. `npm run check` rejects raw colours.
+
+Markdown parsing (rundown, social concept, prices) lives in `src/lib/parse.ts`. Section titles use `SectionHeading.astro` and framed photos use `MatteImage.astro`.
+
 ## Client feedback: where do I change things?
 
 | Need | Where |
@@ -49,7 +69,7 @@ When you change `--t-accent`, check `--t-on-accent` too: a bright accent needs d
 
 ## SEO
 
-Automatic: per-page title and description (the **SEO: description** field in Dato), canonical URL, Open Graph + Twitter card, `SportsEvent` JSON-LD on the home page, `sitemap-index.xml`, `robots.txt`, and fixed image dimensions (no layout shift). **Set `SITE_URL` to the real domain before launch**; otherwise the canonical URLs, sitemap and robots.txt point to localhost.
+Automatic: per-page title and description (the **SEO: description** field in Dato), canonical URL, Open Graph + Twitter card, `SportsEvent` JSON-LD on the home page, `sitemap-index.xml`, `robots.txt`, and fixed image dimensions (no layout shift). **Set `SITE_URL` to the real domain before launch**; otherwise the canonical URLs, sitemap and robots.txt point to localhost (`npm run check` warns while it is empty or localhost). There is a 404 page (`src/pages/404.astro`), keyboard focus styles, and `prefers-reduced-motion` support.
 
 ## Quality gate
 
@@ -67,10 +87,10 @@ npm run check   # fails on any raw colour outside the tokens, then runs the buil
 ## Structure
 
 ```
-src/styles/theme.css   centralised theme (tokens + skin)
+src/styles/theme.css   centralised theme (tokens + components, table of contents at the top)
 src/config.ts          menu, locale, fonts, UI text
-src/lib/               DatoCMS client, queries + fallback merge, text helpers (rich/md), types
-src/components/        Countdown, Gallery, Photo, Icon, PageBanner, Prizes, RouteTabs, Steps, VideoEmbed, ContactList
+src/lib/               DatoCMS client, queries + fallback merge, text helpers (rich/md), parse.ts (rundown, mission, prices), types
+src/components/        Countdown, Gallery, Photo, MatteImage, SectionHeading, Icon, PageBanner, Prizes, RouteTabs, Steps, VideoEmbed, ContactList
 src/layouts/Base.astro transparent-to-glass header + footer
 src/pages/             index (9 blocks), racepack, galeri (not in nav); /tentang and /lari redirect
 scripts/               datocms-schema.mjs, check.mjs

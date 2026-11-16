@@ -15,7 +15,9 @@ const metaDesc = plain(description ?? site.metaDescription);
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = site.heroImage ? img(site.heroImage.url, 1200) : new URL('/brand/og.jpg', Astro.site).href;
+// OG image harus alamat absolut dan format yang dibaca semua pembagi tautan (jpg/png).
+// Gambar dari CMS dipakai bila ada; selain itu og.jpg 1200x630 dari public/brand.
+const ogImage = site.heroImage?.url.startsWith('http') ? img(site.heroImage.url, 1200) : new URL('/brand/og.jpg', Astro.site).href;
 
 // Structured data Event (Google rich result) — hanya di Beranda
 const eventLd = {
@@ -64,7 +66,9 @@ const socials = ([
     <title>{pageTitle}</title>
     <meta name="description" content={metaDesc} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href={fonts.href} rel="stylesheet" />

@@ -4,40 +4,28 @@ import Countdown from '../components/Countdown.astro';
 import Photo from '../components/Photo.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import Icon from '../components/Icon.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import MatteImage from '../components/MatteImage.astro';
 import RouteTabs from '../components/RouteTabs.astro';
 import Prizes from '../components/Prizes.astro';
 import ContactList from '../components/ContactList.astro';
 import { getSiteData, getAbout, getHome, getContact, formatDate } from '../lib/content';
 import { img } from '../lib/datocms';
 import { md, rich } from '../lib/text';
+import { parseRundown, parseMission, priceOf, splitLead } from '../lib/parse';
 import { ui } from '../config';
-import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback';
+import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback'; // TODO: pindah ke CMS bila klien ingin mengganti foto sendiri
 
 const { site, sponsors } = await getSiteData();
 const { about, faqs } = await getAbout();
 const { home, categories, raceInfo, prizes, items, joinSteps } = await getHome();
 const contact = await getContact();
 
-// Race Information: fakta besar + rundown, semuanya dari data (tabel markdown di raceInfo.scheduleDetail)
-const rundown = (raceInfo.scheduleDetail ?? '')
-  .split('\n')
-  .filter((l) => l.startsWith('|'))
-  .map((l) => l.split('|').slice(1, -1).map((c) => c.trim()))
-  .filter((c) => c.length >= 2 && /^\d/.test(c[0]))
-  .map(([time, event]) => ({ time, event }));
-// About: langkah konsep sosial dan penerima manfaat diurai dari about.mission (markdown dari proposal hal. 4)
-const mLines = (about.mission ?? '').split('\n').map((l) => l.trim()).filter(Boolean);
-const flowTitle = mLines.find((l) => /^\*\*[^*]+\*\*$/.test(l))?.replace(/\*\*/g, '') ?? '';
-const flow = mLines
-  .map((l) => l.match(/^\d+\.\s+\*\*(.+?)\*\*\s*(.+)$/))
-  .filter((m): m is RegExpMatchArray => !!m)
-  .map((m) => ({ title: m[1].replace(/:$/, ''), text: m[2] }));
-const benefLine = mLines.find((l) => /^\*\*Penerima/i.test(l));
-const benefLabel = benefLine?.match(/^\*\*(.+?)\*\*/)?.[1].replace(/:$/, '') ?? '';
-const beneficiaries = benefLine ? benefLine.replace(/^\*\*.+?\*\*\s*/, '').split(',').map((x) => x.trim()).filter(Boolean) : [];
+// Data turunan untuk tampilan (penguraian ada di lib/parse.ts)
+const rundown = parseRundown(raceInfo.scheduleDetail);
+const mission = parseMission(about.mission);
 const gear = items.filter((i) => i.image);
 const supplies = items.filter((i) => !i.image);
-const price = (d: string) => d.match(/\*\*(Rp[^*]+)\*\*/)?.[1] ?? '';
 
 // Kelompokkan sponsor per peran, urutan mengikuti CMS (kosong = tidak ditampilkan)
 const groups = new Map<string, typeof sponsors>();
@@ -108,11 +96,11 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
 
       <!-- Konsep sosial (proposal hal. 4) -->
       {
-        flow.length > 0 ? (
+        mission.flow.length > 0 ? (
           <div class="mt-10">
-            {flowTitle && <h3 class="mb-5 text-center text-xl">{flowTitle}</h3>}
+            {mission.title && <h3 class="mb-5 text-center text-xl">{mission.title}</h3>}
             <ol class="grid gap-5 md:grid-cols-3">
-              {flow.map((f, i) => (
+              {mission.flow.map((f, i) => (
                 <li class="flow-tile">
                   <span class="n">{String(i + 1).padStart(2, '0')}</span>
                   <h4 class="mt-2 text-base">{f.title}</h4>
@@ -120,11 +108,11 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
                 </li>
               ))}
             </ol>
-            {beneficiaries.length > 0 && (
+            {mission.beneficiaries.length > 0 && (
               <div class="fade-x mt-6 flex flex-col items-center justify-center gap-x-6 gap-y-3 bg-tint px-10 py-4 md:flex-row">
-                <strong class="font-heading text-ink">{benefLabel}</strong>
+                <strong class="font-heading text-ink">{mission.beneficiariesLabel}</strong>
                 <ul class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-semibold text-primary-dark">
-                  {beneficiaries.map((b) => <li class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-primary"></span>{b}</li>)}
+                  {mission.beneficiaries.map((b) => <li class="flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-primary"></span>{b}</li>)}
                 </ul>
               </div>
             )}
@@ -139,9 +127,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 03. EVENT HIGHLIGHTS: video promo -->
   <section class="section photo-bg on-dark" id="video" style={`background-image:url(${eventBackdrop.url})`}>
     <div class="container-x">
-      <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(home.videoTitle)} />
-      </div>
+      <SectionHeading title={home.videoTitle} />
       <div class="mx-auto max-w-4xl">
         <VideoEmbed youtubeId={home.videoId} />
       </div>
@@ -151,9 +137,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi (rute di section berikutnya) -->
   <section class="section bg-fade" id="race">
     <div class="container-x">
-      <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(home.raceTitle)} />
-      </div>
+      <SectionHeading title={home.raceTitle} />
 
       <div class="grid gap-8 md:grid-cols-3 md:gap-0">
         <div class="fact" id="jadwal-ringkas">
@@ -169,7 +153,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <div class="fact" id="kategori">
           <span class="step-icon mx-auto mb-2"><Icon name="route" size={20} /></span>
           <p class="fact-value">{categories.map((c) => c.name).join(' & ')}</p>
-          <p class="fact-sub">{categories.map((c) => `${c.name} ${price(c.detail)}`).join(' · ')}</p>
+          <p class="fact-sub">{categories.map((c) => `${c.name} ${priceOf(c.detail)}`).join(' · ')}</p>
         </div>
       </div>
 
@@ -187,7 +171,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
           )
         }
         <div class="grid gap-4">
-          {venuePhotos.map((v) => <div class="photo-matte"><img src={v.url} alt={v.alt ?? ''} width={v.width ?? 1400} height={v.height ?? 800} class="photo-frame-wide" loading="lazy" decoding="async" /></div>)}
+          {venuePhotos.map((v) => <MatteImage image={v} wide />)}
         </div>
       </div>
     </div>
@@ -196,10 +180,9 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 04b. RUTE: section sendiri (dipisah dari Race Information atas permintaan) -->
   <section class="section bg-pattern" id="rute">
     <div class="container-x">
-      <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(home.routeTitle)} />
+      <SectionHeading title={home.routeTitle}>
         {raceInfo.routeDetail && <div class="entry mt-1 text-sm" set:html={md(raceInfo.routeDetail)} />}
-      </div>
+      </SectionHeading>
       <RouteTabs items={categories} />
       {raceInfo.routeMapUrl && <p class="mt-10 text-center"><a class="btn btn-blue" href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
     </div>
@@ -208,62 +191,58 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 05. PRIZES & RACEPACK: hadiah (proposal hal. 13) dan perlengkapan peserta (hal. 10 dan 20), satu section -->
   <section class="section bg-fade" id="hadiah">
     <div class="container-x">
-      <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(home.prizesTitle)} />
-      </div>
+      <SectionHeading title={home.prizesTitle} />
 
       <h3 class="divider-label mb-6 text-xl">{ui.prizesSub}</h3>
       <Prizes prizes={prizes} />
 
       <div class="panel mt-12">
-      <h3 id="racepack" class="divider-label mb-6 scroll-mt-24 text-xl">{ui.racepackSub}</h3>
-      <div class="grid items-stretch gap-8 lg:grid-cols-[1.15fr_1fr]">
-        <div class="photo-matte lg:h-full"><img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} class="lg:h-full lg:object-cover" loading="lazy" decoding="async" /></div>
-        <div class="grid grid-cols-2 gap-x-5 gap-y-4">
-          {
-            gear.map((g, i) => (
-              <div>
-                <div class="spot p-1"><Photo image={g.image} alt={g.title} width={420} ratio="16/10" fit="contain" class="silhouette p-1" /></div>
-                <p class="mt-1 flex items-baseline gap-2 font-heading font-bold leading-tight text-ink"><span class="font-display text-lg text-primary">{String(i + 1).padStart(2, '0')}</span>{g.title}</p>
-                <p class="text-sm leading-snug">{g.description}</p>
-              </div>
-            ))
-          }
+        <h3 id="racepack" class="divider-label mb-6 scroll-mt-24 text-xl">{ui.racepackSub}</h3>
+        <div class="grid items-stretch gap-8 lg:grid-cols-[1.15fr_1fr]">
+          <MatteImage image={racepackPhoto} fill />
+          <div class="grid grid-cols-2 gap-x-5 gap-y-4">
+            {
+              gear.map((g, i) => (
+                <div>
+                  <div class="spot p-1"><Photo image={g.image} alt={g.title} width={420} ratio="16/10" fit="contain" class="silhouette p-1" /></div>
+                  <p class="num-title mt-1"><span class="n">{String(i + 1).padStart(2, '0')}</span>{g.title}</p>
+                  <p class="text-sm leading-snug">{g.description}</p>
+                </div>
+              ))
+            }
+          </div>
         </div>
-      </div>
-      {
-        supplies.length > 0 && (
-          <ul class="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-5">
-            {supplies.map((it, i) => (
-              <li>
-                <p class="flex items-baseline gap-2 font-heading font-bold leading-tight text-ink"><span class="font-display text-lg text-primary">{String(gear.length + i + 1).padStart(2, '0')}</span>{it.title}</p>
-                <p class="pb-2 text-sm leading-snug">{it.description}</p>
-              </li>
-            ))}
-          </ul>
-        )
-      }
-      </div>
+        {
+          supplies.length > 0 && (
+            <ul class="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-5">
+              {supplies.map((it, i) => (
+                <li>
+                  <p class="num-title"><span class="n">{String(gear.length + i + 1).padStart(2, '0')}</span>{it.title}</p>
+                  <p class="pb-2 text-sm leading-snug">{it.description}</p>
+                </li>
+              ))}
+            </ul>
+          )
+        }
+        </div>
     </div>
   </section>
 
   <!-- 06. HOW TO JOIN: pendaftaran dan race pack collection -->
   <section class="section bg-dark-glow on-dark" id="daftar">
     <div class="container-x">
-      <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(home.joinTitle)} />
-      </div>
+      <SectionHeading title={home.joinTitle} />
       <ol class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {
           joinSteps.map((st) => {
-            const m = st.description.match(/^\*\*(.+?)\*\*\s*([\s\S]*)$/);
+            const { lead, body } = splitLead(st.description);
             return (
               <li class:list={['tl-item', st.title === 'Race Day' && 'is-now']}>
-                {m && <p class="tl-date">{m[1]}</p>}
+                {lead && <p class="tl-date">{lead}</p>}
                 <div class="tl-track"><span class="tl-dot"></span></div>
                 <div class="card-dark tl-card">
                   <h3>{st.title}</h3>
-                  <div class="entry mt-2 text-sm" set:html={md(m ? m[2] : st.description)} />
+                  <div class="entry mt-2 text-sm" set:html={md(body)} />
                 </div>
               </li>
             );
@@ -280,9 +259,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 07a. FAQ -->
   <section class="section section-flush-b bg-fade" id="faq">
     <div class="container-x max-w-3xl">
-      <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(about.faqTitle)} />
-      </div>
+      <SectionHeading title={about.faqTitle} />
       {
         faqs.map((f) => (
           <details class="faq">
@@ -297,9 +274,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 07b. CONTACT (proposal hal. 27) -->
   <section class="section section-flush-t bg-pattern" id="kontak">
     <div class="container-x max-w-3xl">
-      <div class="section-heading">
-        <h2 class="rich rich-accent" set:html={rich(ui.contactTitle)} />
-      </div>
+      <SectionHeading title={ui.contactTitle} />
       <ContactList contact={contact} />
     </div>
   </section>
