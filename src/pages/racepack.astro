@@ -14,79 +14,131 @@ const { home } = await getHome();
 const { page, info, steps, items } = await getRacepack();
 const contacts = await getContacts();
 
-// Susun kartu info agar baris selalu penuh (3 per baris; sisa 2 atau 1 dilebarkan)
-const rest = info.length % 3;
-const spanFor = (i: number) => (i < info.length - rest ? 'lg:col-span-2' : rest === 2 ? 'lg:col-span-3' : rest === 1 ? 'lg:col-span-6' : 'lg:col-span-2');
+// Kelompokkan informasi pengambilan secara logis (Jadwal & Lokasi vs Syarat Dokumen)
+const scheduleInfo = info.filter((item) => ['calendar', 'clock', 'pin'].includes(item.icon ?? ''));
+const documentInfo = info.filter((item) => !['calendar', 'clock', 'pin'].includes(item.icon ?? ''));
 ---
 
 <Base title="Racepack" description={page.metaDescription}>
   <PageBanner crumb="Racepack" title={page.title} tagline={page.slogan} subtitle="" image={page.bannerImage} />
 
-  <!-- Informasi pengambilan -->
   <div class="dark-flow on-dark">
-  <section class="section on-dark" id="info">
-    <div class="container-x">
-      <h2 class="sr-only">{ui.racepackInfoHeading}</h2>
-      <div class="section-heading">
-        <p>{page.intro}</p>
+    <!-- 01. Alur Pengambilan (3 Langkah Visual - Simetris 3 Kolom) -->
+    <section class="section on-dark" id="langkah">
+      <div class="container-x">
+        <div class="section-heading">
+          <span class="eyebrow">Panduan Peserta</span>
+          <h2 class="rich rich-accent" set:html={rich(page.stepsTitle)} />
+          <p class="text-dark-ink">{page.intro}</p>
+        </div>
+
+        <ol class="grid gap-6 md:grid-cols-3">
+          {
+            steps.map((s, i) => (
+              <li class="card-dark relative p-8">
+                <span class="num absolute right-6 top-6 text-5xl">{String(i + 1).padStart(2, '0')}</span>
+                <span class="icon-chip icon-chip-lg"><Icon name={s.icon ?? 'star'} size={28} /></span>
+                <h3 class="mt-6 text-lg font-bold">{s.title}</h3>
+                <p class="mt-2 text-sm text-dark-ink">{s.description}</p>
+              </li>
+            ))
+          }
+        </ol>
       </div>
-      <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-        {
-          info.map((i, idx) => (
-            <li class:list={['card card-accent flex gap-4 p-6', spanFor(idx)]}>
-              <span class="icon-chip"><Icon name={i.icon ?? 'info'} size={22} /></span>
-              <div>
-                <h3 class="text-base">{i.title}</h3>
-                <div class="entry mt-1 text-sm text-dark-ink" set:html={md(i.content)} />
+    </section>
+
+    <!-- 02. Ketentuan & Detail Pengambilan (Layout 2 Kolom Seimbang, Bukan Bento) -->
+    <section class="section on-dark pt-0" id="ketentuan">
+      <div class="container-x">
+        <div class="section-heading mb-8">
+          <span class="eyebrow">Informasi Penting</span>
+          <h2 class="rich rich-accent">{ui.racepackInfoHeading}</h2>
+        </div>
+
+        <div class="grid gap-6 lg:grid-cols-2">
+          {/* Kolom 1: Jadwal & Lokasi */}
+          <div class="card-dark p-8">
+            <div class="mb-6 flex items-center gap-3 border-b border-card-line pb-4">
+              <span class="icon-chip"><Icon name="calendar" size={20} /></span>
+              <h3 class="text-lg font-bold">Waktu & Lokasi Pengambilan</h3>
+            </div>
+            <ul class="space-y-6">
+              {
+                scheduleInfo.map((item) => (
+                  <li class="flex items-start gap-4">
+                    <span class="mt-0.5 text-accent"><Icon name={item.icon ?? 'pin'} size={20} /></span>
+                    <div>
+                      <h4 class="font-heading text-sm font-bold uppercase tracking-wide text-white">{item.title}</h4>
+                      <div class="entry mt-1 text-sm text-dark-ink" set:html={md(item.content)} />
+                    </div>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          {/* Kolom 2: Dokumen & Mekanisme Pengambilan */}
+          <div class="card-dark flex flex-col justify-between p-8">
+            <div>
+              <div class="mb-6 flex items-center gap-3 border-b border-card-line pb-4">
+                <span class="icon-chip"><Icon name="id" size={20} /></span>
+                <h3 class="text-lg font-bold">Dokumen & Kuasa Pengambilan</h3>
               </div>
-            </li>
-          ))
-        }
-        <li class="card card-accent p-6 sm:col-span-2 lg:col-span-6">
-          <h3 class="text-base">{ui.contactHeading}</h3>
-          <div class="mt-4"><ContactList contacts={contacts} columns /></div>
-        </li>
-      </ul>
-      {
-        page.proxyFileUrl && (
-          <p class="mt-8 text-center"><a class="btn btn-primary" href={page.proxyFileUrl} download><Icon name="download" size={16} /> {page.proxyFileLabel}</a></p>
-        )
-      }
-    </div>
-  </section>
+              <ul class="space-y-6">
+                {
+                  documentInfo.map((item) => (
+                    <li class="flex items-start gap-4">
+                      <span class="mt-0.5 text-accent"><Icon name={item.icon ?? 'people'} size={20} /></span>
+                      <div>
+                        <h4 class="font-heading text-sm font-bold uppercase tracking-wide text-white">{item.title}</h4>
+                        <div class="entry mt-1 text-sm text-dark-ink" set:html={md(item.content)} />
+                      </div>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
 
-  <!-- Tiga langkah visual -->
-  <section class="section on-dark" id="langkah">
-    <div class="container-x">
-      <div class="section-heading">
-        <h2 class="rich rich-accent font-light" set:html={rich(page.stepsTitle)} />
+            {
+              page.proxyFileUrl && (
+                <div class="mt-8 border-t border-card-line pt-6">
+                  <a class="btn btn-outline" href={page.proxyFileUrl} download>
+                    <Icon name="download" size={16} /> {page.proxyFileLabel}
+                  </a>
+                </div>
+              )
+            }
+          </div>
+        </div>
+
+        {/* Panel Kontak Narahubung Panitia */}
+        <div class="card-dark mt-6 p-6 sm:p-8">
+          <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h3 class="font-heading text-base font-bold text-white">{ui.contactHeading}</h3>
+              <p class="mt-1 text-sm text-dark-ink">Pertanyaan terkait jadwal atau bantuan pengambilan paket lomba?</p>
+            </div>
+            <div class="flex-1 lg:max-w-xl">
+              <ContactList contacts={contacts} columns />
+            </div>
+          </div>
+        </div>
       </div>
-      <ol class="grid gap-5 md:grid-cols-3">
-        {
-          steps.map((s, i) => (
-            <li class="card-dark card-accent relative p-8">
-              <span class="num absolute right-6 top-6 text-5xl">{String(i + 1).padStart(2, '0')}</span>
-              <span class="icon-chip icon-chip-lg"><Icon name={s.icon ?? 'star'} size={28} /></span>
-              <h3 class="mt-6 text-lg">{s.title}</h3>
-              <p class="mt-2 text-sm text-white/70">{s.description}</p>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
+    </section>
 
-  <!-- Isi race pack -->
-  <section class="section on-dark" id="isi">
-    <div class="container-x">
-      <div class="section-heading">
-        <h2 class="rich rich-accent font-light" set:html={rich(page.itemsTitle)} />
-        <p>{page.itemsText}</p>
+    <!-- 03. Paket Perlengkapan Peserta (Race Pack Viewer) -->
+    <section class="section on-dark" id="isi">
+      <div class="container-x">
+        <div class="section-heading">
+          <span class="eyebrow">Exclusive Runner Gear</span>
+          <h2 class="rich rich-accent" set:html={rich(page.itemsTitle)} />
+          <p class="text-dark-ink">{page.itemsText}</p>
+        </div>
+        <RacepackViewer items={items} fallbackImage={home.racepackImage} />
       </div>
-      <RacepackViewer items={items} fallbackImage={home.racepackImage} />
-    </div>
-  </section>
+    </section>
 
-  <Newsletter action={site.newsletterAction} />
+    <!-- 04. Newsletter -->
+    <Newsletter action={site.newsletterAction} />
   </div>
 </Base>
