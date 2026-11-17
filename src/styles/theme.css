@@ -266,34 +266,58 @@
             mask-image: linear-gradient(90deg, transparent, #000 70%);
   }
 
-  /* Hero poster. Mobile/tablet: KV utuh di bawah header, lalu band teks.
-     Desktop (>=1024px): pas satu layar, KV mengisi sisa tinggi di bawah ruang nav dan memudar dari atas. */
-  .hero-poster { position: relative; overflow: hidden; color: var(--t-on-dark); background: var(--t-dark); padding-top: var(--t-header-h); }
+  /* Hero poster.
+     Mobile/tablet: KV utuh di bawah header, memudar ke band teks solid di bawahnya.
+     Desktop landscape (>=1024px, rasio >=4:3): satu layar penuh; KV utuh di tengah dengan padding, band countdown menimpa bagian bawah. */
+  .hero-poster {
+    --hero-band: color-mix(in srgb, var(--t-dark) 75%, transparent); /* latar band di desktop */
+    --hero-fade-y: 6%;  /* pudar atas KV: sampai posisi ini */
+    --hero-fade-end: 90%; /* pudar bawah KV: mulai dari posisi ini (QR poster ada di ~78-86%, jangan redup) */
+    --hero-fade-l: 3%;  /* pudar kiri tipis: QR poster dekat tepi kiri */
+    --hero-fade-x: 8%;  /* pudar kanan */
+    position: relative; overflow: hidden; color: var(--t-on-dark); background: var(--t-dark); padding-top: var(--t-header-h);
+  }
+  .hero-poster .stripe-band { margin-top: 0; }
+
+  /* KV: tepi memudar ke warna latar lewat mask (tengah tetap tajam) */
   .hero-poster-media { position: relative; }
-  .hero-poster-media img { display: block; width: 100%; height: auto; }
-  /* Atas KV memudar ke warna latar hero (ruang setinggi nav di atas KV berwarna latar, lalu KV muncul dari pudar) */
-  .hero-poster-media::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 42%; z-index: 1; pointer-events: none; background: linear-gradient(180deg, var(--t-dark), color-mix(in srgb, var(--t-dark) 45%, transparent) 50%, transparent); }
+  .hero-poster-media img {
+    display: block; width: 100%; height: auto;
+    --fade: linear-gradient(180deg, transparent, black var(--hero-fade-y), black var(--hero-fade-end), transparent),
+            linear-gradient(90deg, transparent, black var(--hero-fade-l), black calc(100% - var(--hero-fade-x)), transparent);
+    -webkit-mask-image: var(--fade); mask-image: var(--fade);
+    -webkit-mask-composite: source-in; mask-composite: intersect;
+  }
+
+  /* Band: lokasi + tanggal + tombol + countdown (+ sponsor) */
   .hero-band { position: relative; padding-bottom: 12px; background: var(--t-dark); }
-  .hero-band::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: 120px; pointer-events: none; background: linear-gradient(180deg, transparent, var(--t-dark)); }
-  @media (max-width: 1023px) {
-    .hero-band::before { height: 90px; }
+  .hero-band::before { content: none; }
+  .hero-eyebrow { font: italic 500 clamp(15px, 2vw, 22px) var(--t-font-tag); letter-spacing: .04em; }
+  .hero-meta { text-shadow: 0 1px 3px color-mix(in srgb, var(--t-darker) 80%, transparent); }
+  .nav-cta { white-space: nowrap; flex: none; }
+
+  /* Layout ringkas (KV setinggi aslinya): semua kecuali layar lebar yang landscape */
+  @media not all and (min-width: 1024px) and (min-aspect-ratio: 4/3) {
+    .hero-poster { --hero-fade-y: 14%; }
     .hero-band p { overflow-wrap: anywhere; }
     .hero-band .count-num { font-size: 34px; }
-    .hero-poster [data-countdown] { padding-block: 0 4px; }
     .hero-band [data-countdown] > * { gap: 10px; }
+    .hero-poster [data-countdown] { padding-block: 0 4px; }
   }
-  @media (max-width: 639px) { .hero-band .container-x > * , .hero-band .container-x > * > * { min-width: 0; max-width: 100%; } .hero-band p { white-space: normal; } }
-  .nav-cta { white-space: nowrap; flex: none; }
-  .hero-poster .stripe-band { margin-top: 0; }
-  .hero-eyebrow { font: italic 500 clamp(15px, 2vw, 22px) var(--t-font-tag); letter-spacing: .04em; }
-  @media (min-width: 1024px) {
-    .hero-poster { height: 100svh; min-height: 560px; display: flex; flex-direction: column; }
-    .hero-poster-media { flex: 1 1 0; min-height: 0; overflow: hidden; }
-    .hero-poster-media img { height: 100%; object-fit: cover; object-position: center 30%; }
-    .hero-band { position: absolute; left: 0; right: 0; bottom: 0; padding-bottom: 8px; background: color-mix(in srgb, var(--t-dark) 75%, transparent); }
-    .hero-band::before { height: 110px; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--t-dark) 75%, transparent)); }
-    .hero-band .container-x { padding-block: 8px; }
-    .hero-poster-media::before { height: 96px; }
+  @media (max-width: 639px) {
+    .hero-band .container-x > *, .hero-band .container-x > * > * { min-width: 0; max-width: 100%; }
+    .hero-band p { white-space: normal; }
+  }
+
+  /* Layout satu layar: hanya layar lebar landscape, supaya KV tidak mengambang di layar tinggi */
+  @media (min-width: 1024px) and (min-aspect-ratio: 4/3) {
+    .hero-poster { --hero-fade-y: 4%; --hero-fade-end: 95%; height: 100svh; min-height: 560px; display: flex; flex-direction: column; }
+    .hero-poster-media { flex: 1 1 0; min-height: 0; overflow: hidden; padding: 12px 24px 150px; } /* 150px = ruang band */
+    .hero-poster-media img { height: 100%; width: auto; max-width: 100%; margin-inline: auto; object-fit: contain; }
+
+    .hero-band { position: absolute; inset: auto 0 0 0; padding-block: 20px 24px; background: var(--hero-band); }
+    .hero-band::before { content: ""; position: absolute; inset: auto 0 100% 0; height: 110px; pointer-events: none; background: linear-gradient(180deg, transparent, var(--hero-band)); }
+    .hero-band .container-x { padding-block: 0; }
     .hero-poster [data-countdown] { padding: 0; }
     .hero-poster [data-countdown] > .container-x { padding-inline: 0; }
     .hero-poster .count-num { font-size: clamp(40px, 4.2vw, 64px); }

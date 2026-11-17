@@ -52,8 +52,8 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <div class="container-x flex flex-col gap-5 py-3 lg:flex-row lg:items-center lg:justify-between">
           <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
             <div>
-              <h1 class="hero-eyebrow">{site.heroHeadline}</h1>
-              <p class="mt-1 font-heading text-sm font-bold">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
+              <h1 class="hero-eyebrow lg:sr-only">{site.heroHeadline}</h1>
+              <p class="hero-meta mt-1 font-heading text-sm font-bold lg:mt-0 lg:text-base">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
             </div>
             {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
           </div>
