@@ -142,7 +142,7 @@ Urutan baru, memakai ulang komponen yang ada:
 4. **Event Highlights**: komponen baru `VideoEmbed.astro` (thumbnail klik lalu iframe, tanpa autoplay, ~20 baris). Bila URL video kosong, section memakai KV sebagai poster dan tulisan "Segera Hadir" (sudah ada `ui.comingSoon`).
 5. **Race Information**: `Tabs.astro` dengan 4 tab: Kategori (5K, 10K), Jadwal, Lokasi, Rute.
 6. **Prizes & Racepack**: `RacepackViewer.astro` dengan 4 item (Jersey, Finisher Medal, BIB, Tas Serut) dan gambar dari aset. Hadiah kategori ditambahkan sebagai teks di panel kiri.
-7. **How to Join**: `Steps` (pendaftaran lalu race pack collection) + tombol "Daftar Sekarang" + tautan ke `/racepack`.
+7. **How to Join**: `Steps` (pendaftaran lalu race pack collection) + tombol "Daftar" + tautan ke `/racepack`.
 8. **FAQ & Contact**: `<details class="faq">` + tombol kontak (sudah ada di `tentang.astro`).
 9. Newsletter (komponen yang ada) tetap di bawah sebelum footer.
 
@@ -533,7 +533,7 @@ Temuan teknis:
 - [x] /racepack dirapikan: info dan persiapan digabung jadi satu section, latar memakai pasangan gradient Home (.bg-fade, .bg-pattern, .bg-fade), jarak 5 antar kartu, lebar kontak sejajar Home.
 - [x] `.fact-sub` digelapkan (token ink 85 persen), kontras di atas 6:1.
 - [x] logo-light.webp dan logo-dark.webp diperkecil ke 640px (187 KB menjadi 44 KB dan 111 KB menjadi 33 KB); atribut width/height di Base.astro disesuaikan.
-- [ ] Tombol "Daftar Sekarang" (header, hero, How to Join) menuju `#` sampai URL pendaftaran ada.
+- [ ] Tombol "Daftar" (header, hero, How to Join) menuju `#` sampai URL pendaftaran ada.
 - [ ] Video Event Highlights memakai ID dummy YouTube.
 
 Menunggu klien: lihat bagian 14, 17, 18 dan daftar `- [ ]` di atas (nama event, jam flag off, venue, seluruh/sebagian/100%, FAQ, penampil TBC, daftar racepack, izin foto/merek, nomor pribadi, URL registrasi, video, sponsor, sosmed, isi halaman Racepack).

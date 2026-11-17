@@ -22,6 +22,7 @@ export const nav = [
 ] as const;
 
 export const ui = {
+  navRegister: 'Daftar',
   watchVideo: 'Putar video',
   videoTitle: 'Video promo ANSORUN',
   howToJoinCta: 'Race Pack Collection',

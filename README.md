@@ -82,7 +82,7 @@ Foto contoh dari Unsplash (di `src/lib/fallback.ts`) muncul bila field gambar Da
 - **Foto:** foto contoh Unsplash (di `src/lib/fallback.ts`) muncul bila field gambar di Dato kosong. Ganti dengan foto asli.
 - **Sponsor:** belum ada sponsor resmi, bagian sponsor di hero tersembunyi sampai `sponsors` di `src/lib/fallback.ts` (atau DatoCMS) terisi.
 - **Video:** Event Highlights memakai ID YouTube dummy (`home.videoId`).
-- **URL registrasi:** tombol "Daftar Sekarang" masih menuju `#` (`site.registrationUrl`).
+- **URL registrasi:** tombol "Daftar" masih menuju `#` (`site.registrationUrl`).
 
 ## Struktur
 

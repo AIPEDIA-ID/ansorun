@@ -82,7 +82,7 @@ npm run check   # fails on any raw colour outside the tokens, then runs the buil
 - **Photos:** sample photos from Unsplash (in `src/lib/fallback.ts`) appear whenever an image field in Dato is empty. Replace them with real photos.
 - **Sponsors:** no official sponsors yet; the hero sponsor row stays hidden until `sponsors` in `src/lib/fallback.ts` (or DatoCMS) is filled.
 - **Video:** Event Highlights uses a dummy YouTube ID (`home.videoId`).
-- **Registration URL:** the "Daftar Sekarang" button still points to `#` (`site.registrationUrl`).
+- **Registration URL:** the "Daftar" button still points to `#` (`site.registrationUrl`).
 
 ## Structure
 

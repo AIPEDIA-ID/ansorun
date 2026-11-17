@@ -58,7 +58,7 @@ export const site: SiteSettings = {
   primaryColor: null,
   accentColor: null,
   registrationUrl: '#', // TODO(data): URL registrasi asli (isi QR di KV)
-  registrationLabel: 'Daftar Sekarang',
+  registrationLabel: 'Daftar',
   countdownTitle: '',
   countdownText: '',
   instagramTitle: 'Ikuti kami di **Instagram**', // tidak dipakai di Beranda baru
