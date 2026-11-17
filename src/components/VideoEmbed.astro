@@ -1,9 +1,9 @@
 ---
-import { ui } from '../config';
+import { ui, withBase } from '../config';
 import Icon from './Icon.astro';
 
 interface Props { youtubeId: string; poster?: string; title?: string }
-const { youtubeId, poster = '/brand/kv.webp', title = ui.videoTitle } = Astro.props;
+const { youtubeId, poster = withBase('/brand/kv.webp'), title = ui.videoTitle } = Astro.props;
 ---
 
 <!-- Klik untuk memuat iframe (tanpa autoplay saat load, tidak ada request YouTube sebelum diklik) -->
