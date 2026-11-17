@@ -268,9 +268,8 @@
 
   /* Hero poster.
      Mobile/tablet: KV utuh di bawah header, memudar ke band teks solid di bawahnya.
-     Desktop landscape (>=1024px, rasio >=4:3): satu layar penuh; KV utuh di tengah dengan padding, band countdown menimpa bagian bawah. */
+     Desktop landscape (>=1024px, rasio >=4:3): satu layar penuh; KV utuh mengisi sisa tinggi, band countdown di bawahnya (tidak menimpa KV, supaya QR/teks poster jelas). */
   .hero-poster {
-    --hero-band: color-mix(in srgb, var(--t-dark) 75%, transparent); /* latar band di desktop */
     --hero-fade-y: 6%;  /* pudar atas KV: sampai posisi ini */
     --hero-fade-end: 90%; /* pudar bawah KV: mulai dari posisi ini (QR poster ada di ~78-86%, jangan redup) */
     --hero-fade-l: 3%;  /* pudar kiri tipis: QR poster dekat tepi kiri */
@@ -311,12 +310,11 @@
 
   /* Layout satu layar: hanya layar lebar landscape, supaya KV tidak mengambang di layar tinggi */
   @media (min-width: 1024px) and (min-aspect-ratio: 4/3) {
-    .hero-poster { --hero-fade-y: 4%; --hero-fade-end: 95%; height: 100svh; min-height: 560px; display: flex; flex-direction: column; }
-    .hero-poster-media { flex: 1 1 0; min-height: 0; overflow: hidden; padding: 12px 24px 150px; } /* 150px = ruang band */
-    .hero-poster-media img { height: 100%; width: auto; max-width: 100%; margin-inline: auto; object-fit: contain; }
+    .hero-poster { --hero-fade-y: 4%; --hero-fade-end: 92%; height: 100svh; min-height: 560px; display: flex; flex-direction: column; }
+    .hero-poster-media { flex: 1 1 0; min-height: 0; overflow: hidden; display: grid; grid-template-rows: minmax(0, 1fr) auto; padding: 12px 24px 0; }
+    .hero-poster-media img { height: 100%; width: auto; max-width: 100%; justify-self: center; object-fit: contain; }
 
-    .hero-band { position: absolute; inset: auto 0 0 0; padding-block: 20px 24px; background: var(--hero-band); }
-    .hero-band::before { content: ""; position: absolute; inset: auto 0 100% 0; height: 110px; pointer-events: none; background: linear-gradient(180deg, transparent, var(--hero-band)); }
+    .hero-band { padding-block: 8px 24px; }
     .hero-band .container-x { padding-block: 0; }
     .hero-poster [data-countdown] { padding: 0; }
     .hero-poster [data-countdown] > .container-x { padding-inline: 0; }
