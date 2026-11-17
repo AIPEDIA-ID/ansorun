@@ -3,7 +3,7 @@ import '../styles/theme.css';
 import { getSiteData } from '../lib/content';
 import { img } from '../lib/datocms';
 import { plain } from '../lib/text';
-import { fonts, fontFaceCss, nav, ui } from '../config';
+import { fonts, fontFaceCss, nav, ui, withBase } from '../config';
 import Icon from '../components/Icon.astro';
 
 interface Props { title?: string; description?: string }
@@ -17,7 +17,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // OG image harus alamat absolut dan format yang dibaca semua pembagi tautan (jpg/png).
 // Gambar dari CMS dipakai bila ada; selain itu og.jpg 1200x630 dari public/brand.
-const ogImage = site.heroImage?.url.startsWith('http') ? img(site.heroImage.url, 1200) : new URL('/brand/og.jpg', Astro.site).href;
+const ogImage = site.heroImage?.url.startsWith('http') ? img(site.heroImage.url, 1200) : new URL(withBase('/brand/og.jpg'), Astro.site).href;
 
 // Structured data Event (Google rich result) — hanya di Beranda
 const eventLd = {
@@ -66,9 +66,9 @@ const socials = ([
     <title>{pageTitle}</title>
     <meta name="description" content={metaDesc} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href={withBase('/favicon.ico')} sizes="48x48" />
+    <link rel="icon" href={withBase('/favicon-32.png')} type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href={fonts.href} rel="stylesheet" />
@@ -83,7 +83,7 @@ const socials = ([
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={metaDesc} />
     {ogImage && <meta name="twitter:image" content={ogImage} />}
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
     {path === '/' && <script type="application/ld+json" set:html={JSON.stringify(eventLd)} />}
     {<style set:html={`${fontFaceCss}:root{${overrides}}`} />}
   </head>
@@ -91,14 +91,14 @@ const socials = ([
     <!-- Header: transparan di atas hero, kaca terang setelah scroll -->
     <header class="header" data-header>
       <div class="container-x flex items-center justify-between gap-x-6" style="min-height:var(--t-header-h)">
-        <a href="/" class="site-title" aria-label={plain(site.eventName)}>
+        <a href={withBase('/')} class="site-title" aria-label={plain(site.eventName)}>
           {
             site.logo ? (
               <img src={img(site.logo.url, 400)} alt={plain(site.eventName)} class="logo-cms h-11 w-auto" />
             ) : (
               <>
-                <img src="/brand/logo-light.webp" alt={plain(site.eventName)} width="640" height="176" class="logo-on-clear w-auto" />
-                <img src="/brand/logo-dark.webp" alt="" width="640" height="176" class="logo-on-solid w-auto" />
+                <img src={withBase('/brand/logo-light.webp')} alt={plain(site.eventName)} width="640" height="176" class="logo-on-clear w-auto" />
+                <img src={withBase('/brand/logo-dark.webp')} alt="" width="640" height="176" class="logo-on-solid w-auto" />
               </>
             )
           }
@@ -120,7 +120,7 @@ const socials = ([
     <footer class="site-footer">
       <div class="container-x grid gap-12 py-16 lg:grid-cols-[1.3fr_2fr]">
         <div>
-          <img src="/brand/logo-light.webp" alt={plain(site.eventName)} width="640" height="176" class="h-16 w-auto" loading="lazy" />
+          <img src={withBase('/brand/logo-light.webp')} alt={plain(site.eventName)} width="640" height="176" class="h-16 w-auto" loading="lazy" />
           <p class="mt-3 max-w-xs">{site.tagline}</p>
           <p class="mt-1">{site.categories}</p>
           <p class="mt-3 flex items-center gap-2"><Icon name="pin" size={16} /> {site.location}</p>

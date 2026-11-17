@@ -13,7 +13,7 @@ import { getSiteData, getAbout, getHome, getContact, formatDate } from '../lib/c
 import { img } from '../lib/datocms';
 import { md, rich } from '../lib/text';
 import { parseRundown, parseMission, priceOf, splitLead } from '../lib/parse';
-import { ui } from '../config';
+import { ui, withBase } from '../config';
 import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback'; // TODO: pindah ke CMS bila klien ingin mengganti foto sendiri
 
 const { site, sponsors } = await getSiteData();
@@ -251,7 +251,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
       </ol>
       <p class="mt-10 flex flex-wrap justify-center gap-3">
         {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
-        <a class="btn btn-outline" href="/racepack">{ui.howToJoinCta}</a>
+        <a class="btn btn-outline" href={withBase('/racepack')}>{ui.howToJoinCta}</a>
       </p>
     </div>
   </section>

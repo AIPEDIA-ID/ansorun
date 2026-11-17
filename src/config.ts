@@ -5,12 +5,20 @@
 export const LOCALE = 'id-ID';
 export const TIMEZONE = 'Asia/Jakarta';
 
+/** Base path dari Astro (misal "/event-lari" untuk GitHub Pages, atau "" untuk root). */
+export const base = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
+export const withBase = (path: string): string => {
+  if (!path.startsWith('/')) return path;
+  if (path === '/') return base ? `${base}/` : '/';
+  return base ? `${base}${path}` : path;
+};
+
 // Galeri sengaja tidak ada di nav (halaman /galeri tetap ada, belum ditampilkan).
 export const nav = [
-  { href: '/', label: 'Beranda' },
-  { href: '/#tentang', label: 'Tentang' },
-  { href: '/#race', label: 'Race Info' },
-  { href: '/racepack', label: 'Racepack' },
+  { href: withBase('/'), label: 'Beranda' },
+  { href: withBase('/#tentang'), label: 'Tentang' },
+  { href: withBase('/#race'), label: 'Race Info' },
+  { href: withBase('/racepack'), label: 'Racepack' },
 ] as const;
 
 export const ui = {
@@ -59,5 +67,5 @@ export const fonts = {
 
 /** @font-face untuk font klien. Rentang weight 100–900 agar browser tidak membuat faux-bold. */
 export const fontFaceCss = fonts.faces
-  .map((f) => `@font-face{font-family:"${f.family}";src:url(/fonts/${f.file}) format("woff2");font-style:${f.style};font-weight:100 900;font-display:swap}`)
+  .map((f) => `@font-face{font-family:"${f.family}";src:url(${withBase(`/fonts/${f.file}`)}) format("woff2");font-style:${f.style};font-weight:100 900;font-display:swap}`)
   .join('');

@@ -1,6 +1,7 @@
 ---
 import { getSiteData } from '../lib/content';
 import { rich } from '../lib/text';
+import { withBase } from '../config';
 
 interface Props { crumb: string; title?: string; tagline?: string; image?: string }
 const { crumb, title, tagline, image } = Astro.props;
@@ -12,7 +13,7 @@ const right = tagline ?? site.tagline;
   <div class="stripe-stack" aria-hidden="true"></div>
   <div class="container-x relative">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Beranda</a> <span class="mx-2 opacity-60">&rsaquo;</span> <span class="current">{crumb}</span>
+      <a href={withBase('/')}>Beranda</a> <span class="mx-2 opacity-60">&rsaquo;</span> <span class="current">{crumb}</span>
     </nav>
     <div class="mt-16 flex flex-wrap items-end justify-between gap-6">
       <h1 class="rich" set:html={rich(title ?? site.bannerTitle)} />

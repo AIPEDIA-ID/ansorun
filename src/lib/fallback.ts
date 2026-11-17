@@ -6,12 +6,12 @@ import type {
   AboutPage, ContactInfo, Faq, FooterLink, GalleryPhoto, HomePage, Img, Prize,
   RaceCategory, RaceInfo, RacepackItem, RacepackPage, SiteSettings, Sponsor, Step,
 } from './types';
-
+import { withBase } from '../config';
 
 // Foto contoh dari Unsplash (hanya dipakai bila field gambar di DatoCMS kosong).
 const un = (id: string, alt: string) => ({ url: `https://images.unsplash.com/photo-${id}`, alt, width: null, height: null });
 // Aset resmi ANSORUN (hasil olahan dari .docs/assets_bank) — file ada di public/brand/
-const brand = (file: string, alt: string, width: number, height: number): Img => ({ url: `/brand/${file}`, alt, width, height });
+const brand = (file: string, alt: string, width: number, height: number): Img => ({ url: withBase(`/brand/${file}`), alt, width, height });
 
 // Foto dari proposal (hal. 6, 7, 20, 21, 23), diekstrak ke public/brand. TODO: belum ada model CMS, ganti lewat kode.
 export const venuePhotos: Img[] = [
@@ -81,14 +81,14 @@ export const site: SiteSettings = {
 export const sponsors: Sponsor[] = [];
 
 export const footerLinks: FooterLink[] = [
-  { group: 'Event', label: 'About ANSORUN', url: '/#tentang' },
-  { group: 'Event', label: 'Race Information', url: '/#race' },
-  { group: 'Event', label: 'Prizes', url: '/#hadiah' },
-  { group: 'Event', label: 'Racepack', url: '/#racepack' },
-  { group: 'Peserta', label: 'How to Join', url: '/#daftar' },
-  { group: 'Peserta', label: 'Racepack Collection', url: '/racepack' },
-  { group: 'Peserta', label: 'FAQ', url: '/#faq' },
-  { group: 'Peserta', label: 'Kontak', url: '/#kontak' },
+  { group: 'Event', label: 'About ANSORUN', url: withBase('/#tentang') },
+  { group: 'Event', label: 'Race Information', url: withBase('/#race') },
+  { group: 'Event', label: 'Prizes', url: withBase('/#hadiah') },
+  { group: 'Event', label: 'Racepack', url: withBase('/#racepack') },
+  { group: 'Peserta', label: 'How to Join', url: withBase('/#daftar') },
+  { group: 'Peserta', label: 'Racepack Collection', url: withBase('/racepack') },
+  { group: 'Peserta', label: 'FAQ', url: withBase('/#faq') },
+  { group: 'Peserta', label: 'Kontak', url: withBase('/#kontak') },
 ];
 
 /* =====================================================================
@@ -190,7 +190,7 @@ export const racepackItems: RacepackItem[] = [
 // Sumber: proposal hal. 4, 5, 19
 export const joinSteps: Step[] = [
   { title: 'Pendaftaran', description: '**Des 2026**\n\nLaunching & registrasi. Pendaftaran online dibuka, kampanye digital.', icon: 'file' }, // TODO(data): URL registrasi
-  { title: 'Race Pack Collection', description: '**Jan 2027**\n\nPengambilan racepack menjelang race day. Lihat halaman [Racepack](/racepack).', icon: 'bag' },
+  { title: 'Race Pack Collection', description: `**Jan 2027**\n\nPengambilan racepack menjelang race day. Lihat halaman [Racepack](${withBase('/racepack')}).`, icon: 'bag' },
   { title: 'Race Day', description: '**31 Jan 2027**\n\nLari 5K/10K, konser, undian Grand Prize.', icon: 'route' }, // proposal hal. 19, ditambahkan atas permintaan (dokumen hanya menyebut 2 langkah)
   { title: 'Berbagi Takjil', description: '**Ramadhan 1448 H**\n\nPenyaluran takjil.', icon: 'check' }, // hal. 19: "Penyaluran takjil & laporan ke sponsor", bagian sponsor sengaja tidak ditulis
 ];
@@ -202,7 +202,7 @@ export const faqs: Faq[] = [
   { question: 'Kategori apa saja dan berapa biayanya?', answer: 'Tersedia **5K** (Rp150.000) dan **10K** (Rp200.000), kategori umum, sudah termasuk racepack lengkap.' },
   { question: 'Ke mana hasil pendaftaran disalurkan?', answer: 'Hasil pendaftaran dikonversi menjadi paket takjil buka puasa untuk anak yatim piatu, lansia di panti jompo, dan masyarakat kurang mampu.' },
   { question: 'Apakah acara ini terbuka untuk semua agama?', answer: 'Ya. Acara ini terbuka untuk semua kalangan lintas agama.' },
-  { question: 'Bagaimana cara mengambil racepack?', answer: 'Lihat halaman [Racepack](/racepack) untuk informasi pengambilan.' },
+  { question: 'Bagaimana cara mengambil racepack?', answer: `Lihat halaman [Racepack](${withBase('/racepack')}) untuk informasi pengambilan.` },
 ];
 
 // Kontak dari proposal hal. 27. CATATAN: nomor mungkin pribadi, klien meminta tetap dipasang

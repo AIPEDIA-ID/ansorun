@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageBanner from '../components/PageBanner.astro';
+import { withBase } from '../config';
 ---
 
 <Base title="Halaman tidak ditemukan" description="Halaman yang Anda cari tidak ditemukan.">
@@ -10,8 +11,8 @@ import PageBanner from '../components/PageBanner.astro';
     <div class="container-x max-w-2xl text-center">
       <p class="text-xl">Alamat yang Anda buka tidak ada atau sudah dipindahkan.</p>
       <p class="mt-8 flex flex-wrap justify-center gap-3">
-        <a class="btn" href="/">Kembali ke Beranda</a>
-        <a class="btn btn-blue" href="/racepack">Racepack</a>
+        <a class="btn" href={withBase('/')}>Kembali ke Beranda</a>
+        <a class="btn btn-blue" href={withBase('/racepack')}>Racepack</a>
       </p>
     </div>
   </section>
