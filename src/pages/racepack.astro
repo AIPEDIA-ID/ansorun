@@ -1,20 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageBanner from '../components/PageBanner.astro';
-import Steps from '../components/Steps.astro';
 import Icon from '../components/Icon.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import MatteImage from '../components/MatteImage.astro';
 import ContactList from '../components/ContactList.astro';
-import { getRacepack, getContact } from '../lib/content';
+import { getRacepack, getHome, getContact } from '../lib/content';
 import { md } from '../lib/text';
 import { ui } from '../config';
 import { racepackPhoto } from '../lib/fallback';
 
 const { page, steps } = await getRacepack();
 const contact = await getContact();
+const { items } = await getHome();
 
 // Kartu informasi pengambilan: tanggal, jam, lokasi
+// Emoji penanda item (pola digiland); item di luar daftar ini memakai 🎁
+const emoji: Record<string, string> = {
+  'Kaos Lari': '👕', Medali: '🏅', 'Nomor Dada': '🎽', 'Tas Serut': '🎒', 'Air Minum': '💧',
+  Roti: '🍞', Multivitamin: '💊', 'Kartu E-Money': '💳', 'Kalender Puasa': '📅',
+};
+
 const info = [
   { icon: 'calendar', title: 'Tanggal pengambilan', text: page.date },
   { icon: 'clock', title: 'Jam operasional', text: page.hours },
@@ -25,31 +31,56 @@ const info = [
 <Base title="Racepack" description={page.metaDescription}>
   <PageBanner crumb="Racepack" title={page.bannerTitle} tagline="" image={page.heroImage?.url} />
 
-  <!-- 1. Headline + tiga langkah visual -->
+  <!-- 1. Racepack Collection (pola digiland.co.id/run): judul, info pengambilan, daftar item + panel preview -->
   <section class="section bg-fade" id="langkah">
     <div class="container-x">
       <SectionHeading title={page.title} />
-      <Steps steps={steps} dark />
+      <div class="panel mt-10" data-picker>
+        <div class="mb-6 border-b border-line pb-4">
+          <h2 class="text-xl">{page.venue}</h2>
+          <p class="mt-1 text-sm">{page.date}</p>
+          <p class:list={['text-sm', page.hours === ui.tbd && 'tbd']}>{page.hours}</p>
+        </div>
+        <div class="grid items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_1.4fr]">
+          <div class="pick-list" role="tablist" aria-label={ui.racepackSub}>
+            <button type="button" class="pick-item" role="tab" aria-selected="true" data-src={racepackPhoto.url} data-alt={racepackPhoto.alt ?? ''}>
+              <strong><span class="pick-emoji" aria-hidden="true">🎁</span>{ui.racepackSub}</strong>
+            </button>
+            {
+              items.map((it) => (
+                <button type="button" class="pick-item" role="tab" aria-selected="false" data-src={(it.image ?? racepackPhoto).url} data-alt={(it.image ?? racepackPhoto).alt ?? it.title}>
+                  <strong><span class="pick-emoji" aria-hidden="true">{emoji[it.title] ?? '🎁'}</span>{it.title}</strong>
+                  <span class:list={[it.description === ui.tbd && 'tbd']}>{it.description}</span>
+                </button>
+              ))
+            }
+          </div>
+          <div class="photo-matte pick-preview">
+            <img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} data-preview />
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- 2. Detail pengambilan: tanggal, jam, lokasi, dokumen, pengambilan diwakilkan -->
+  <!-- 2. Cara pengambilan: 3 langkah + dokumen + pengambilan diwakilkan, satu grid (pola digiland) -->
   <section class="section bg-pattern" id="info">
     <div class="container-x">
-      <div class="grid gap-5 md:grid-cols-3">
+      <SectionHeading title="CARA **PENGAMBILAN**" />
+      <p class="-mt-4 mb-8 text-center text-sm">{page.venue} · {page.date}</p>
+      <ol class="grid gap-6 lg:grid-cols-6 on-dark">
         {
-          info.map((c) => (
-            <div class="info-card">
-              <span class="step-icon"><Icon name={c.icon} size={22} /></span>
-              <div>
-                <h3>{c.title}</h3>
-                <p class:list={['mt-1 text-sm', c.text === ui.tbd && 'tbd']}>{c.text}</p>
-              </div>
-            </div>
+          steps.map((s, i) => (
+            <li class="card-dark relative p-7 lg:col-span-2">
+              <span class="step-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="step-icon"><Icon name={s.icon ?? 'star'} size={26} /></span>
+              <h3 class="mt-5 text-lg">{s.title}</h3>
+              <div class="entry mt-2 text-sm" set:html={md(s.description)} />
+            </li>
           ))
         }
-      </div>
-      <div class="mt-5 grid gap-5 md:grid-cols-2" id="persiapan">
+      </ol>
+      <div class="mt-6 grid gap-6 md:grid-cols-2" id="persiapan">
         <div class="info-card">
           <span class="step-icon"><Icon name="id" size={22} /></span>
           <div>
@@ -73,19 +104,25 @@ const info = [
     </div>
   </section>
 
-  <!-- 3. Isi racepack (proposal hal. 20) -->
-  <section class="section bg-fade" id="isi">
-    <div class="container-x max-w-4xl">
-      <h2 class="divider-label mb-6 text-xl">{ui.racepackSub}</h2>
-      <MatteImage image={racepackPhoto} />
-    </div>
-  </section>
-
   <!-- 4. Informasi kontak panitia (proposal hal. 27) -->
-  <section class="section bg-pattern" id="kontak">
+  <section class="section bg-fade" id="kontak">
     <div class="container-x max-w-3xl">
       <SectionHeading title="KONTAK **PANITIA**" />
       <ContactList contact={contact} />
     </div>
   </section>
 </Base>
+
+<script>
+  // Daftar item: klik mengganti foto preview (tanpa perpustakaan)
+  document.querySelectorAll<HTMLElement>('[data-picker]').forEach((root) => {
+    const img = root.querySelector<HTMLImageElement>('[data-preview]');
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.pick-item')];
+    tabs.forEach((t) =>
+      t.addEventListener('click', () => {
+        tabs.forEach((x) => x.setAttribute('aria-selected', String(x === t)));
+        if (img) { img.src = t.dataset.src ?? img.src; img.alt = t.dataset.alt ?? ''; }
+      }),
+    );
+  });
+</script>

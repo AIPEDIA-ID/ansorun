@@ -4,8 +4,6 @@ const token = import.meta.env.DATOCMS_API_TOKEN as string | undefined;
 const environment = import.meta.env.DATOCMS_ENVIRONMENT as string | undefined;
 const drafts = import.meta.env.DATOCMS_DRAFTS === 'true';
 
-export const hasDato = Boolean(token);
-
 let warned = false;
 
 /**

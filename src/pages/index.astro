@@ -148,7 +148,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <div class="fact" id="lokasi">
           <span class="step-icon mx-auto mb-2"><Icon name="pin" size={20} /></span>
           <p class="fact-value">{raceInfo.locationName}</p>
-          <p class="fact-sub">{raceInfo.locationAddress}{raceInfo.locationMapUrl && <> · <a href={raceInfo.locationMapUrl} rel="noopener" target="_blank">{ui.openMap}</a></>}</p>
+          <p class="fact-sub">{raceInfo.locationAddress}{raceInfo.locationMapUrl && <> · <a class="inline-block py-2" href={raceInfo.locationMapUrl} rel="noopener" target="_blank">{ui.openMap}</a></>}</p>
         </div>
         <div class="fact" id="kategori">
           <span class="step-icon mx-auto mb-2"><Icon name="route" size={20} /></span>

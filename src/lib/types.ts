@@ -86,11 +86,6 @@ export interface Step {
   icon: string | null; // nama ikon di components/Icon.astro
 }
 
-export interface InfoTab {
-  title: string;
-  content: string; // markdown
-}
-
 /** Section 04: Race Information (kategori, jadwal, lokasi, rute) */
 export interface RaceCategory {
   name: string; // mis. "5K"

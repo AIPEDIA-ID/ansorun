@@ -38,7 +38,7 @@ export const ui = {
  *  - `href`    : link Google Fonts (hanya font body)
  *  - `faces`   : font klien yang di-host sendiri di /public/fonts (dibuat jadi @font-face)
  *  - `heading` / `body` / `tag` / `display` : font-family per peran
- *      heading = Neospeed (judul, label) | body = Open Sans (paragraf)
+ *      heading = Neospeed (judul, label) | body = Carlito (paragraf, padanan Calibri di PDF)
  *      tag = Osaca Medium Italic (tagline, eyebrow) | display = Golf Italic (judul besar, angka; hanya ukuran besar)
  */
 export const fonts = {
@@ -51,7 +51,7 @@ export const fonts = {
     { family: 'Osaca', file: 'osaca-medium-italic.woff2', style: 'normal' },
     { family: 'Osaca', file: 'osaca-medium-italic.woff2', style: 'italic' },
   ],
-  heading: '"Neospeed", "Montserrat", "Helvetica Neue", Arial, sans-serif',
+  heading: '"Neospeed", "Helvetica Neue", Arial, sans-serif',
   body: '"Carlito", "Calibri", Arial, sans-serif', // Carlito = padanan gratis Calibri (font isi di PDF proposal)
   tag: '"Osaca", "Carlito", Arial, sans-serif',
   display: '"Golf", "Neospeed", Arial, sans-serif',

@@ -22,7 +22,7 @@ const { contact } = Astro.props;
             {contact.people.map((p) => (
               <tr class="border-b border-line">
                 <td class="px-2.5 py-3 sm:px-4 font-bold text-ink">{p.name}</td>
-                <td class="px-2.5 py-3 sm:px-4 whitespace-nowrap"><a href={`tel:${p.phone.replace(/\D/g, '')}`}>{fmtPhone(p.phone)}</a></td>
+                <td class="px-2.5 py-3 sm:px-4 whitespace-nowrap"><a class="inline-block py-2" href={`tel:${p.phone.replace(/\D/g, '')}`}>{fmtPhone(p.phone)}</a></td>
                 <td class="px-2.5 py-3 sm:px-4 text-right"><a class="btn btn-blue btn-sm !px-3" href={waLink(p.phone)} rel="noopener" target="_blank" aria-label={`WhatsApp ${p.name}`}>Chat</a></td>
               </tr>
             ))}
@@ -35,7 +35,7 @@ const { contact } = Astro.props;
   {
     (contact.website || contact.email) && (
       <p class="mt-5 flex flex-wrap justify-center gap-x-8 gap-y-1 text-sm font-semibold">
-        {contact.website && <a href={contact.website} rel="noopener" target="_blank">{contact.website.replace(/^https?:\/\//, '')}</a>}
+        {contact.website && <a class="inline-block py-2" href={contact.website} rel="noopener" target="_blank">{contact.website.replace(/^https?:\/\//, '')}</a>}
         {contact.email && <a href={`mailto:${contact.email}`}>{contact.email}</a>}
       </p>
     )
