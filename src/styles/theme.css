@@ -265,20 +265,20 @@
   }
 
   /* Hero poster. Mobile/tablet: KV utuh di bawah header, lalu band teks.
-     Desktop (>=1024px): pas satu layar, KV mengisi sisa tinggi di belakang nav transparan. */
+     Desktop (>=1024px): pas satu layar, KV mengisi sisa tinggi di bawah ruang nav dan memudar dari atas. */
   .hero-poster { position: relative; overflow: hidden; color: var(--t-on-dark); background: var(--t-dark); padding-top: var(--t-header-h); }
   .hero-poster-media { position: relative; }
   .hero-poster-media img { display: block; width: 100%; height: auto; }
-  /* Atas KV memudar ke warna latar hero (mobile/tablet: menyatu dengan bar nav di atasnya; desktop: scrim tipis agar nav terbaca) */
+  /* Atas KV memudar ke warna latar hero (ruang setinggi nav di atas KV berwarna latar, lalu KV muncul dari pudar) */
   .hero-poster-media::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 42%; z-index: 1; pointer-events: none; background: linear-gradient(180deg, var(--t-dark), color-mix(in srgb, var(--t-dark) 45%, transparent) 50%, transparent); }
   .hero-poster-media::after { content: ""; position: absolute; inset: auto 0 0 0; height: 38%; pointer-events: none; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--t-dark) 55%, transparent) 55%, var(--t-dark)); }   /* bawah KV memudar ke band teks */
   .hero-poster .stripe-band { margin-top: 0; }
   .hero-eyebrow { font: italic 500 clamp(15px, 2vw, 22px) var(--t-font-tag); letter-spacing: .04em; }
   @media (min-width: 1024px) {
-    .hero-poster { height: 100svh; min-height: 600px; display: flex; flex-direction: column; padding-top: 0; }
+    .hero-poster { height: 100svh; min-height: 600px; display: flex; flex-direction: column; }
     .hero-poster-media { flex: 1 1 0; min-height: 0; }
     .hero-poster-media img { height: 100%; object-fit: cover; object-position: center 32%; }
-    .hero-poster-media::before { height: 120px; background: linear-gradient(180deg, color-mix(in srgb, var(--t-darker) 70%, transparent), transparent); }
+    .hero-poster-media::before { height: 96px; }
     .hero-poster [data-countdown] { padding: 0; }
     .hero-poster [data-countdown] > .container-x { padding-inline: 0; }
     .hero-poster .count-num { font-size: clamp(40px, 4.2vw, 64px); }
