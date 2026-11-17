@@ -5,7 +5,7 @@
 export const LOCALE = 'id-ID';
 export const TIMEZONE = 'Asia/Jakarta';
 
-/** Base path dari Astro (misal "/event-lari" untuk GitHub Pages, atau "" untuk root). */
+/** Base path dari Astro (misal "/asorun" untuk GitHub Pages, atau "" untuk root). */
 export const base = (import.meta.env.BASE_URL ?? '/').replace(/\/$/, '');
 export const withBase = (path: string): string => {
   if (!path.startsWith('/')) return path;

@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   // URL deployment: default ke GitHub Pages repo ini
   site: process.env.SITE_URL ?? 'https://aipedia-id.github.io',
-  base: process.env.BASE_PATH ?? (process.env.GITHUB_ACTIONS && !process.env.CUSTOM_DOMAIN ? '/event-lari' : '/'),
+  base: process.env.BASE_PATH ?? (process.env.GITHUB_ACTIONS && !process.env.CUSTOM_DOMAIN ? '/asorun' : '/'),
   integrations: [sitemap()],
   devToolbar: {
     enabled: false,
