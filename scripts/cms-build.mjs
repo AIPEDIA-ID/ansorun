@@ -25,9 +25,9 @@
 import { parse } from 'parse5';
 import { createHash } from 'node:crypto';
 import { execSync } from 'node:child_process';
-import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
-import { SITE_URL } from './cms-config.mjs';
+import { ADMIN_PATH, SITE_URL } from './cms-config.mjs';
 
 const ROOT = process.cwd();
 const TMP = join(ROOT, '.cms-dist');
@@ -289,6 +289,8 @@ function main() {
 
   console.log('4/4 salin kode PHP…');
   if (existsSync(SRC)) cpSync(SRC, OUT, { recursive: true });
+  // folder admin dipasang di alamat rahasia (ADMIN_PATH), bukan /admin
+  renameSync(join(pubDir, 'admin'), join(pubDir, ADMIN_PATH));
 
   rmSync(TMP, { recursive: true, force: true });
   const n = Object.keys(fields).length;

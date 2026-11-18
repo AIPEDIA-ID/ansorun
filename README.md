@@ -20,11 +20,11 @@ npm run cms:parity   # tes: hasil PHP sama dengan Astro
 ## Deploy ke cPanel
 
 1. `npm run cms` → `cpanel/dist/ansorun-<versi>.zip`
-2. File Manager: unggah zip ke `/home/ansz8897/`, **Extract**. Selesai: situs tayang, `/admin` bisa login.
+2. File Manager: unggah zip ke `/home/ansz8897/`, **Extract**. Selesai: situs tayang, halaman admin di `https://ansorun.com/nimda-pw/`.
 
-Akun admin ikut di dalam zip (dari `cpanel/local/config.php`, di luar git). Buat/ganti akun: `php cpanel/src/cms/bin/make-config.php <username>`, lalu `npm run cms` lagi.
+Alamat admin diatur di `scripts/cms-config.mjs` (`ADMIN_PATH`). Akun admin ikut di dalam zip (dari `cpanel/local/config.php`, di luar git). Buat/ganti akun: `php cpanel/src/cms/bin/make-config.php <username>`, lalu `npm run cms` lagi.
 
-Setelah update, buka `/admin` sekali agar suntingan klien diterapkan lagi ke halaman baru. Zip tidak menimpa `content/` dan `uploads/`.
+Setelah update, buka `/nimda-pw/` sekali agar suntingan klien diterapkan lagi ke halaman baru. Zip tidak menimpa `content/` dan `uploads/`.
 
 Cek dulu bahwa `public_html` tidak punya `index.html`/`index.php` bawaan hosting yang masih dipakai. Cek hosting (PHP 8.0+): unggah `cpanel/tools/probe.php` ke `public_html`, buka, lalu hapus.
 
