@@ -1,0 +1,96 @@
+---
+/**
+ * Hero Beranda. Gaya ada di theme.css bagian 5.4 ("Hero").
+ *
+ * Susunan: KV polos (latar) + logo judul + tanggal/QR, lalu band info (lokasi, tombol, countdown, sponsor).
+ * Mengganti gambar:
+ *   - latar KV   : field CMS heroImage (fallback: public/brand/kv-polos.webp)
+ *   - logo judul : public/brand/hero-logo.webp (transparan + bayangan; judul <h1>)
+ *   - tanggal/QR : public/brand/hero-date.webp, hero-qr.webp (lihat HeroExtra.astro)
+ * Bila KV diganti dengan komposisi lain, sesuaikan variabel --kv-* di theme.css.
+ */
+import Countdown from './Countdown.astro';
+import HeroExtra from './HeroExtra.astro';
+import { formatDate } from '../lib/content';
+import { img } from '../lib/datocms';
+import { plain } from '../lib/text';
+import { withBase } from '../config';
+import type { SiteSettings, Sponsor } from '../lib/types';
+
+interface Props {
+  site: SiteSettings;
+  sponsors: Map<string, Sponsor[]>; // dikelompokkan per peran ("Powered by", ...)
+}
+const { site, sponsors } = Astro.props;
+---
+
+<section class="hero-poster on-dark">
+  <div class="hero-poster-media">
+    <div class="hero-kv">
+      <div class="hero-stage">
+        {
+          site.heroImage && (
+            <img
+              class="hero-kv-img"
+              src={img(site.heroImage.url, 2000)}
+              alt={site.heroImage.alt ?? ''}
+              width={site.heroImage.width ?? 1921}
+              height={site.heroImage.height ?? 1082}
+              fetchpriority="high"
+              decoding="async"
+            />
+          )
+        }
+        <h1 class="hero-logo">
+          <img
+            src={withBase('/brand/hero-logo.webp')}
+            alt={`${plain(site.eventName)}: ${site.heroEyebrow}. ${site.heroHeadline}`}
+            width="1562"
+            height="531"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </h1>
+      </div>
+    </div>
+
+    <div class="hero-band">
+      <!-- Layout ringkas: tanggal + QR melayang di atas band -->
+      <div class="hero-extra container-x"><HeroExtra url={site.registrationUrl} label={site.registrationLabel} /></div>
+
+      <div class="hero-main container-x">
+        <div class="hero-info">
+          <p class="hero-meta font-heading text-sm font-bold lg:text-base">
+            {site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}
+          </p>
+          {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
+        </div>
+        <div class="hero-count"><Countdown target={site.eventDate} embedded /></div>
+      </div>
+
+      {
+        sponsors.size > 0 && (
+          <div class="container-x flex flex-wrap items-end gap-x-10 gap-y-4 pb-3">
+            {[...sponsors].map(([role, list]) => (
+              <div>
+                <div class="mb-1.5 text-[10px] font-semibold uppercase tracking-[.2em] text-white/60">{role}</div>
+                <div class="flex items-center gap-4">
+                  {list.map((s) => {
+                    const inner = s.logo
+                      ? <img src={img(s.logo.url, 240)} alt={s.name} class="h-8 w-auto" loading="lazy" />
+                      : <span class="font-heading text-sm font-bold">{s.name}</span>;
+                    return s.url ? <a href={s.url} rel="noopener" target="_blank">{inner}</a> : inner;
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <!-- Layout satu layar: tanggal + QR di atas band, diposisikan pada kanvas KV -->
+    <div class="hero-over"><div class="hero-stage"><HeroExtra url={site.registrationUrl} label={site.registrationLabel} /></div></div>
+  </div>
+  <div class="stripe-band" aria-hidden="true"></div>
+</section>

@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import Countdown from '../components/Countdown.astro';
+import Hero from '../components/Hero.astro';
 import Photo from '../components/Photo.astro';
 import VideoEmbed from '../components/VideoEmbed.astro';
 import Icon from '../components/Icon.astro';
@@ -9,9 +9,8 @@ import MatteImage from '../components/MatteImage.astro';
 import RouteTabs from '../components/RouteTabs.astro';
 import Prizes from '../components/Prizes.astro';
 import ContactList from '../components/ContactList.astro';
-import { getSiteData, getAbout, getHome, getContact, formatDate } from '../lib/content';
-import { img } from '../lib/datocms';
-import { md, rich, plain } from '../lib/text';
+import { getSiteData, getAbout, getHome, getContact } from '../lib/content';
+import { md, rich } from '../lib/text';
 import { parseRundown, parseMission, priceOf, splitLead } from '../lib/parse';
 import { ui, withBase } from '../config';
 import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback'; // TODO: pindah ke CMS bila klien ingin mengganti foto sendiri
@@ -33,65 +32,8 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
 ---
 
 <Base description={home.metaDescription}>
-  <!-- 01. HOME / HERO: KV, headline, countdown, CTA -->
-  <section class="hero-poster on-dark">
-    <div class="hero-poster-media">
-      <div class="hero-kv">
-        {
-          site.heroImage && (
-            <img
-              class="hero-kv-img"
-              src={img(site.heroImage.url, 2000)}
-              alt={site.heroImage.alt ?? ''}
-              width={site.heroImage.width ?? 1921}
-              height={site.heroImage.height ?? 1082}
-              fetchpriority="high"
-              decoding="async"
-            />
-          )
-        }
-        <h1 class="hero-logo">
-          <img
-            src={withBase('/brand/hero-logo.webp')}
-            alt={`${plain(site.eventName)}: ${site.heroEyebrow}. ${site.heroHeadline}`}
-            width="1562"
-            height="531"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </h1>
-      </div>
-      <div class="hero-band">
-        <div class="container-x flex flex-col gap-5 py-3 lg:flex-row lg:items-center lg:justify-between">
-          <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
-            <p class="hero-meta font-heading text-sm font-bold lg:text-base">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
-            {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
-          </div>
-          <div class="lg:w-[46%]"><Countdown target={site.eventDate} embedded /></div>
-        </div>
-        {
-          groups.size > 0 && (
-            <div class="container-x flex flex-wrap items-end gap-x-10 gap-y-4 pb-3">
-              {[...groups].map(([role, list]) => (
-                <div>
-                  <div class="mb-1.5 text-[10px] font-semibold uppercase tracking-[.2em] text-white/60">{role}</div>
-                  <div class="flex items-center gap-4">
-                    {list.map((s) => {
-                      const inner = s.logo
-                        ? <img src={img(s.logo.url, 240)} alt={s.name} class="h-8 w-auto" loading="lazy" />
-                        : <span class="font-heading text-sm font-bold">{s.name}</span>;
-                      return s.url ? <a href={s.url} rel="noopener" target="_blank">{inner}</a> : inner;
-                    })}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )
-        }
-      </div>
-    </div>
-    <div class="stripe-band" aria-hidden="true"></div>
-  </section>
+  <!-- 01. HOME / HERO: KV, logo judul, countdown, CTA -->
+  <Hero site={site} sponsors={groups} />
 
   <!-- 02. ABOUT ANSORUN: tentang event dan misi sosial -->
   <section class="section bg-fade" id="tentang">

@@ -266,64 +266,110 @@
             mask-image: linear-gradient(90deg, transparent, #000 70%);
   }
 
-  /* Hero: KV polos (full-bleed, di belakang header transparan) + logo judul di atasnya + band info.
-     Aset: public/brand/kv-polos.webp (latar) dan hero-logo.webp (judul, transparan + bayangan).
-     Layout ringkas (mobile, tablet, layar tinggi): KV berbingkai rasio tetap, band solid di bawahnya.
-     Layout satu layar (>=1024px dan landscape): KV mengisi satu layar, band menimpa bagian bawah KV dengan latar 75%. */
+  /* ---- Hero (markup: components/Hero.astro) --------------------------------------------------
+     Dua layout, satu markup:
+       RINGKAS      default (mobile, tablet, layar tinggi/kotak): KV berbingkai, tanggal+QR melayang
+                    di kiri bawah KV, band info di bawahnya. Tinggi minimal satu layar.
+       SATU LAYAR   >=1024px dan rasio >=16:10: KV memenuhi layar (cover), logo/tanggal/QR ditempatkan
+                    pada kanvas 16:9 sesuai komposisi KV resmi, band menimpa bagian bawah (75%).
+     Mengganti KV/logo: sesuaikan variabel --kv-* di bawah (persen terhadap KV 1921x1082). */
   .hero-poster {
-    --hero-band: color-mix(in srgb, var(--t-dark) 75%, transparent); /* latar band di layout satu layar */
+    --kv-aspect: 1.7753;                                           /* lebar/tinggi KV */
+    --kv-anchor-y: 35%;                                            /* bagian KV yang dipertahankan saat di-crop */
+    --kv-logo-x: 9.73%; --kv-logo-y: 6.65%; --kv-logo-w: 81.3%;    /* logo judul */
+    --kv-date-x: 5.02%; --kv-date-y: 67.5%; --kv-date-w: 12.6%;    /* tanggal 31/01/27 5K-10K */
+    --kv-qr-x: 5.05%;   --kv-qr-y: 77.2%;   --kv-qr-w: 12%;        /* QR + "Online Registration" */
+    --hero-band: color-mix(in srgb, var(--t-dark) 75%, transparent); /* latar band, layout satu layar */
+    --hero-pad-x: max(20px, calc((100% - var(--t-container)) / 2 + 20px)); /* tepi kiri kontainer */
+
     position: relative; overflow: hidden; color: var(--t-on-dark); background: var(--t-dark);
-    padding-top: var(--t-header-h); /* ruang hijau di atas KV, setara band di bawahnya */
+    padding-top: var(--t-header-h); /* ruang hijau di bawah header, di atas KV */
   }
   .hero-poster .stripe-band { margin-top: 0; }
   .hero-poster-media { position: relative; }
 
+  /* KV + logo judul */
   .hero-kv { position: relative; aspect-ratio: 5 / 6; overflow: hidden; }
-  .hero-kv::before { /* pudar atas: KV muncul dari ruang hijau di bawah header */
-    content: ""; position: absolute; inset: 0 0 auto 0; height: 14%; z-index: 1; pointer-events: none;
-    background: linear-gradient(180deg, var(--t-dark), transparent);
-  }
-  .hero-kv::after { /* pudar bawah ke warna band (hanya layout ringkas) */
-    content: ""; position: absolute; inset: auto 0 0 0; height: 28%; pointer-events: none;
-    background: linear-gradient(180deg, transparent, var(--t-dark));
-  }
+  .hero-stage { display: contents; } /* jadi kanvas 16:9 di layout satu layar */
   .hero-kv-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 100%; }
-  .hero-logo { position: absolute; left: 50%; top: 3%; z-index: 2; width: min(80%, 420px); transform: translateX(-50%); margin: 0; }
+  .hero-logo { position: absolute; left: 50%; top: 3%; z-index: 2; width: min(80%, 420px); margin: 0; transform: translateX(-50%); }
   .hero-logo img { display: block; width: 100%; height: auto; }
+  .hero-kv::before, .hero-kv::after { /* pudar ke warna latar: atas (dari header) dan bawah (ke band) */
+    content: ""; position: absolute; left: 0; right: 0; z-index: 1; pointer-events: none;
+  }
+  .hero-kv::before { top: 0; height: 14%; background: linear-gradient(180deg, var(--t-dark), transparent); }
+  .hero-kv::after { bottom: 0; height: 28%; background: linear-gradient(180deg, transparent, var(--t-dark)); }
 
-  .hero-band { position: relative; padding-bottom: 12px; background: var(--t-dark); }
+  /* Tanggal + QR (HeroExtra.astro) */
+  .hero-over { display: none; }
+  .hero-extra { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .x-date { display: block; height: auto; filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--t-darker) 55%, transparent)); }
+  .x-qr, .x-qr img { display: block; width: 100%; height: auto; }
+
+  /* Band info */
+  .hero-band { position: relative; padding: 4px 0 12px; background: var(--t-dark); }
+  .hero-main { padding-block: 8px 0; }
+  .hero-info { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
   .hero-meta { text-shadow: 0 1px 3px color-mix(in srgb, var(--t-darker) 80%, transparent); }
+  .hero-band p { overflow-wrap: anywhere; }
+  .hero-band .count-num { font-size: 34px; }
+  .hero-poster [data-countdown] { padding-block: 0 4px; }
+  .hero-poster [data-countdown] > .container-x { padding-inline: 0; }
   .nav-cta { white-space: nowrap; flex: none; }
 
-  @media (min-width: 640px) {
-    .hero-kv { aspect-ratio: 16 / 10; }
-    .hero-kv-img { object-position: 50% 80%; }
-    .hero-logo { width: min(62%, 620px); }
+  /* Ringkas: tinggi minimal satu layar, KV mengisi sisa tinggi di atas band */
+  .hero-poster { min-height: 100svh; display: flex; flex-direction: column; }
+  .hero-poster-media { flex: 1 1 auto; display: flex; flex-direction: column; }
+  .hero-kv { flex: 1 1 auto; aspect-ratio: auto; min-height: 300px; }
+  .hero-band > .hero-extra { /* melayang di kiri bawah KV, tepat di atas teks band */
+    position: absolute; left: var(--hero-pad-x); bottom: 100%; z-index: 3;
+    width: min(34vw, 190px); margin: 0 0 8px; padding: 0;
   }
-  @media not all and (min-width: 1024px) and (min-aspect-ratio: 4/3) {
-    .hero-band p { overflow-wrap: anywhere; }
-    .hero-band .count-num { font-size: 34px; }
-    .hero-band [data-countdown] > * { gap: 10px; }
-    .hero-poster [data-countdown] { padding-block: 0 4px; }
-  }
+  .hero-extra .x-date { width: 88%; }
+
   @media (max-width: 639px) {
     .hero-band .container-x > *, .hero-band .container-x > * > * { min-width: 0; max-width: 100%; }
     .hero-band p { white-space: normal; }
   }
+  @media (min-width: 640px) {
+    .hero-kv-img { object-position: 50% 80%; }
+    .hero-logo { width: min(62%, 620px); }
+  }
+  @media (min-width: 900px) { /* info kiri, countdown kanan */
+    .hero-main { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .hero-count { width: 46%; }
+  }
 
-  @media (min-width: 1024px) and (min-aspect-ratio: 4/3) {
-    .hero-poster { height: 100svh; min-height: 560px; display: flex; flex-direction: column; }
+  /* Satu layar */
+  @media (min-width: 1024px) and (min-aspect-ratio: 8/5) {
+    .hero-poster { height: 100svh; min-height: 560px; }
     .hero-poster-media { flex: 1 1 0; min-height: 0; }
-    .hero-kv { position: absolute; inset: 0; aspect-ratio: auto; }
+
+    /* Kanvas 16:9 seukuran KV (cover). Elemen diposisikan dengan persen terhadap kanvas, jadi ikut skala/crop KV. */
+    .hero-kv, .hero-over { position: absolute; inset: 0; display: block; aspect-ratio: auto; min-height: 0; overflow: hidden; container-type: size; }
     .hero-kv::after { display: none; }
-    .hero-kv-img { object-position: 50% 35%; }
-    .hero-logo { top: 2%; width: min(60%, 96svh); }
+    .hero-over { z-index: 3; pointer-events: none; }
+    .hero-stage {
+      display: block; position: absolute; left: 50%; top: var(--kv-anchor-y);
+      width: max(100cqw, calc(var(--kv-aspect) * 100cqh)); aspect-ratio: var(--kv-aspect);
+      transform: translate(-50%, calc(var(--kv-anchor-y) * -1));
+    }
+    .hero-kv-img { object-fit: fill; }
+    .hero-logo { left: var(--kv-logo-x); top: var(--kv-logo-y); width: var(--kv-logo-w); transform: none; }
+    .hero-over .x-date { position: absolute; left: var(--kv-date-x); top: var(--kv-date-y); width: var(--kv-date-w); }
+    .hero-over .x-qr { position: absolute; left: var(--kv-qr-x); top: var(--kv-qr-y); width: var(--kv-qr-w); pointer-events: auto; }
+    .hero-extra { display: none; }
 
     .hero-band { position: absolute; inset: auto 0 0 0; padding-block: 20px 24px; background: var(--hero-band); }
-    .hero-band::before { content: ""; position: absolute; inset: auto 0 100% 0; height: 110px; pointer-events: none; background: linear-gradient(180deg, transparent, var(--hero-band)); }
-    .hero-band .container-x { padding-block: 0; }
+    .hero-band::before { /* pudar atas band ke KV */
+      content: ""; position: absolute; inset: auto 0 100% 0; height: 110px; pointer-events: none;
+      background: linear-gradient(180deg, transparent, var(--hero-band));
+    }
+    /* isi band digeser ke kanan supaya tidak menabrak tanggal/QR di kiri */
+    .hero-band > .container-x { max-width: none; width: calc(100% - 19vw - clamp(16px, 3vw, 56px)); margin: 0 auto 0 19vw; padding: 0; }
+    .hero-main { padding-block: 0; }
+    .hero-info { gap: 16px 32px; }
     .hero-poster [data-countdown] { padding: 0; }
-    .hero-poster [data-countdown] > .container-x { padding-inline: 0; }
     .hero-poster .count-num { font-size: clamp(40px, 4.2vw, 64px); }
     .hero-poster .count-label { margin-top: 2px; font-size: 11px; }
   }
