@@ -1,6 +1,6 @@
 /**
  * Konfigurasi statis & teks UI yang BUKAN konten CMS.
- * Teks yang sering diubah klien (judul, tanggal, FAQ, dll.) ada di DatoCMS.
+ * Teks yang sering diubah klien (judul, tanggal, FAQ, dll.) ada di src/lib/fallback.ts.
  */
 export const LOCALE = 'id-ID';
 export const TIMEZONE = 'Asia/Jakarta';

@@ -1,5 +1,5 @@
 /**
- * Konten contoh. Dipakai bila DatoCMS belum terhubung atau sebuah field masih kosong.
+ * Sumber konten situs (teks, tanggal, FAQ, sponsor, hadiah, dst.), dibaca oleh lib/content.ts.
  * Judul mendukung **tebal** dan baris baru (lihat lib/text.ts).
  */
 import type {
@@ -8,7 +8,7 @@ import type {
 } from './types';
 import { withBase } from '../config';
 
-// Foto contoh dari Unsplash (hanya dipakai bila field gambar di DatoCMS kosong).
+// Foto contoh dari Unsplash (sementara, ganti dengan foto asli sebelum rilis).
 const un = (id: string, alt: string) => ({ url: `https://images.unsplash.com/photo-${id}`, alt, width: null, height: null });
 // Aset resmi ANSORUN (hasil olahan dari .docs/assets_bank) — file ada di public/brand/
 const brand = (file: string, alt: string, width: number, height: number): Img => ({ url: withBase(`/brand/${file}`), alt, width, height });

@@ -1,7 +1,7 @@
 ---
 import '../styles/theme.css';
 import { getSiteData } from '../lib/content';
-import { img } from '../lib/datocms';
+import { img } from '../lib/img';
 import { plain } from '../lib/text';
 import { fonts, fontFaceCss, nav, ui, withBase } from '../config';
 import Icon from '../components/Icon.astro';
@@ -36,7 +36,7 @@ const eventLd = {
   }),
 };
 
-// Override warna dari DatoCMS (opsional) — mengalahkan token di theme.css
+// Override warna dari site.primaryColor / accentColor (opsional) — mengalahkan token di theme.css
 const overrides = [
   `--t-font-heading:${fonts.heading}`,
   `--t-font-body:${fonts.body}`,
