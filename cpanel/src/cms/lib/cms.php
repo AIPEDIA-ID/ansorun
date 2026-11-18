@@ -1,6 +1,6 @@
 <?php
 /**
- * Mesin CMS, sengaja kecil: templat (tpl/) + nilai klien (content/content.json) -> HTML statis di public_html.
+ * Mesin CMS, sengaja kecil: templat (tpl/) + nilai klien (public_html/data/content.json) -> HTML statis di public_html.
  * Tanpa database. Nilai yang belum diedit memakai teks bawaan dari templat (fallback).
  */
 declare(strict_types=1);
@@ -10,6 +10,15 @@ function cms_public(): string {
     $cfg = cms_config();
     return rtrim($cfg['public_html'] ?? ($_SERVER['DOCUMENT_ROOT'] ?? dirname(cms_dir()) . '/public_html'), '/');
 }
+/** SEMUA data klien ada di satu folder: content.json, history/, uploads/. Pindah hosting = salin folder ini. */
+function cms_data(): string {
+    $dir = rtrim(cms_config()['data_dir'] ?? cms_public() . '/data', '/');
+    if (!is_dir($dir)) mkdir($dir, 0755, true);
+    // data/ boleh dibuka dari web (gambar), tapi bukan json/php: satu .htaccess di sini cukup
+    if (!is_file("$dir/.htaccess")) file_put_contents("$dir/.htaccess", "Options -Indexes -ExecCGI\nRemoveHandler .php .phtml\n<FilesMatch \"\\.(json|php|phtml|phar)$\">\n  Require all denied\n</FilesMatch>\n");
+    return $dir;
+}
+
 function cms_config(): array { return is_file(cms_dir() . '/config.php') ? (require cms_dir() . '/config.php') : []; }
 
 function cms_read(string $file): array {
@@ -25,7 +34,7 @@ function cms_write(string $path, string $data): void {
 }
 
 function cms_manifest(): array { return cms_read(cms_dir() . '/tpl/manifest.json') + ['templates' => [], 'fields' => []]; }
-function cms_values(): array { return cms_read(cms_dir() . '/content/content.json')['values'] ?? []; }
+function cms_values(): array { return cms_read(cms_data() . '/content.json')['values'] ?? []; }
 
 /* ---------------------------------------------------------------- nilai -> HTML */
 
@@ -99,10 +108,10 @@ function cms_sync(array $values): bool {
 /** Simpan konten klien (dengan salinan versi lama), lalu tayangkan. */
 function cms_save(array $values): int {
     $pages = cms_render_all($values); // uji render dulu, sebelum menyentuh apa pun
-    $file = cms_dir() . '/content/content.json';
+    $file = cms_data() . '/content.json';
     if (is_file($file)) {
-        @mkdir(cms_dir() . '/content/history', 0755, true);
-        copy($file, cms_dir() . '/content/history/' . date('Ymd-His') . '.json');
+        @mkdir(cms_data() . '/history', 0755, true);
+        copy($file, cms_data() . '/history/' . date('Ymd-His') . '.json');
     }
     cms_write($file, json_encode(['values' => $values], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
     return cms_publish($values);
@@ -119,11 +128,12 @@ function cms_upload(array $file, array $field, string $base): string {
     if (!empty($field['width']) && !empty($field['height']) && abs(($info[0] / $info[1]) / ($field['width'] / $field['height']) - 1) > 0.06) {
         return "!Rasio gambar tidak cocok. Dibutuhkan sekitar {$field['width']}×{$field['height']}, yang diunggah {$info[0]}×{$info[1]}.";
     }
-    $dir = cms_public() . '/uploads';
+    $dir = cms_data() . '/uploads';
     if (!is_dir($dir)) mkdir($dir, 0755, true);
-    if (!is_file("$dir/.htaccess")) file_put_contents("$dir/.htaccess", "RemoveHandler .php .phtml\n<FilesMatch \"\\.(php|phtml|phar)$\">\n  Require all denied\n</FilesMatch>\n");
+    $web = str_starts_with($dir, cms_public()) ? substr($dir, strlen(cms_public())) : null;
+    if ($web === null) return '!data_dir harus di dalam public_html agar gambar bisa tampil.';
     $name = date('Ymd') . '-' . bin2hex(random_bytes(4)) . ".$ext";
-    return move_uploaded_file($file['tmp_name'], "$dir/$name") ? "$base/uploads/$name" : '!Gagal menyimpan gambar.';
+    return move_uploaded_file($file['tmp_name'], "$dir/$name") ? "$base$web/$name" : '!Gagal menyimpan gambar.';
 }
 
 /* ---------------------------------------------------------------- login */

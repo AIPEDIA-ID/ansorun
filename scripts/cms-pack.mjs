@@ -8,7 +8,7 @@
  * Versi otomatis: cpanel/version.json menyimpan versi terakhir + sidik jari isi build.
  *   - isi berubah -> versi naik (1.0 -> 1.1 -> ... -> 1.10); naikkan major dengan mengedit version.json
  *   - isi sama    -> versi tetap
- * Isi zip = hasil build Astro (situs langsung tayang) + CMS + akun admin (cpanel/local/config.php). Tidak berisi cms/content/ atau uploads/.
+ * Isi zip = hasil build Astro (situs langsung tayang) + CMS + akun admin (cpanel/local/config.php). Tidak berisi data klien (public_html/data/).
  * Setelah update, buka /admin sekali: suntingan klien diterapkan lagi ke halaman baru (otomatis).
  */
 import { createHash } from 'node:crypto';
@@ -43,7 +43,7 @@ else console.warn('PERINGATAN: cpanel/local/config.php belum ada, admin tidak bi
 rmSync(DIST, { recursive: true, force: true });
 mkdirSync(DIST, { recursive: true });
 const zip = `ansorun-${version}.zip`;
-execSync(`cd ${BUILD} && zip -qr ../dist/${zip} cms public_html -x "*/content/*" "*/state/*" "*/uploads/*" "*.DS_Store"`, { stdio: 'inherit' });
+execSync(`cd ${BUILD} && zip -qr ../dist/${zip} cms public_html -x "*/data/*" "*/state/*" "*.DS_Store"`, { stdio: 'inherit' });
 
 console.log(`Versi ${version}${prev ? (changed ? ` (naik dari ${prev.version})` : ' (isi sama, versi tetap)') : ' (rilis pertama)'}`);
 console.log(`Zip: cpanel/dist/${zip}`);

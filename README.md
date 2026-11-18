@@ -24,7 +24,7 @@ npm run cms:parity   # tes: hasil PHP sama dengan Astro
 
 Alamat admin diatur di `scripts/cms-config.mjs` (`ADMIN_PATH`). Akun admin ikut di dalam zip (dari `cpanel/local/config.php`, di luar git). Buat/ganti akun: `php cpanel/src/cms/bin/make-config.php <username>`, lalu `npm run cms` lagi.
 
-Setelah update, buka `/nimda-pw/` sekali agar suntingan klien diterapkan lagi ke halaman baru. Zip tidak menimpa `content/` dan `uploads/`.
+Setelah update, buka `/nimda-pw/` sekali agar suntingan klien diterapkan lagi ke halaman baru. Zip tidak menimpa data klien (`public_html/data/`).
 
 Cek dulu bahwa `public_html` tidak punya `index.html`/`index.php` bawaan hosting yang masih dipakai. Cek hosting (PHP 8.0+): unggah `cpanel/tools/probe.php` ke `public_html`, buka, lalu hapus.
 
@@ -32,9 +32,9 @@ Cek dulu bahwa `public_html` tidak punya `index.html`/`index.php` bawaan hosting
 
 `cpanel/version.json`, mulai 1.0, naik otomatis bila isi build berubah. Commit file ini, lalu `git tag v<versi>`.
 
-## Konten klien ke git
+## Data klien: satu folder
 
-Unduh `cms/content/content.json` dan `public_html/uploads/` dari server ke `cpanel/content/`, lalu commit. Satu arah saja (server → repo).
+Semua data klien ada di **`public_html/data/`**: `content.json` (teks), `uploads/` (gambar), `history/` (salinan lama). Pindah hosting, cadangan, atau commit ke git = salin folder ini saja (mis. ke `cpanel/data/`). Lokasinya bisa diganti lewat `data_dir` di `config.php`. Akun admin ada terpisah di `cms/config.php`.
 
 ## Ubah di mana?
 
