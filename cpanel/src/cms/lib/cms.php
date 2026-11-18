@@ -84,13 +84,14 @@ function cms_version(): string { return trim((string)@file_get_contents(cms_dir(
 function cms_publish(array $values): int {
     $pages = cms_render_all($values); // render dulu semuanya; bila error, situs lama utuh
     foreach ($pages as $rel => $html) cms_write(cms_public() . '/' . $rel, $html);
-    cms_write(cms_dir() . '/state/rendered', cms_version());
+    cms_write(cms_dir() . '/state/rendered', sha1($pages['index.html'] ?? ''));
     return count($pages);
 }
 
-/** Setelah unggah zip baru: halaman belum ada atau versi berubah -> terapkan templat baru. Konten klien tetap. */
+/** Setelah Extract zip: bila index.html bukan buatan CMS lagi (tertimpa hasil build), terapkan lagi suntingan klien. */
 function cms_sync(array $values): bool {
-    if (is_file(cms_public() . '/index.html') && trim((string)@file_get_contents(cms_dir() . '/state/rendered')) === cms_version()) return false;
+    $idx = cms_public() . '/index.html';
+    if (is_file($idx) && sha1_file($idx) === trim((string)@file_get_contents(cms_dir() . '/state/rendered'))) return false;
     cms_publish($values);
     return true;
 }

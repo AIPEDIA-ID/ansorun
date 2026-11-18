@@ -8,8 +8,8 @@
  * Versi otomatis: cpanel/version.json menyimpan versi terakhir + sidik jari isi build.
  *   - isi berubah -> versi naik (1.0 -> 1.1 -> ... -> 1.10); naikkan major dengan mengedit version.json
  *   - isi sama    -> versi tetap
- * Zip aman untuk deploy pertama maupun update: tidak berisi halaman situs, config.php, cms/content/, atau uploads/.
- * Halaman dibuat/diperbarui otomatis saat /admin dibuka.
+ * Isi zip = hasil build Astro (situs langsung tayang setelah Extract) + CMS. Tidak berisi config.php, cms/content/, atau uploads/.
+ * Setelah update, buka /admin sekali: suntingan klien diterapkan lagi ke halaman baru (otomatis).
  */
 import { createHash } from 'node:crypto';
 import { execSync } from 'node:child_process';

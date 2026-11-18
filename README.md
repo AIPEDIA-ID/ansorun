@@ -19,17 +19,18 @@ npm run cms:parity   # tes: hasil PHP sama dengan Astro
 
 ## Deploy ke cPanel
 
+Situs = hasil build Astro. CMS hanya untuk mengedit teks dan gambar.
+
 1. `npm run cms`
-2. File Manager: unggah `cpanel/dist/ansorun-<versi>.zip` ke `/home/ansz8897/`, lalu **Extract**
-3. Buka `https://ansorun.com/admin/` dan login. Situs langsung dibuat/diperbarui.
+2. File Manager: unggah `cpanel/dist/ansorun-<versi>.zip` ke `/home/ansz8897/`, lalu **Extract**. Situs langsung tayang.
 
-Hanya **pertama kali**, sebelum langkah 3:
+Agar klien bisa mengedit (**pertama kali saja**):
 - `php cpanel/src/cms/bin/make-config.php admin` (hasil: `cpanel/local/config.php`)
-- unggah `config.php` itu ke `/home/ansz8897/cms/config.php` (izin 600)
+- unggah `config.php` itu ke `/home/ansz8897/cms/config.php` (izin 600), lalu buka `https://ansorun.com/admin/`
 
-Aman untuk update: zip tidak berisi halaman, `config.php`, `content/`, atau `uploads/`, jadi konten klien tidak tertimpa. Cek dulu bahwa `public_html` tidak punya `index.html` bawaan hosting yang masih dipakai.
+**Setiap update:** Extract zip baru, lalu buka `/admin` sekali. Suntingan klien otomatis diterapkan lagi ke halaman baru (sebelum itu situs menampilkan teks bawaan). Zip tidak menimpa `config.php`, `content/`, atau `uploads/`.
 
-Cek hosting (PHP 8.0+, izin tulis): unggah `cpanel/tools/probe.php` ke `public_html`, buka, lalu hapus.
+Cek dulu bahwa `public_html` tidak punya `index.html`/`index.php` bawaan hosting yang masih dipakai. Cek hosting (PHP 8.0+, izin tulis): unggah `cpanel/tools/probe.php` ke `public_html`, buka, lalu hapus.
 
 ## Versi
 

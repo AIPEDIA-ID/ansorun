@@ -30,7 +30,7 @@ $m = cms_manifest();
 $fields = $m['fields'];
 $base = rtrim((string)($m['base'] ?? '/'), '/');
 $values = cms_values();
-try { if (cms_sync($values)) $_SESSION['msg'] = 'Situs diperbarui ke versi ' . cms_version() . '.'; }
+try { if (cms_sync($values)) $_SESSION['msg'] = 'Suntingan klien diterapkan ke situs (versi ' . cms_version() . ').'; }
 catch (Throwable $e) { $_SESSION['msg'] = 'Gagal menerapkan versi baru: ' . $e->getMessage(); }
 
 /* ---- simpan = langsung tayang */

@@ -11,7 +11,7 @@
  *
  * Hasil (cpanel/build/) meniru susunan server:
  *   cms/          -> /home/USER/cms/         (privat: kode, templat)
- *   public_html/  -> /home/USER/public_html/ (publik: aset + /admin; halaman dibuat oleh /admin)
+ *   public_html/  -> /home/USER/public_html/ (publik: halaman hasil build + aset + /admin)
  * Zip siap unggah dibuat oleh scripts/cms-pack.mjs (`npm run cms` menjalankan keduanya).
  *
  * Aturan deteksi (semua dibaca dari HTML, komponen Astro tidak perlu diubah):
@@ -280,6 +280,12 @@ function main() {
   console.log('3/4 manifest…');
   const manifest = { base: process.env.BASE_PATH ?? '/', templates, pages, fields };
   writeFileSync(join(tplDir, 'manifest.json'), JSON.stringify(manifest, null, 1));
+
+  // Halaman = hasil build Astro apa adanya (nilai bawaan), supaya situs langsung tayang setelah Extract tanpa CMS.
+  for (const rel of templates) {
+    const tpl = readFileSync(join(tplDir, rel), 'utf8');
+    writeFileSync(join(pubDir, rel), tpl.replace(/%%CMS:([A-Za-z0-9_]+)%%/g, (_, k) => fields[k]?.default ?? ''));
+  }
 
   console.log('4/4 salin kode PHP…');
   if (existsSync(SRC)) cpSync(SRC, OUT, { recursive: true });
