@@ -15,6 +15,7 @@ import { formatDate } from '../lib/content';
 import { img } from '../lib/img';
 import { plain } from '../lib/text';
 import { withBase } from '../config';
+import { cmsAttr } from '../lib/cms';
 import type { SiteSettings, Sponsor } from '../lib/types';
 
 interface Props {
@@ -63,7 +64,7 @@ const { site, sponsors } = Astro.props;
           <p class="hero-meta font-heading text-sm font-bold lg:text-base">
             {site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}
           </p>
-          {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
+          {site.registrationUrl && <a class="btn" href={site.registrationUrl} {...cmsAttr('href', 'registrationUrl', 'Link pendaftaran')}>{site.registrationLabel}</a>}
         </div>
         <div class="hero-count"><Countdown target={site.eventDate} embedded /></div>
       </div>

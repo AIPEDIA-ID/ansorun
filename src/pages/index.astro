@@ -13,6 +13,7 @@ import { getSiteData, getAbout, getHome, getContact } from '../lib/content';
 import { md, rich } from '../lib/text';
 import { parseRundown, parseMission, priceOf, splitLead } from '../lib/parse';
 import { ui, withBase } from '../config';
+import { cmsAttr } from '../lib/cms';
 import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback'; // TODO: pindah ke CMS bila klien ingin mengganti foto sendiri
 
 const { site, sponsors } = await getSiteData();
@@ -204,7 +205,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         }
       </ol>
       <p class="mt-10 flex flex-wrap justify-center gap-3">
-        {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
+        {site.registrationUrl && <a class="btn" href={site.registrationUrl} {...cmsAttr('href', 'registrationUrl', 'Link pendaftaran')}>{site.registrationLabel}</a>}
         <a class="btn btn-outline" href={withBase('/racepack')}>{ui.howToJoinCta}</a>
       </p>
     </div>

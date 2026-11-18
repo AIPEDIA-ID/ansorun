@@ -1,5 +1,6 @@
 ---
 import { ui } from '../config';
+import { cmsAttr } from '../lib/cms';
 import { rich } from '../lib/text';
 
 interface Props { target: string; title?: string; text?: string; embedded?: boolean }
@@ -12,7 +13,7 @@ const units = [
 ] as const;
 ---
 
-<section class:list={[embedded ? 'pb-14 pt-2' : 'section']} data-countdown={target}>
+<section class:list={[embedded ? 'pb-14 pt-2' : 'section']} data-countdown={target} {...cmsAttr('data-countdown', 'eventDate', 'Tanggal dan jam mulai (ISO)')}>
   <div class="container-x">
     {
       (title || text) && (

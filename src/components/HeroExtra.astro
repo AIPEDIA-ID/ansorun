@@ -4,10 +4,11 @@
  * Dipakai dua kali di hero: baris di band (layout ringkas) dan melayang di KV (layout satu layar).
  */
 import { withBase } from '../config';
+import { cmsAttr } from '../lib/cms';
 interface Props { url?: string | null; label?: string }
 const { url, label = 'Daftar' } = Astro.props;
 const Tag = url ? 'a' : 'span';
-const attrs = url ? { href: url, rel: 'noopener', 'aria-label': label } : {};
+const attrs = url ? { href: url, rel: 'noopener', 'aria-label': label, ...cmsAttr('href', 'registrationUrl', 'Link pendaftaran') } : {};
 ---
 
 <img class="x-date" src={withBase('/brand/hero-date.webp')} alt="31 Januari 2027, kategori 5K dan 10K" width="660" height="264" loading="lazy" />

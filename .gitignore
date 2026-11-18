@@ -4,3 +4,9 @@ dist
 .env
 .DS_Store
 .claude
+
+# CMS cPanel: hasil build dan rahasia lokal tidak masuk git
+.cms-dist
+cpanel/build
+cpanel/dist
+cpanel/local

@@ -7,6 +7,7 @@ export default defineConfig({
   // URL deployment: default ke GitHub Pages repo ini
   site: process.env.SITE_URL ?? 'https://aipedia-id.github.io',
   base: process.env.BASE_PATH ?? (process.env.GITHUB_ACTIONS && !process.env.CUSTOM_DOMAIN ? '/ansorun' : '/'),
+  outDir: process.env.CMS_OUT_DIR ?? './dist',
   integrations: [sitemap()],
   devToolbar: {
     enabled: false,

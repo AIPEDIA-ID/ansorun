@@ -5,6 +5,7 @@ import { img } from '../lib/img';
 import { plain } from '../lib/text';
 import { fonts, fontFaceCss, nav, ui, withBase } from '../config';
 import Icon from '../components/Icon.astro';
+import { cmsAttr } from '../lib/cms';
 
 interface Props { title?: string; description?: string }
 const { title, description } = Astro.props;
@@ -112,7 +113,7 @@ const socials = ([
             {nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}
           </ul>
         </nav>
-        <a class="btn btn-primary nav-cta" href={site.registrationUrl ?? withBase('/#daftar')}>{ui.navRegister}</a>
+        <a class="btn btn-primary nav-cta" href={site.registrationUrl ?? withBase('/#daftar')} {...cmsAttr('href', 'registrationUrl', 'Link pendaftaran')}>{ui.navRegister}</a>
       </div>
     </header>
 

@@ -1,90 +1,67 @@
-# ANSORUN Run to Ramadan 2027 — Astro + Tailwind
+# ANSORUN Run to Ramadan 2027
 
-🇮🇩 Bahasa Indonesia · 🇬🇧 [English](README.en.md)
+Situs event lari statis (Astro + Tailwind). Klien mengedit teks dan gambar lewat `/admin` (CMS PHP kecil di cPanel).
 
-Situs event lari statis. **Struktur halaman** mengikuti `.docs/content_structure.md` dengan template referensi digiland.co.id (header transparan di atas hero lalu kaca terang setelah scroll, countdown, footer gelap). Beranda 9 blok: Hero, About, Event Highlights, Race Information, Rute, Prizes & Racepack, How to Join, FAQ, Contact; halaman `/racepack`; `/galeri` tetap ada tapi tidak di nav. Beberapa blok sengaja dipisah dari dokumen klien (lihat bagian 21 plan). **Skin**-nya: warna dari palet desain ANSORUN (teal, hijau jersey, lime), gradient lembut untuk latar, kartu bersudut 14px berbayangan tipis, tombol timbul, judul dengan font klien (Neospeed, Golf Italic, Osaca) dan paragraf dengan Carlito (padanan gratis Calibri, font isi di PDF proposal). Semua nilai visual tetap lewat token di `theme.css`. Rencana lengkap: `.docs/plan_implement_content.md`.
-
-## Menjalankan
+## Jalankan
 
 ```bash
-cp .env.example .env     # isi SITE_URL (domain asli) bila akan rilis
 npm install
 npm run dev
 ```
 
-Semua konten (teks, tanggal, FAQ, sponsor, hadiah, dst.) ada di `src/lib/fallback.ts`.
+## Perintah
 
-## Judul dengan penekanan
-Field judul mendukung `**tebal**` dan baris baru, mis. `AYO` ⏎ `**BERLARI** Lebih Jauh`. Di hero, bagian tebal berat 800 dan sisanya tipis; di judul section, bagian tebal berwarna aksen. HTML di-escape.
+```bash
+npm run check        # pagar warna mentah + build
+npm run cms          # build + zip untuk cPanel: cpanel/dist/ansorun-<versi>.zip
+npm run cms:parity   # tes: hasil PHP sama dengan Astro
+```
 
-## Logo
-Dua file di `public/brand/`: `logo-light.webp` (putih/lime, untuk header transparan dan footer) dan `logo-dark.webp` (gelap). Header memakai logo terang di atas hero. Setelah scroll header menjadi kaca terang dan logo gelap tampil. Keduanya adalah titling asli klien (tidak dibuat ulang), lebar 640px.
+## Deploy ke cPanel
 
-## Konvensi konten
-Konten contoh di `src/lib/fallback.ts` mengikuti teks PDF proposal. Yang belum ada dari klien berbentuk `[Konten menyusul: ...]` atau "Segera diumumkan". Penanda di kode: `TODO(data)` (menunggu klien) dan `CATATAN` (asumsi atau konflik antar halaman PDF). Daftar lengkap ada di bagian 8, 13, 19, 20, dan 21 plan.
+1. `npm run cms`
+2. File Manager: unggah `cpanel/dist/ansorun-<versi>.zip` ke `/home/ansz8897/`, lalu **Extract**
+3. Buka `https://ansorun.com/admin/` dan login. Situs langsung dibuat/diperbarui.
 
-## Struktur CSS (`src/styles/theme.css`)
+Hanya **pertama kali**, sebelum langkah 3:
+- `php cpanel/src/cms/bin/make-config.php admin` (hasil: `cpanel/local/config.php`)
+- unggah `config.php` itu ke `/home/ansz8897/cms/config.php` (izin 600)
 
-File ini satu-satunya tempat tampilan diatur dan sudah diberi daftar isi di bagian atas:
+Aman untuk update: zip tidak berisi halaman, `config.php`, `content/`, atau `uploads/`, jadi konten klien tidak tertimpa. Cek dulu bahwa `public_html` tidak punya `index.html` bawaan hosting yang masih dipakai.
 
-| Bagian | Isi |
-|---|---|
-| 1. TOKENS | Warna, bentuk (`--t-radius-card`), ritme (`--t-section-y`, `--t-flush`, `--t-head-gap`). **Hanya di sini boleh ada warna mentah.** |
-| 2. TURUNAN | Nilai yang dihitung dari token (`--t-wash`, `--t-shadow`, dst.). Jangan ditulis ulang |
-| 3. TAILWIND | Token dibuka sebagai utility (`bg-primary`, `text-ink`, `font-heading`) |
-| 4. BASE | html, body, tautan, judul |
-| 5.1 sampai 5.9 | Komponen per kelompok: layout, latar, header, hero, tombol, kartu, blok konten, dekor, footer |
+Cek hosting (PHP 8.0+, izin tulis): unggah `cpanel/tools/probe.php` ke `public_html`, buka, lalu hapus.
 
-Aturan perawatan:
-- **Kartu**: semua permukaan terang (`.card`, `.flow-tile`, `.info-card`, `details.faq`, `.photo-matte`) memakai satu aturan di 5.6. Ubah di sana, jangan menimpa per komponen.
-- **Latar section terang** dipakai bergantian: `bg-fade`, `bg-pattern`, `bg-fade`, ... agar warna ujung bertemu.
-- **Ritme vertikal** lewat token, bukan angka di markup: padding section `--t-section-y`, jarak judul `--t-head-gap`, jarak antar blok dalam section `mt-10`, grid kartu `gap-5`, dua kolom `gap-8`.
-- Tambahkan komponen baru di kelompok yang sesuai, bukan di akhir file. Pakai token, bukan warna mentah. `npm run check` menolak warna mentah.
+## Versi
 
-Penguraian teks markdown (rundown, konsep sosial, harga) ada di `src/lib/parse.ts`. Judul section memakai `SectionHeading.astro`, foto berbingkai memakai `MatteImage.astro`.
+`cpanel/version.json`, mulai 1.0, naik otomatis bila isi build berubah. Commit file ini, lalu `git tag v<versi>`.
 
-## Feedback klien: ubah di mana?
+## Konten klien ke git
+
+Unduh `cms/content/content.json` dan `public_html/uploads/` dari server ke `cpanel/content/`, lalu commit. Satu arah saja (server → repo).
+
+## Ubah di mana?
 
 | Kebutuhan | File |
 |---|---|
-| Warna, lebar, tinggi header | `src/styles/theme.css` bagian TOKENS (termasuk `--t-on-dark` / `--t-surface` untuk putih) |
-| Font (link + nama font) | `src/config.ts` → `fonts` |
-| Warna utama/aksen (override token) | `src/lib/fallback.ts` → `site.primaryColor` / `accentColor` |
-| Bentuk komponen (tombol, kartu, hero, stripe) | `src/styles/theme.css` bagian SKIN |
-| Menu & teks UI statis | `src/config.ts` |
-| Teks, gambar, tanggal, FAQ, sponsor | `src/lib/fallback.ts` |
-| Susunan section | `src/pages/*.astro` |
+| Warna, ukuran, bentuk komponen | `src/styles/theme.css` (daftar isi di atas file; warna mentah hanya di TOKENS) |
+| Font, menu, teks UI | `src/config.ts` |
+| Teks, gambar, tanggal, FAQ, sponsor (nilai awal) | `src/lib/fallback.ts` |
+| Susunan section | `src/pages/*.astro`, `src/components/` |
 
-## SEO
+Setelah live, teks diubah lewat `/admin`, bukan lewat kode. Mengubah teks bawaan di kode membuat field itu dianggap baru, sehingga suntingan klien pada teks lama tidak berlaku.
 
-Otomatis: title/description per halaman (`metaDescription` di `src/lib/fallback.ts`), canonical, Open Graph + Twitter card, JSON-LD `SportsEvent` di Beranda, `sitemap-index.xml`, `robots.txt`, ukuran gambar tetap (tanpa layout shift). **Isi `SITE_URL` dengan domain asli sebelum rilis**, kalau tidak canonical, sitemap, dan robots menunjuk ke localhost (`npm run check` memperingatkan bila masih kosong atau localhost). Ada halaman 404 (`src/pages/404.astro`), gaya fokus keyboard, dan dukungan `prefers-reduced-motion`.
+## Sebelum rilis
 
-## Pagar kualitas
-
-```bash
-npm run check   # gagal bila ada warna mentah di luar token, lalu build
-```
-
-## Isi contoh yang perlu diganti sebelum rilis
-
-- **Foto:** foto contoh Unsplash di `src/lib/fallback.ts`. Ganti dengan foto asli.
-- **Sponsor:** belum ada sponsor resmi, bagian sponsor di hero tersembunyi sampai `sponsors` di `src/lib/fallback.ts` terisi.
-- **Video:** Event Highlights memakai ID YouTube dummy (`home.videoId`).
-- **URL registrasi:** tombol "Daftar" masih menuju `#` (`site.registrationUrl`).
+- Foto contoh Unsplash di `fallback.ts` → ganti foto asli.
+- `sponsors` masih kosong (bagian sponsor tersembunyi), `home.videoId` masih dummy, `site.registrationUrl` masih `#`.
+- Domain asli ada di `scripts/cms-config.mjs` (`SITE_URL`); `npm run check` memperingatkan bila kosong atau localhost.
 
 ## Struktur
 
 ```
-src/styles/theme.css   tema terpusat (token + komponen, ada daftar isi di atas file)
-src/config.ts          menu, locale, teks UI
-src/lib/               content.ts (pembaca konten), fallback.ts (isi konten), img.ts, teks (rich/md), parse.ts (rundown, misi, harga), tipe
-src/components/        Countdown, Gallery, Photo, MatteImage, SectionHeading, Icon, PageBanner, Prizes, RouteTabs, Steps, VideoEmbed, ContactList
-src/layouts/Base.astro header transparan lalu kaca terang + footer
-src/pages/             index (9 blok), racepack, galeri (tanpa nav); /tentang dan /lari di-redirect
-scripts/               check.mjs
+src/styles/theme.css   tema terpusat
+src/lib/               content.ts, fallback.ts (isi konten), img.ts, cms.ts, teks, parse
+src/components/        Hero, Countdown, RouteTabs, Prizes, ... ; src/pages/ index, racepack, galeri
+cpanel/src/            kode PHP CMS (cms/ privat, public_html/admin/ publik)
+scripts/               check.mjs, cms-build.mjs, cms-pack.mjs, cms-parity.mjs
 ```
-
-## Belum ada
-- Toggle bahasa ID/EN (semua teks Indonesia).
-- Newsletter: sengaja tidak ada (tidak ada di struktur klien). Komponennya sudah dihapus.
-- Carousel galeri (saat ini grid + lightbox).
