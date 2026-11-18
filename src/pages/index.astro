@@ -21,6 +21,17 @@ const { about, faqs } = await getAbout();
 const { home, categories, raceInfo, prizes, items, joinSteps } = await getHome();
 const contact = await getContact();
 
+// Data terstruktur FAQ untuk Google (rich result), diambil dari FAQ yang sama dengan yang tampil
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.question,
+    acceptedAnswer: { '@type': 'Answer', text: md(f.answer).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() },
+  })),
+};
+
 // Data turunan untuk tampilan (penguraian ada di lib/parse.ts)
 const rundown = parseRundown(raceInfo.scheduleDetail);
 const mission = parseMission(about.mission);
@@ -33,6 +44,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
 ---
 
 <Base description={home.metaDescription}>
+  {faqs.length > 0 && <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
   <!-- 01. HOME / HERO: KV, logo judul, countdown, CTA -->
   <Hero site={site} sponsors={groups} />
 

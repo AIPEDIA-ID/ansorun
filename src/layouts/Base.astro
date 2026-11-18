@@ -18,21 +18,29 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // OG image harus alamat absolut dan format yang dibaca semua pembagi tautan (jpg/png).
 // Gambar dari CMS dipakai bila ada; selain itu og.jpg 1200x630 dari public/brand.
+const ogAlt = `${plain(site.eventName)} — ${site.heroEyebrow}. ${plain(site.categories)}, ${site.location}`;
 const ogImage = site.heroImage?.url.startsWith('http') ? img(site.heroImage.url, 1200) : new URL(withBase('/brand/og.jpg'), Astro.site).href;
 
 // Structured data Event (Google rich result) — hanya di Beranda
+const hasRealUrl = !!site.registrationUrl && /^https?:\/\//.test(site.registrationUrl);
 const eventLd = {
   '@context': 'https://schema.org',
   '@type': 'SportsEvent',
-  name: plain(site.eventName),
+  name: `${plain(site.eventName)} — ${site.heroEyebrow}`,
   description: metaDesc,
   startDate: site.eventDate,
   eventStatus: 'https://schema.org/EventScheduled',
   eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-  location: { '@type': 'Place', name: site.location, address: site.location },
+  location: {
+    '@type': 'Place',
+    name: site.location,
+    address: { '@type': 'PostalAddress', addressLocality: 'Jakarta', addressCountry: 'ID' },
+  },
   url: canonical,
+  inLanguage: 'id-ID',
   ...(ogImage && { image: [ogImage] }),
-  ...(site.registrationUrl && {
+  // hanya bila URL pendaftaran sudah asli (bukan placeholder "#")
+  ...(hasRealUrl && {
     offers: { '@type': 'Offer', url: site.registrationUrl, availability: 'https://schema.org/InStock' },
   }),
 };
@@ -80,12 +88,20 @@ const socials = ([
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={metaDesc} />
     {ogImage && <meta property="og:image" content={ogImage} />}
+    {ogImage && <meta property="og:image:secure_url" content={ogImage} />}
+    {ogImage && <meta property="og:image:type" content="image/jpeg" />}
+    {ogImage && <meta property="og:image:width" content="1200" />}
+    {ogImage && <meta property="og:image:height" content="630" />}
+    {ogImage && <meta property="og:image:alt" content={ogAlt} />}
     <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={metaDesc} />
     {ogImage && <meta name="twitter:image" content={ogImage} />}
+    {ogImage && <meta name="twitter:image:alt" content={ogAlt} />}
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
     {path === '/' && <script type="application/ld+json" set:html={JSON.stringify(eventLd)} />}
+    <slot name="head" />
     {<style set:html={`${fontFaceCss}:root{${overrides}}`} />}
   </head>
   <body id="top">
