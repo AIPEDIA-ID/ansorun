@@ -11,7 +11,7 @@ import Prizes from '../components/Prizes.astro';
 import ContactList from '../components/ContactList.astro';
 import { getSiteData, getAbout, getHome, getContact, formatDate } from '../lib/content';
 import { img } from '../lib/datocms';
-import { md, rich } from '../lib/text';
+import { md, rich, plain } from '../lib/text';
 import { parseRundown, parseMission, priceOf, splitLead } from '../lib/parse';
 import { ui, withBase } from '../config';
 import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback'; // TODO: pindah ke CMS bila klien ingin mengganti foto sendiri
@@ -36,25 +36,35 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
   <!-- 01. HOME / HERO: KV, headline, countdown, CTA -->
   <section class="hero-poster on-dark">
     <div class="hero-poster-media">
-      {
-        site.heroImage && (
+      <div class="hero-kv">
+        {
+          site.heroImage && (
+            <img
+              class="hero-kv-img"
+              src={img(site.heroImage.url, 2000)}
+              alt={site.heroImage.alt ?? ''}
+              width={site.heroImage.width ?? 1921}
+              height={site.heroImage.height ?? 1082}
+              fetchpriority="high"
+              decoding="async"
+            />
+          )
+        }
+        <h1 class="hero-logo">
           <img
-            src={img(site.heroImage.url, 2400)}
-            alt={site.heroImage.alt ?? site.eventName}
-            width={site.heroImage.width ?? 2400}
-            height={site.heroImage.height ?? 1351}
+            src={withBase('/brand/hero-logo.webp')}
+            alt={`${plain(site.eventName)}: ${site.heroEyebrow}. ${site.heroHeadline}`}
+            width="1562"
+            height="531"
             fetchpriority="high"
             decoding="async"
           />
-        )
-      }
+        </h1>
+      </div>
       <div class="hero-band">
         <div class="container-x flex flex-col gap-5 py-3 lg:flex-row lg:items-center lg:justify-between">
           <div class="flex flex-wrap items-center gap-x-8 gap-y-4">
-            <div>
-              <h1 class="hero-eyebrow lg:sr-only">{site.heroHeadline}</h1>
-              <p class="hero-meta mt-1 font-heading text-sm font-bold lg:mt-0 lg:text-base">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
-            </div>
+            <p class="hero-meta font-heading text-sm font-bold lg:text-base">{site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}</p>
             {site.registrationUrl && <a class="btn" href={site.registrationUrl}>{site.registrationLabel}</a>}
           </div>
           <div class="lg:w-[46%]"><Countdown target={site.eventDate} embedded /></div>

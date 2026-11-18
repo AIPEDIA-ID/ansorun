@@ -53,7 +53,7 @@ export const site: SiteSettings = {
   heroEyebrow: 'Run to Ramadan 2027',
   heroHeadline: 'Tiap ayunan kaki, hadirkan jalan berbagi', // TODO(data): headline resmi (sementara tagline dari KV)
   heroSubheadline: 'Tiap ayunan kaki, hadirkan jalan berbagi',
-  heroImage: brand('kv.webp', 'ANSORUN Run to Ramadan 2027, 31 Januari 2027, kategori 5K dan 10K', 2400, 1351),
+  heroImage: brand('kv-polos.webp', 'Lima pelari berbaju hijau di Jakarta dengan latar Monas dan gedung tinggi', 1921, 1082), // KV polos (tanpa teks); judul = brand/hero-logo.webp
   logo: null,
   primaryColor: null,
   accentColor: null,
