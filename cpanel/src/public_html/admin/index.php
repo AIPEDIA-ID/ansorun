@@ -13,7 +13,8 @@ function back(): void { $p = (string)($_GET['p'] ?? ''); $dir = rtrim(dirname($_
 $SECTIONS = ['hero-poster' => 'Hero', 'tentang' => 'About', 'highlight' => 'Event highlights', 'race' => 'Race information', 'info' => 'Race info',
     'rute' => 'Route', 'hadiah' => 'Prizes & racepack', 'langkah' => 'How to join', 'daftar' => 'Registration', 'faq' => 'FAQ', 'kontak' => 'Contact',
     'header' => 'Menu', 'footer' => 'Footer', 'seo' => 'Page title & description (SEO)', 'page-banner' => 'Page banner', 'halaman' => 'Page content',
-    'hero-countdown' => 'Countdown', 'pb-14' => 'Countdown', 'video' => 'Video', 'section' => 'Images & other'];
+    'hero-countdown' => 'Countdown', 'pb-14' => 'Countdown', 'video' => 'Video', 'section' => 'Images & other',
+    'registration' => 'Registration'];
 
 /* Shared Tailwind classes for the login and admin pages. */
 $F = 'mt-1.5 w-full rounded-lg border border-line bg-white px-3 py-2 focus:border-brand focus:outline-none focus:ring-2 focus:ring-lime';
@@ -22,35 +23,35 @@ $BTN_SMALL = 'rounded-full px-3 py-1 text-sm font-semibold text-brand hover:bg-b
 
 function esc(string $s): string { return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
+/** Short title shown above a field. Button fields (Registration tab) are just LINK or TEXT. */
+function fieldTitle(array $field): string {
+    if (($field['section'] ?? '') === 'registration') return $field['type'] === 'url' ? 'LINK' : 'TEXT';
+    if (!empty($field['alt']) || str_starts_with($field['label'], 'Teks alternatif')) return 'Alt text';
+    if ($field['type'] === 'image' || str_starts_with($field['label'], 'Gambar')) return 'Image';
+    return $field['label'];
+}
+
 /** One row in the Racepack items list. data-f = column name; input names are rebuilt by JS to match row order. */
-function list_row(array $it, string $fallbackSrc): void {
+/** Prints one Racepack items row. The markup lives in cms/admin/list-row.html; this only fills in the values. */
+function list_row(array $item, string $fallbackSrc): void {
     global $F, $BTN_SMALL;
-    $img = (string)($it['image'] ?? '');
-    ?>
-    <div class="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-line" data-row>
-      <div class="flex flex-wrap gap-5">
-        <div class="grid w-40 shrink-0 content-start gap-2">
-          <img src="<?= esc($img !== '' ? $img : $fallbackSrc) ?>" alt="" class="h-24 w-40 rounded-lg border border-line bg-white object-contain">
-          <input type="file" data-f="file" accept="image/*" class="text-sm file:mr-3 file:cursor-pointer file:rounded-full file:border-0 file:bg-brand/10 file:px-3 file:py-1.5 file:font-semibold file:text-brand">
-          <span class="text-sm text-soft"><?= $img !== '' ? 'Photo' : 'No photo: shows "Coming soon"' ?></span>
-          <input type="hidden" data-f="image" value="<?= esc($img) ?>">
-          <input type="hidden" data-f="w" value="<?= esc((string)($it['w'] ?? '')) ?>">
-          <input type="hidden" data-f="h" value="<?= esc((string)($it['h'] ?? '')) ?>">
-        </div>
-        <div class="grid min-w-0 flex-1 gap-3">
-          <label class="block text-sm font-semibold">Title<input type="text" data-f="title" value="<?= esc((string)($it['title'] ?? '')) ?>" class="<?= $F ?>"></label>
-          <label class="block text-sm font-semibold">Description<input type="text" data-f="description" value="<?= esc((string)($it['description'] ?? '')) ?>" class="<?= $F ?>"></label>
-          <label class="block text-sm font-semibold">Photo alt text<input type="text" data-f="alt" value="<?= esc((string)($it['alt'] ?? '')) ?>" class="<?= $F ?>"></label>
-          <label class="block text-sm font-semibold">Emoji<input type="text" data-f="emoji" value="<?= esc((string)($it['emoji'] ?? '')) ?>" class="<?= $F ?> max-w-[8rem]"></label>
-        </div>
-        <div class="flex shrink-0 flex-col items-start gap-1">
-          <button type="button" data-act="up" class="<?= $BTN_SMALL ?>">Up</button>
-          <button type="button" data-act="down" class="<?= $BTN_SMALL ?>">Down</button>
-          <button type="button" data-act="del" class="rounded-full px-3 py-1 text-sm font-semibold text-red-700 hover:bg-red-50">Remove</button>
-        </div>
-      </div>
-    </div>
-    <?php
+    $image = (string)($item['image'] ?? '');
+    $values = [
+        'preview' => esc($image !== '' ? $image : $fallbackSrc),
+        'photo_note' => esc($image !== '' ? 'Photo' : 'No photo: shows "Coming soon"'),
+        'image' => esc($image),
+        'w' => esc((string)($item['w'] ?? '')),
+        'h' => esc((string)($item['h'] ?? '')),
+        'title' => esc((string)($item['title'] ?? '')),
+        'description' => esc((string)($item['description'] ?? '')),
+        'alt' => esc((string)($item['alt'] ?? '')),
+        'emoji' => esc((string)($item['emoji'] ?? '')),
+        'field_class' => $F,   // class strings contain no characters that need escaping
+        'btn_class' => $BTN_SMALL,
+    ];
+    $replace = [];
+    foreach ($values as $name => $value) $replace['{{' . $name . '}}'] = $value;
+    echo strtr((string)file_get_contents(cms_dir() . '/admin/list-row.html'), $replace);
 }
 
 /** Document head: Tailwind loads from a CDN pinned to the project's version, and the ANSORUN palette is registered as theme tokens. */
@@ -146,7 +147,7 @@ if ($_POST) {
 }
 
 /* ---- layout: sidebar tabs per page */
-$PAGE_NAMES = ['index.html' => 'Home', 'racepack/index.html' => 'Racepack', 'lists' => 'Racepack items'];
+$PAGE_NAMES = ['index.html' => 'Home', 'racepack/index.html' => 'Racepack', 'lists' => 'Racepack items', 'registration' => 'Registration'];
 $PAGE_URLS = ['index.html' => '/', 'racepack/index.html' => '/racepack/', 'galeri/index.html' => '/galeri/', '404.html' => '/404.html'];
 $count = [];
 foreach ($m['pages'] as $keys) foreach ($keys as $k) $count[$k] = ($count[$k] ?? 0) + 1;
@@ -156,8 +157,18 @@ foreach ($m['pages'] as $rel => $keys) {
     foreach ($keys as $k) { if ($count[$k] > 1) $umum[$k] = $k; else $tabs[$rel][] = $k; }
 }
 $tabs = array_filter($tabs) + ($umum ? ['umum' => array_values($umum)] : []);
-// Only these tabs: Home, Racepack, Racepack items (repeated list), Menu/footer/buttons
-$tabs = array_merge(array_intersect_key($tabs, ['index.html' => 1, 'racepack/index.html' => 1]), ['lists' => ['racepack']], array_intersect_key($tabs, ['umum' => 1]));
+// Registration fields (section "registration", set by data-cms-group in the templates) get their own tab
+$registrationKeys = array_keys(array_filter($fields, fn($f) => ($f['section'] ?? '') === 'registration'));
+foreach ($tabs as $name => $keys) $tabs[$name] = array_values(array_diff($keys, $registrationKeys));
+$tabs = array_filter($tabs);
+
+// Only these tabs: Home, Racepack, Racepack items (repeated list), Registration, Menu/footer/buttons
+$tabs = array_merge(
+    array_intersect_key($tabs, ['index.html' => 1, 'racepack/index.html' => 1]),
+    ['lists' => ['racepack']],
+    ['registration' => $registrationKeys],
+    array_intersect_key($tabs, ['umum' => 1])
+);
 $listCount = count($values['lists']['racepack'] ?? ($m['lists']['racepack']['items'] ?? []));
 $cur = isset($tabs[$_GET['p'] ?? '']) ? $_GET['p'] : (string)array_key_first($tabs);
 $tabName = fn($t) => $t === 'umum' ? 'Menu, footer, buttons' : ($PAGE_NAMES[$t] ?? $t);
@@ -171,7 +182,11 @@ admin_head($h($tabName($cur)) . ' — CMS');
 <aside class="bg-ink p-4 text-white md:fixed md:inset-y-0 md:left-0 md:flex md:w-64 md:flex-col md:overflow-y-auto">
   <div class="px-2 pb-4 pt-1"><div class="text-[17px] font-extrabold tracking-wider">ANSORUN</div><div class="text-xs text-white/60">CMS · v<?= $h(cms_version() ?: '?') ?></div></div>
   <nav class="flex flex-wrap gap-1 md:flex-col">
-    <?php foreach ($tabs as $t => $keys): if ($t === 'umum') echo '<hr class="my-3 hidden border-white/15 md:block">'; ?>
+    <?php foreach ($tabs as $t => $keys):
+      // Sidebar groups (desktop only; on phones the tabs wrap in one row)
+      if ($t === 'index.html') echo '<p class="hidden px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-white/50 md:block">Pages</p>';
+      if ($t === 'lists') echo '<p class="hidden px-3 pb-1 pt-4 text-xs font-semibold uppercase tracking-wider text-white/50 md:block">Shared</p>';
+    ?>
     <a href="?p=<?= $h(rawurlencode((string)$t)) ?>" class="flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-sm <?= $t === $cur ? 'bg-lime font-bold text-ink' : 'text-white/85 hover:bg-white/10' ?>"><?= $h($tabName($t)) ?><span class="text-xs <?= $t === $cur ? 'opacity-70' : 'opacity-60' ?>"><?= $t === 'lists' ? $listCount : count($keys) ?></span></a>
     <?php endforeach; ?>
   </nav>
@@ -257,7 +272,7 @@ admin_head($h($tabName($cur)) . ' — CMS');
       <div class="py-4">
         <input type="hidden" name="has[<?= $h($k) ?>]" value="1">
         <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span class="font-semibold"><?= $h(!empty($f['alt']) || str_starts_with($f['label'], 'Teks alternatif') ? 'Alt text' : ($f['type'] === 'image' || str_starts_with($f['label'], 'Gambar') ? 'Image' : $f['label'])) ?></span>
+          <span class="font-semibold"><?= $h(fieldTitle($f)) ?></span>
           <?php if ($over !== null): ?><span class="rounded-full bg-brand/10 px-2 py-0.5 text-xs font-semibold text-brand">modified</span><?php endif; ?>
         </div>
         <?php if (count($f['pages']) > 1): ?><p class="text-sm text-soft">Used on <?= count($f['pages']) ?> pages.</p><?php endif; ?>

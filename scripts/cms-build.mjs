@@ -77,6 +77,9 @@ export function transform(html, relPath) {
   const sectionLabel = (stack) => {
     for (let i = stack.length - 1; i >= 0; i--) {
       const el = stack[i];
+      // data-cms-group="name" puts everything inside the element into that admin tab
+      const group = attrOf(el, 'data-cms-group')?.value;
+      if (group) return group;
       if (['section', 'header', 'footer', 'main'].includes(tagOf(el))) {
         const id = attrOf(el, 'id')?.value;
         if (id) return id;

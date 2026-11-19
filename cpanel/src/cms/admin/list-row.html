@@ -1,0 +1,37 @@
+<div class="grid gap-5 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-line md:grid-cols-[10rem_minmax(0,1fr)_auto]" data-row>
+
+  <div class="grid min-w-0 content-start gap-2">
+    <img src="{{preview}}" alt="" class="h-24 w-full rounded-lg border border-line bg-white object-contain">
+    <input type="file" data-f="file" accept="image/*" class="w-full text-xs file:mr-2 file:cursor-pointer file:rounded-full file:border-0 file:bg-brand/10 file:px-3 file:py-1 file:font-semibold file:text-brand">
+    <span class="text-xs text-soft">{{photo_note}}</span>
+    <input type="hidden" data-f="image" value="{{image}}">
+    <input type="hidden" data-f="w" value="{{w}}">
+    <input type="hidden" data-f="h" value="{{h}}">
+  </div>
+
+  <div class="grid min-w-0 content-start gap-3">
+    <label class="grid gap-1.5 text-sm font-semibold">
+      Title
+      <input type="text" data-f="title" value="{{title}}" class="{{field_class}}">
+    </label>
+    <label class="grid gap-1.5 text-sm font-semibold">
+      Description
+      <input type="text" data-f="description" value="{{description}}" class="{{field_class}}">
+    </label>
+    <label class="grid gap-1.5 text-sm font-semibold">
+      Photo alt text
+      <input type="text" data-f="alt" value="{{alt}}" class="{{field_class}}">
+    </label>
+    <label class="grid gap-1.5 text-sm font-semibold">
+      Emoji
+      <input type="text" data-f="emoji" value="{{emoji}}" class="{{field_class}} max-w-24">
+    </label>
+  </div>
+
+  <div class="flex gap-1 md:flex-col md:items-start">
+    <button type="button" data-act="up" class="{{btn_class}}">Up</button>
+    <button type="button" data-act="down" class="{{btn_class}}">Down</button>
+    <button type="button" data-act="del" class="rounded-full px-3 py-1 text-sm font-semibold text-red-700 hover:bg-red-50">Remove</button>
+  </div>
+
+</div>

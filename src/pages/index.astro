@@ -37,6 +37,7 @@ const faqLd = {
 const rundown = parseRundown(raceInfo.scheduleDetail);
 const mission = parseMission(about.mission);
 const gear = items.filter((i) => i.image);
+const supplies = items.filter((i) => !i.image);
 
 // Kelompokkan sponsor per peran, urutan mengikuti CMS (kosong = tidak ditampilkan)
 const groups = new Map<string, typeof sponsors>();
@@ -190,6 +191,25 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
           </div>
           {CMS_BUILD && <script type="application/json" data-cms-list="racepack" data-cms-skip set:html={JSON.stringify(racepackListDefaults(items))} />}
         </div>
+        {CMS_BUILD ? (
+          <ul class="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-5" data-cms-skip>
+            <!--cms-list racepack when=noimage-->
+            <li>
+              <p class="num-title"><span class="n">%%ITEM:n2%%</span>%%ITEM:title%%</p>
+              <p class="pb-2 text-sm leading-snug">%%ITEM:desc%%</p>
+            </li>
+            <!--/cms-list-->
+          </ul>
+        ) : supplies.length > 0 && (
+          <ul class="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-5" data-cms-skip>
+            {supplies.map((it, i) => (
+              <li>
+                <p class="num-title"><span class="n">{String(gear.length + i + 1).padStart(2, '0')}</span>{it.title}</p>
+                <p class="pb-2 text-sm leading-snug">{it.description}</p>
+              </li>
+            ))}
+          </ul>
+        )}
         </div>
     </div>
   </section>

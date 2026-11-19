@@ -129,7 +129,7 @@ const socials = ([
             {nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined} data-cms-skip>{n.label}</a></li>)}
           </ul>
         </nav>
-        <a class="btn btn-primary nav-cta" href={site.registrationUrl ?? withBase('/#daftar')} {...cmsAttr('href', 'registrationUrl', 'Registration link')}>{ui.navRegister}</a>
+        <a class="btn btn-primary nav-cta" data-cms-group="registration" href={site.registrationUrl ?? withBase('/#daftar')} {...cmsAttr('href', 'registrationUrl', 'Registration link')}>{ui.navRegister}</a>
       </div>
     </header>
 
