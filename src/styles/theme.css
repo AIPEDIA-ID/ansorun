@@ -275,10 +275,8 @@
      Mengganti KV/logo: sesuaikan variabel --kv-* di bawah (persen terhadap KV 1921x1082). */
   .hero-poster {
     --kv-aspect: 1.7753;                                           /* lebar/tinggi KV */
-    --kv-anchor-y: 35%;                                            /* bagian KV yang dipertahankan saat di-crop */
-    --kv-logo-x: 9.73%; --kv-logo-y: 6.65%; --kv-logo-w: 81.3%;    /* logo judul */
-    --kv-date-x: 5.02%; --kv-date-y: 67.5%; --kv-date-w: 12.6%;    /* tanggal 31/01/27 5K-10K */
-    --kv-qr-x: 5.05%;   --kv-qr-y: 77.2%;   --kv-qr-w: 12%;        /* QR + "Online Registration" */
+    --kv-anchor-y: 52%;                                            /* layar lebih lebar dari 16:9: sisa dipotong terutama dari langit di atas, bukan kaki */
+    --kv-logo-x: 9.73%; --kv-logo-y: 10.5%; --kv-logo-w: 81.3%;   /* logo judul (y turun agar tagline tidak tertutup navbar) */
     --hero-band: color-mix(in srgb, var(--t-dark) 75%, transparent); /* latar band, layout satu layar */
     --hero-pad-x: max(20px, calc((100% - var(--t-container)) / 2 + 20px)); /* tepi kiri kontainer */
 
@@ -300,12 +298,6 @@
   .hero-kv::before { top: 0; height: 14%; background: linear-gradient(180deg, var(--t-dark), transparent); }
   .hero-kv::after { bottom: 0; height: 28%; background: linear-gradient(180deg, transparent, var(--t-dark)); }
 
-  /* Tanggal + QR (HeroExtra.astro) */
-  .hero-over { display: none; }
-  .hero-extra { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
-  .x-date { display: block; height: auto; filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--t-darker) 55%, transparent)); }
-  .x-qr, .x-qr img { display: block; width: 100%; height: auto; }
-
   /* Band info */
   .hero-band { position: relative; padding: 4px 0 12px; background: var(--t-dark); }
   .hero-main { padding-block: 8px 0; }
@@ -313,7 +305,7 @@
   .hero-meta { text-shadow: 0 1px 3px color-mix(in srgb, var(--t-darker) 80%, transparent); }
   .hero-band p { overflow-wrap: anywhere; }
   .hero-band .count-num { font-size: 34px; }
-  .hero-poster [data-countdown] { padding-block: 0 4px; }
+  .hero-countdown { padding: 1rem 0 .5rem; } /* jarak countdown dari tombol dan dari tepi bawah band; layar lebar di-nolkan agar sejajar tengah dengan info */
   .hero-poster [data-countdown] > .container-x { padding-inline: 0; }
   .nav-cta { white-space: nowrap; flex: none; }
 
@@ -321,15 +313,11 @@
   .hero-poster { min-height: 100svh; display: flex; flex-direction: column; }
   .hero-poster-media { flex: 1 1 auto; display: flex; flex-direction: column; }
   .hero-kv { flex: 1 1 auto; aspect-ratio: auto; min-height: 300px; }
-  .hero-band > .hero-extra { /* melayang di kiri bawah KV, tepat di atas teks band */
-    position: absolute; left: var(--hero-pad-x); bottom: 100%; z-index: 3;
-    width: min(34vw, 190px); margin: 0 0 8px; padding: 0;
-  }
-  .hero-extra .x-date { width: 88%; }
 
   @media (max-width: 639px) {
     .hero-band .container-x > *, .hero-band .container-x > * > * { min-width: 0; max-width: 100%; }
     .hero-band p { white-space: normal; }
+    .hero-info .btn { margin-inline: auto; } /* tombol DAFTAR di tengah (mobile) */
   }
   @media (min-width: 640px) {
     .hero-kv-img { object-position: 50% 80%; }
@@ -346,9 +334,9 @@
     .hero-poster-media { flex: 1 1 0; min-height: 0; }
 
     /* Kanvas 16:9 seukuran KV (cover). Elemen diposisikan dengan persen terhadap kanvas, jadi ikut skala/crop KV. */
-    .hero-kv, .hero-over { position: absolute; inset: 0; display: block; aspect-ratio: auto; min-height: 0; overflow: hidden; container-type: size; }
+    .hero-kv { position: absolute; inset: 0; display: block; aspect-ratio: auto; min-height: 0; overflow: hidden; container-type: size; }
+    .hero-kv::before { height: 36px; } /* pudar atas tipis: tagline logo tetap terang */
     .hero-kv::after { display: none; }
-    .hero-over { z-index: 3; pointer-events: none; }
     .hero-stage {
       display: block; position: absolute; left: 50%; top: var(--kv-anchor-y);
       width: max(100cqw, calc(var(--kv-aspect) * 100cqh)); aspect-ratio: var(--kv-aspect);
@@ -356,22 +344,22 @@
     }
     .hero-kv-img { object-fit: fill; }
     .hero-logo { left: var(--kv-logo-x); top: var(--kv-logo-y); width: var(--kv-logo-w); transform: none; }
-    .hero-over .x-date { position: absolute; left: var(--kv-date-x); top: var(--kv-date-y); width: var(--kv-date-w); }
-    .hero-over .x-qr { position: absolute; left: var(--kv-qr-x); top: var(--kv-qr-y); width: var(--kv-qr-w); pointer-events: auto; }
-    .hero-extra { display: none; }
 
-    .hero-band { position: absolute; inset: auto 0 0 0; padding-block: 20px 24px; background: var(--hero-band); }
+    .hero-band { position: absolute; inset: auto 0 0 0; padding-block: 10px 14px; background: var(--hero-band); }
     .hero-band::before { /* pudar atas band ke KV */
-      content: ""; position: absolute; inset: auto 0 100% 0; height: 110px; pointer-events: none;
+      content: ""; position: absolute; inset: auto 0 100% 0; height: 56px; pointer-events: none;
       background: linear-gradient(180deg, transparent, var(--hero-band));
     }
-    /* isi band digeser ke kanan supaya tidak menabrak tanggal/QR di kiri */
-    .hero-band > .container-x { max-width: none; width: calc(100% - 19vw - clamp(16px, 3vw, 56px)); margin: 0 auto 0 19vw; padding: 0; }
-    .hero-main { padding-block: 0; }
-    .hero-info { gap: 16px 32px; }
+    /* Simetris terhadap tengah halaman: tombol DAFTAR di tengah, info kiri dan countdown kanan sejajar tengah */
+    .hero-band > .container-x { max-width: none; width: calc(100% - 16vw); margin: 0 auto; padding: 0; }
+    .hero-main { padding-block: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; column-gap: 24px; }
+    .hero-info { display: contents; }
+    .hero-meta { grid-column: 1; justify-self: end; text-align: right; white-space: nowrap; position: relative; top: 4px; } /* 4px: sejajar dengan bayangan 3D tombol DAFTAR */
+    .hero-info .btn { grid-column: 2; justify-self: center; }
+    .hero-count { grid-column: 3; width: 100%; }
     .hero-poster [data-countdown] { padding: 0; }
-    .hero-poster .count-num { font-size: clamp(40px, 4.2vw, 64px); }
-    .hero-poster .count-label { margin-top: 2px; font-size: 11px; }
+    .hero-poster .count-num { font-size: clamp(30px, 2.8vw, 46px); }
+    .hero-poster .count-label { margin-top: 0; font-size: 10px; }
   }
 
   /* Banner halaman dalam */

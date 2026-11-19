@@ -13,7 +13,7 @@ const units = [
 ] as const;
 ---
 
-<section class:list={[embedded ? 'pb-14 pt-2' : 'section']} data-countdown={target} {...cmsAttr('data-countdown', 'eventDate', 'Tanggal dan jam mulai (ISO)')}>
+<section class:list={[embedded ? 'hero-countdown' : 'section']} data-countdown={target} {...cmsAttr('data-countdown', 'eventDate', 'Tanggal dan jam mulai (ISO)')}>
   <div class="container-x">
     {
       (title || text) && (

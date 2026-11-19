@@ -2,15 +2,13 @@
 /**
  * Hero Beranda. Gaya ada di theme.css bagian 5.4 ("Hero").
  *
- * Susunan: KV polos (latar) + logo judul + tanggal/QR, lalu band info (lokasi, tombol, countdown, sponsor).
+ * Susunan: KV polos (latar) + logo judul, lalu band info (lokasi, tombol, countdown, sponsor).
  * Mengganti gambar:
  *   - latar KV   : field CMS heroImage (fallback: public/brand/kv-polos.webp)
  *   - logo judul : public/brand/hero-logo.webp (transparan + bayangan; judul <h1>)
- *   - tanggal/QR : public/brand/hero-date.webp, hero-qr.webp (lihat HeroExtra.astro)
  * Bila KV diganti dengan komposisi lain, sesuaikan variabel --kv-* di theme.css.
  */
 import Countdown from './Countdown.astro';
-import HeroExtra from './HeroExtra.astro';
 import { formatDate } from '../lib/content';
 import { img } from '../lib/img';
 import { plain } from '../lib/text';
@@ -56,9 +54,6 @@ const { site, sponsors } = Astro.props;
     </div>
 
     <div class="hero-band">
-      <!-- Layout ringkas: tanggal + QR melayang di atas band -->
-      <div class="hero-extra container-x"><HeroExtra url={site.registrationUrl} label={site.registrationLabel} /></div>
-
       <div class="hero-main container-x">
         <div class="hero-info">
           <p class="hero-meta font-heading text-sm font-bold lg:text-base">
@@ -90,8 +85,6 @@ const { site, sponsors } = Astro.props;
       }
     </div>
 
-    <!-- Layout satu layar: tanggal + QR di atas band, diposisikan pada kanvas KV -->
-    <div class="hero-over"><div class="hero-stage"><HeroExtra url={site.registrationUrl} label={site.registrationLabel} /></div></div>
   </div>
   <div class="stripe-band" aria-hidden="true"></div>
 </section>
