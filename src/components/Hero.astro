@@ -59,7 +59,7 @@ const { site, sponsors } = Astro.props;
           <p class="hero-meta font-heading text-sm font-bold lg:text-base">
             {site.location} &nbsp;|&nbsp; {formatDate(site.eventDate)}
           </p>
-          {site.registrationUrl && <a class="btn" href={site.registrationUrl} {...cmsAttr('href', 'registrationUrl', 'Link pendaftaran')}>{site.registrationLabel}</a>}
+          {site.registrationUrl && <a class="btn" href={site.registrationUrl} {...cmsAttr('href', 'registrationUrl', 'Registration link')}>{site.registrationLabel}</a>}
         </div>
         <div class="hero-count"><Countdown target={site.eventDate} embedded /></div>
       </div>

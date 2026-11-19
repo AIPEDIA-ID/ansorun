@@ -13,7 +13,7 @@ const right = tagline ?? site.tagline;
   <div class="stripe-stack" aria-hidden="true"></div>
   <div class="container-x relative">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href={withBase('/')}>Beranda</a> <span class="mx-2 opacity-60">&rsaquo;</span> <span class="current">{crumb}</span>
+      <a href={withBase('/')} data-cms-skip>Beranda</a> <span class="mx-2 opacity-60">&rsaquo;</span> <span class="current" data-cms-skip>{crumb}</span>
     </nav>
     <div class="mt-16 flex flex-wrap items-end justify-between gap-6">
       <h1 class="rich" set:html={rich(title ?? site.bannerTitle)} />

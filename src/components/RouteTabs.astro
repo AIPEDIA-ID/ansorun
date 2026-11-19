@@ -31,7 +31,7 @@ const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
         {c.routeMapImage ? (
           <button type="button" class="route-map" data-full={img(c.routeMapImage.url, 2400)} data-alt={c.routeMapImage.alt ?? `Peta rute ${c.name}`} aria-label={`${ui.zoomMap}: ${c.name}`}>
             <img src={img(c.routeMapImage.url, 1400)} alt={c.routeMapImage.alt ?? `Peta rute ${c.name}`} width={c.routeMapImage.width ?? 1400} height={c.routeMapImage.height ?? 788} class="block w-full" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
-            <span class="route-map-hint"><Icon name="zoom" size={14} /> {ui.zoomMap}</span>
+            <span class="route-map-hint" data-cms-skip><Icon name="zoom" size={14} /> {ui.zoomMap}</span>
           </button>
         ) : (
           <div class="card grid min-h-[240px] place-items-center p-8 text-center tbd">{ui.tbd}</div>
@@ -46,7 +46,7 @@ const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
   <dialog class="lightbox lightbox-wide" aria-label="Peta rute ukuran penuh">
     <img alt="" class="max-h-[82vh] w-full object-contain" />
-    <form method="dialog" class="mt-3 text-center"><button class="btn btn-blue">{ui.closeLightbox}</button></form>
+    <form method="dialog" class="mt-3 text-center"><button class="btn btn-blue" data-cms-skip>{ui.closeLightbox}</button></form>
   </dialog>
 </div>
 

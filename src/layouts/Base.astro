@@ -126,10 +126,10 @@ const socials = ([
         </button>
         <nav class="nav" id="site-nav" aria-label="Menu utama">
           <ul class="flex flex-col md:flex-row md:flex-wrap">
-            {nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a></li>)}
+            {nav.map((n) => <li><a href={n.href} aria-current={path === n.href ? 'page' : undefined} data-cms-skip>{n.label}</a></li>)}
           </ul>
         </nav>
-        <a class="btn btn-primary nav-cta" href={site.registrationUrl ?? withBase('/#daftar')} {...cmsAttr('href', 'registrationUrl', 'Link pendaftaran')}>{ui.navRegister}</a>
+        <a class="btn btn-primary nav-cta" href={site.registrationUrl ?? withBase('/#daftar')} {...cmsAttr('href', 'registrationUrl', 'Registration link')}>{ui.navRegister}</a>
       </div>
     </header>
 
@@ -152,8 +152,8 @@ const socials = ([
           {
             [...groups].map(([group, links]) => (
               <div>
-                <h4>{group}</h4>
-                <ul>{links.map((l) => <li><a class="inline-block py-1.5" href={l.url}>{l.label}</a></li>)}</ul>
+                <h4 data-cms-skip>{group}</h4>
+                <ul>{links.map((l) => <li><a class="inline-block py-1.5" href={l.url} data-cms-skip>{l.label}</a></li>)}</ul>
               </div>
             ))
           }
@@ -162,7 +162,7 @@ const socials = ([
       <div class="container-x border-t border-white/10 py-6 text-[13px]">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <span>{site.footerNote}</span>
-          <a href="#top">{ui.backToTop} &uarr;</a>
+          <a href="#top" data-cms-skip>{ui.backToTop} &uarr;</a>
         </div>
       </div>
       <div class="footer-rule"></div>

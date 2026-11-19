@@ -9,22 +9,18 @@ import { getRacepack, getHome, getContact } from '../lib/content';
 import { md } from '../lib/text';
 import { ui } from '../config';
 import { racepackPhoto } from '../lib/fallback';
+import { CMS_BUILD } from '../lib/cms';
+import { racepackEmoji, DEFAULT_EMOJI } from '../lib/racepack-list';
 
 const { page, steps } = await getRacepack();
 const contact = await getContact();
 const { items } = await getHome();
-
-// Emoji penanda item (pola digiland); item di luar daftar ini memakai 🎁
-const emoji: Record<string, string> = {
-  'Kaos Lari': '👕', Medali: '🏅', 'Nomor Dada': '🎽', 'Tas Serut': '🎒', 'Air Minum': '💧',
-  Roti: '🍞', Multivitamin: '💊', 'Kartu E-Money': '💳', 'Kalender Puasa': '📅',
-};
 ---
 
 <Base title="Racepack" description={page.metaDescription}>
   <PageBanner crumb="Racepack" title={page.bannerTitle} tagline="" image={page.heroImage?.url} />
 
-  <!-- 1. Racepack Collection (pola digiland.co.id/run): judul, info pengambilan, daftar item + panel preview -->
+  <!-- 1. Racepack Collection (layout follows digiland.co.id/run): title, pickup info, item list + preview panel -->
   <section class="section bg-fade" id="langkah">
     <div class="container-x">
       <SectionHeading title={page.title} />
@@ -39,7 +35,7 @@ const emoji: Record<string, string> = {
               <div class="meta-item">
                 <span class="step-icon"><Icon name={m.icon} size={20} /></span>
                 <div>
-                  <dt>{m.label}</dt>
+                  <dt data-cms-skip>{m.label}</dt>
                   <dd class:list={[m.text === ui.tbd && 'tbd']}>{m.text}</dd>
                 </div>
               </div>
@@ -48,17 +44,25 @@ const emoji: Record<string, string> = {
         </dl>
         <div class="grid items-start gap-6 lg:grid-cols-[1fr_1fr]">
           <div class="pick-wrap">
-            <div class="pick-list" role="tablist" aria-label={ui.racepackSub}>
+            <div class="pick-list" role="tablist" aria-label={ui.racepackSub} data-cms-skip>
               <button type="button" class="pick-item" role="tab" aria-selected="true" data-src={racepackPhoto.url} data-alt={racepackPhoto.alt ?? ''} data-desc="">
-                <strong><span class="pick-emoji" aria-hidden="true">🎁</span><span class="pick-name">{ui.racepackSub}</span></strong>
+                <strong><span class="pick-emoji" aria-hidden="true">🎁</span><span class="pick-name" data-cms-skip>{ui.racepackSub}</span></strong>
               </button>
-              {
+              {CMS_BUILD ? (
+                <>
+                  <!--cms-list racepack-->
+                  <button type="button" class="pick-item" role="tab" aria-selected="false" data-src="%%ITEM:psrc%%" data-alt="%%ITEM:palt%%" data-desc="%%ITEM:pdesc%%" data-soon="%%ITEM:soon%%" data-icon="%%ITEM:emoji%%">
+                    <strong><span class="pick-emoji" aria-hidden="true">%%ITEM:emoji%%</span><span class="pick-name">%%ITEM:title%%</span>%%ITEM:soontag%%</strong>
+                  </button>
+                  <!--/cms-list-->
+                </>
+              ) : (
                 items.map((it) => (
-                  <button type="button" class="pick-item" role="tab" aria-selected="false" data-src={(it.image ?? racepackPhoto).url} data-alt={(it.image ?? racepackPhoto).alt ?? it.title} data-desc={it.description === ui.tbd ? '' : it.description} data-soon={it.image ? undefined : ''} data-icon={emoji[it.title] ?? '🎁'}>
-                    <strong><span class="pick-emoji" aria-hidden="true">{emoji[it.title] ?? '🎁'}</span><span class="pick-name">{it.title}</span>{!it.image && <em class="pick-tag">Coming soon</em>}</strong>
+                  <button type="button" class="pick-item" role="tab" aria-selected="false" data-src={(it.image ?? racepackPhoto).url} data-alt={(it.image ?? racepackPhoto).alt ?? it.title} data-desc={it.description === ui.tbd ? '' : it.description} data-soon={it.image ? '0' : '1'} data-icon={racepackEmoji[it.title] ?? DEFAULT_EMOJI}>
+                    <strong><span class="pick-emoji" aria-hidden="true">{racepackEmoji[it.title] ?? DEFAULT_EMOJI}</span><span class="pick-name">{it.title}</span>{!it.image && <em class="pick-tag">Coming soon</em>}</strong>
                   </button>
                 ))
-              }
+              )}
             </div>
             <p class="pick-scroll-hint" data-scroll-hint aria-hidden="true">
               Scroll untuk melihat semua item
@@ -68,7 +72,7 @@ const emoji: Record<string, string> = {
             <img src={racepackPhoto.url} alt={racepackPhoto.alt ?? ''} width={racepackPhoto.width ?? 1578} height={racepackPhoto.height ?? 997} data-preview />
             <div class="pick-soon" data-soon-panel hidden>
               <span aria-hidden="true" data-soon-icon>🎁</span>
-              <strong>Coming soon</strong>
+              <strong data-cms-skip>Coming soon</strong>
             </div>
             <p class="pick-desc" data-desc aria-live="polite"></p>
           </div>
@@ -77,7 +81,7 @@ const emoji: Record<string, string> = {
     </div>
   </section>
 
-  <!-- 2. Cara pengambilan: 3 langkah + dokumen + pengambilan diwakilkan, satu grid (pola digiland) -->
+  <!-- 2. Pickup steps: 3 steps + documents + proxy pickup, in one grid (digiland layout) -->
   <section class="section bg-pattern" id="info">
     <div class="container-x">
       <SectionHeading title="CARA **PENGAMBILAN**"><p>{page.venue} · {page.date}</p></SectionHeading>
@@ -117,7 +121,7 @@ const emoji: Record<string, string> = {
     </div>
   </section>
 
-  <!-- 3. Informasi kontak panitia (proposal hal. 27) -->
+  <!-- 3. Organizer contact (proposal p. 27) -->
   <section class="section bg-fade" id="kontak">
     <div class="container-x max-w-3xl">
       <SectionHeading title="KONTAK **PANITIA**" />
@@ -127,7 +131,7 @@ const emoji: Record<string, string> = {
 </Base>
 
 <script>
-  // Daftar item: klik mengganti foto preview dan keterangannya
+  // Item list: clicking an item swaps the preview photo and description
   document.querySelectorAll<HTMLElement>('[data-picker]').forEach((root) => {
     const img = root.querySelector<HTMLImageElement>('[data-preview]');
     const desc = root.querySelector<HTMLElement>('[data-desc]:not(button)');
@@ -141,7 +145,7 @@ const emoji: Record<string, string> = {
       t.addEventListener('click', () => {
         tabs.forEach((x) => x.setAttribute('aria-selected', String(x === t)));
         t.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        const isSoon = t.dataset.soon !== undefined;
+        const isSoon = t.dataset.soon === '1';
         if (img && soon) {
           img.hidden = isSoon;
           soon.hidden = !isSoon;
@@ -160,7 +164,7 @@ const emoji: Record<string, string> = {
     );
 
 
-    // Petunjuk hilang setelah daftar digulir
+    // Hide the scroll hint once the list has been scrolled
     list?.addEventListener('scroll', () => hint?.classList.toggle('is-hidden', list.scrollTop > 16), { passive: true });
   });
 </script>

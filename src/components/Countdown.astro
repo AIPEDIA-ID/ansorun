@@ -13,7 +13,7 @@ const units = [
 ] as const;
 ---
 
-<section class:list={[embedded ? 'hero-countdown' : 'section']} data-countdown={target} {...cmsAttr('data-countdown', 'eventDate', 'Tanggal dan jam mulai (ISO)')}>
+<section class:list={[embedded ? 'hero-countdown' : 'section']} data-countdown={target} {...cmsAttr('data-countdown', 'eventDate', 'Start date & time (ISO)')}>
   <div class="container-x">
     {
       (title || text) && (
@@ -28,12 +28,12 @@ const units = [
         units.map(([key, label]) => (
           <div>
             <div class="count-num" data-unit={key}>00</div>
-            <div class="count-label">{label}</div>
+            <div class="count-label" data-cms-skip>{label}</div>
           </div>
         ))
       }
     </div>
-    <p class:list={["hidden text-center font-heading text-xl font-bold", embedded ? "text-white" : "text-primary"]} data-countdown-done>{ui.countdownDone}</p>
+    <p class:list={["hidden text-center font-heading text-xl font-bold", embedded ? "text-white" : "text-primary"]} data-countdown-done data-cms-skip>{ui.countdownDone}</p>
   </div>
 </section>
 

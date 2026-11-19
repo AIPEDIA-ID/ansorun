@@ -13,15 +13,16 @@ import { getSiteData, getAbout, getHome, getContact } from '../lib/content';
 import { md, rich } from '../lib/text';
 import { parseRundown, parseMission, priceOf, splitLead } from '../lib/parse';
 import { ui, withBase } from '../config';
-import { cmsAttr } from '../lib/cms';
-import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback'; // TODO: pindah ke CMS bila klien ingin mengganti foto sendiri
+import { cmsAttr, CMS_BUILD } from '../lib/cms';
+import { racepackListDefaults } from '../lib/racepack-list';
+import { venuePhotos, racepackPhoto, eventBackdrop, aboutQuote } from '../lib/fallback'; // TODO: move to the CMS if the client wants to replace these photos
 
 const { site, sponsors } = await getSiteData();
 const { about, faqs } = await getAbout();
 const { home, categories, raceInfo, prizes, items, joinSteps } = await getHome();
 const contact = await getContact();
 
-// Data terstruktur FAQ untuk Google (rich result), diambil dari FAQ yang sama dengan yang tampil
+// FAQ structured data for Google (rich result), built from the same FAQ items shown on the page
 const faqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -32,11 +33,10 @@ const faqLd = {
   })),
 };
 
-// Data turunan untuk tampilan (penguraian ada di lib/parse.ts)
+// Derived display data (parsing lives in lib/parse.ts)
 const rundown = parseRundown(raceInfo.scheduleDetail);
 const mission = parseMission(about.mission);
 const gear = items.filter((i) => i.image);
-const supplies = items.filter((i) => !i.image);
 
 // Kelompokkan sponsor per peran, urutan mengikuti CMS (kosong = tidak ditampilkan)
 const groups = new Map<string, typeof sponsors>();
@@ -45,13 +45,13 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
 
 <Base description={home.metaDescription}>
   {faqs.length > 0 && <script slot="head" type="application/ld+json" set:html={JSON.stringify(faqLd)} />}
-  <!-- 01. HOME / HERO: KV, logo judul, countdown, CTA -->
+  <!-- 01. HOME / HERO: key visual, title logo, countdown, CTA -->
   <Hero site={site} sponsors={groups} />
 
-  <!-- 02. ABOUT ANSORUN: tentang event dan misi sosial -->
+  <!-- 02. ABOUT ANSORUN: the event and its social mission -->
   <section class="section bg-fade" id="tentang">
     <div class="container-x">
-      <!-- Judul + kutipan di kiri, teks di kanan -->
+      <!-- Heading and quote on the left, text on the right -->
       <div class="grid items-stretch gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.5fr)] lg:gap-12">
         <div class="flex flex-col">
           <h2 class="rich rich-accent text-[clamp(36px,4.6vw,56px)] leading-[1.02]" set:html={rich(about.sectionTitle)} />
@@ -61,7 +61,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <div class="entry [&>p:first-child]:text-xl [&>p:first-child]:text-ink" set:html={md(about.body)} />
       </div>
 
-      <!-- Konsep sosial (proposal hal. 4) -->
+      <!-- Social concept (proposal p. 4) -->
       {
         mission.flow.length > 0 ? (
           <div class="mt-10">
@@ -91,7 +91,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 03. EVENT HIGHLIGHTS: video promo -->
+  <!-- 03. EVENT HIGHLIGHTS: promo video -->
   <section class="section photo-bg on-dark" id="video" style={`background-image:url(${eventBackdrop.url})`}>
     <div class="container-x">
       <SectionHeading title={home.videoTitle} />
@@ -101,7 +101,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 04. RACE INFORMATION: kategori, jadwal, lokasi (rute di section berikutnya) -->
+  <!-- 04. RACE INFORMATION: categories, schedule, location (routes are in the next section) -->
   <section class="section bg-fade" id="race">
     <div class="container-x">
       <SectionHeading title={home.raceTitle} />
@@ -115,7 +115,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         <div class="fact" id="lokasi">
           <span class="step-icon mx-auto mb-2"><Icon name="pin" size={20} /></span>
           <p class="fact-value">{raceInfo.locationName}</p>
-          <p class="fact-sub">{raceInfo.locationAddress}{raceInfo.locationMapUrl && <> · <a class="inline-block py-2" href={raceInfo.locationMapUrl} rel="noopener" target="_blank">{ui.openMap}</a></>}</p>
+          <p class="fact-sub">{raceInfo.locationAddress}{raceInfo.locationMapUrl && <> · <a class="inline-block py-2" data-cms-skip href={raceInfo.locationMapUrl} rel="noopener" target="_blank">{ui.openMap}</a></>}</p>
         </div>
         <div class="fact" id="kategori">
           <span class="step-icon mx-auto mb-2"><Icon name="route" size={20} /></span>
@@ -144,31 +144,41 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 04b. RUTE: section sendiri (dipisah dari Race Information atas permintaan) -->
+  <!-- 04b. ROUTES: its own section (split from Race Information on request) -->
   <section class="section bg-pattern" id="rute">
     <div class="container-x">
       <SectionHeading title={home.routeTitle}>
         {raceInfo.routeDetail && <div class="entry mt-1 text-sm" set:html={md(raceInfo.routeDetail)} />}
       </SectionHeading>
       <RouteTabs items={categories} />
-      {raceInfo.routeMapUrl && <p class="mt-10 text-center"><a class="btn btn-blue" href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
+      {raceInfo.routeMapUrl && <p class="mt-10 text-center"><a class="btn btn-blue" data-cms-skip href={raceInfo.routeMapUrl} rel="noopener" target="_blank"><Icon name="route" size={16} /> {ui.openMap}</a></p>}
     </div>
   </section>
 
-  <!-- 05. PRIZES & RACEPACK: hadiah (proposal hal. 13) dan perlengkapan peserta (hal. 10 dan 20), satu section -->
+  <!-- 05. PRIZES & RACEPACK: prizes (proposal p. 13) and participant kit (pp. 10 and 20), one section -->
   <section class="section bg-fade" id="hadiah">
     <div class="container-x">
       <SectionHeading title={home.prizesTitle} />
 
-      <h3 class="divider-label mb-6 text-xl">{ui.prizesSub}</h3>
+      <h3 class="divider-label mb-6 text-xl" data-cms-skip>{ui.prizesSub}</h3>
       <Prizes prizes={prizes} />
 
       <div class="panel mt-12">
-        <h3 id="racepack" class="divider-label mb-6 scroll-mt-24 text-xl">{ui.racepackSub}</h3>
+        <h3 id="racepack" class="divider-label mb-6 scroll-mt-24 text-xl" data-cms-skip>{ui.racepackSub}</h3>
         <div class="grid items-stretch gap-8 lg:grid-cols-[1.15fr_1fr]">
           <MatteImage image={racepackPhoto} fill />
-          <div class="grid grid-cols-2 gap-x-5 gap-y-4">
-            {
+          <div class="grid grid-cols-2 gap-x-5 gap-y-4" data-cms-skip>
+            {CMS_BUILD ? (
+              <>
+                <!--cms-list racepack when=image-->
+                <div>
+                  <div class="spot p-1"><Photo image={{ url: '%%ITEM:image%%', width: '%%ITEM:w%%', height: '%%ITEM:h%%' }} alt="%%ITEM:title%%" width={420} ratio="16/10" fit="contain" class="silhouette p-1" /></div>
+                  <p class="num-title mt-1"><span class="n">%%ITEM:n2%%</span>%%ITEM:title%%</p>
+                  <p class="text-sm leading-snug">%%ITEM:desc%%</p>
+                </div>
+                <!--/cms-list-->
+              </>
+            ) : (
               gear.map((g, i) => (
                 <div>
                   <div class="spot p-1"><Photo image={g.image} alt={g.title} width={420} ratio="16/10" fit="contain" class="silhouette p-1" /></div>
@@ -176,26 +186,15 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
                   <p class="text-sm leading-snug">{g.description}</p>
                 </div>
               ))
-            }
+            )}
           </div>
+          {CMS_BUILD && <script type="application/json" data-cms-list="racepack" data-cms-skip set:html={JSON.stringify(racepackListDefaults(items))} />}
         </div>
-        {
-          supplies.length > 0 && (
-            <ul class="mt-8 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-5">
-              {supplies.map((it, i) => (
-                <li>
-                  <p class="num-title"><span class="n">{String(gear.length + i + 1).padStart(2, '0')}</span>{it.title}</p>
-                  <p class="pb-2 text-sm leading-snug">{it.description}</p>
-                </li>
-              ))}
-            </ul>
-          )
-        }
         </div>
     </div>
   </section>
 
-  <!-- 06. HOW TO JOIN: pendaftaran dan race pack collection -->
+  <!-- 06. HOW TO JOIN: registration and race pack collection -->
   <section class="section bg-dark-glow on-dark" id="daftar">
     <div class="container-x">
       <SectionHeading title={home.joinTitle} />
@@ -217,8 +216,8 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
         }
       </ol>
       <p class="mt-10 flex flex-wrap justify-center gap-3">
-        {site.registrationUrl && <a class="btn" href={site.registrationUrl} {...cmsAttr('href', 'registrationUrl', 'Link pendaftaran')}>{site.registrationLabel}</a>}
-        <a class="btn btn-outline" href={withBase('/racepack')}>{ui.howToJoinCta}</a>
+        {site.registrationUrl && <a class="btn" href={site.registrationUrl} {...cmsAttr('href', 'registrationUrl', 'Registration link')}>{site.registrationLabel}</a>}
+        <a class="btn btn-outline" data-cms-skip href={withBase('/racepack')}>{ui.howToJoinCta}</a>
       </p>
     </div>
   </section>
@@ -238,7 +237,7 @@ for (const s of sponsors) groups.set(s.role, [...(groups.get(s.role) ?? []), s])
     </div>
   </section>
 
-  <!-- 07b. CONTACT (proposal hal. 27) -->
+  <!-- 07b. CONTACT (proposal p. 27) -->
   <section class="section section-flush-t bg-pattern" id="kontak">
     <div class="container-x max-w-3xl">
       <SectionHeading title={ui.contactTitle} />
